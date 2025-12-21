@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.hover-card.auto-hover {
+    transform: scale(1.05);
+}
+
+.leaflet-container {
+    z-index: 10;
+}
+
+.leaflet-container a {
+    color: #fff !important;
+}
+
+.leaflet-control-zoom-in span {
+    color: #000 !important;
+}
+
+.leaflet-control-zoom-out span {
+    color: #000 !important;
+}
+
+@media (min-width: 1024px) {
+    .lg\:text-51xl {
+        font-size: 2.9rem;
+        line-height: 1;
+    }
+}
+
+@media (min-width: 1024px) {
+    .lg\:text-6xl {
+        font-size: 4.3rem !important;
+        line-height: 1;
+    }
+}
+
+[x-cloak] {
+    display: none !important;
+}

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', $globalSettings['site_name'] ?? 'Cocinarte') -
+        {{ $globalSettings['meta_title'] ?? 'Comida Casera' }}
+    </title>
+    <meta name="description" content="{{ $globalSettings['meta_description'] ?? 'La mejor comida casera.' }}">
+
+    <!-- Tailwind CSS -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Leaflet CSS para mapas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+
+    @stack('styles')
+</head>
+
+<body class="bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 min-h-screen">
+
+    <!-- Navbar -->
+    <nav
+        class="bg-white/90 backdrop-blur-lg shadow-lg sticky top-0 z-50 border-b-2 border-gradient-to-r from-orange-400 via-pink-500 to-purple-600">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-3">
+                        <img src="{{ asset('storage/front/logo-8.webp') }}" alt="Logo" class="h-16 w-100">
+                    </a>
+                </div>
+
+                <!-- Nav Links -->
+                <div class="hidden md:flex items-center space-x-8">
+
+                    @auth
+                        @if(auth()->user()->isCook())
+                            <a href="{{ route('cook.dashboard') }}"
+                                class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
+                                Mi Cocina
+                            </a>
+                        @endif
+
+                        @if(auth()->user()->isDeliveryDriver())
+                            <a href="{{ route('delivery-driver.dashboard') }}"
+                                class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                                🚴 Mi Panel
+                            </a>
+                        @endif
+
+                        @if(auth()->user()->isAdmin())
+                            <a href="{{ route('admin.dashboard') }}"
+                                class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                                Admin
+                            </a>
+                        @endif
+
+
+                        @if(auth()->user()->isCustomer())
+                            <a href="{{ route('marketplace.catalog') }}"
+                                class="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+                                Explorar
+                            </a>
+                            <a href="{{ route('orders.my') }}"
+                                class="text-gray-700 hover:text-pink-600 font-medium transition-colors flex items-center">
+                                <span>Mis Pedidos</span>
+                                @php
+                                    $pendingCount = auth()->user()->orders()->whereIn('status', ['awaiting_cook_acceptance', 'preparing'])->count();
+                                @endphp
+                                @if($pendingCount > 0)
+                                    <span
+                                        class="ml-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs rounded-full px-2 py-1">{{ $pendingCount }}</span>
+                                @endif
+                            </a>
+
+                            <a href="{{ route('cart.index') }}"
+                                class="relative text-gray-700 hover:text-orange-600 transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                @php
+                                    $cart = session()->get('cart', []);
+                                @endphp
+                                @if(count($cart) > 0)
+                                    <span
+                                        class="absolute -top-2 -right-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ count($cart) }}</span>
+                                @endif
+                            </a>
+                        @endif
+
+
+                        <!-- User Menu -->
+                        <div class="relative group">
+                            <button class="flex items-center space-x-2 text-gray-700 hover:text-purple-600">
+                                @if (auth()->user()->profile_photo_path)
+                                    <img class="h-10 w-10 rounded-full object-cover border-2 border-purple-200"
+                                        src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}"
+                                        alt="{{ auth()->user()->name }}" />
+                                @else
+                                    <div
+                                        class="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white font-bold">
+                                        {{ substr(auth()->user()->name, 0, 1) }}
+                                    </div>
+                                @endif
+                            </button>
+                            <div
+                                class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div class="py-2">
+                                    @if(auth()->user()->isAdmin())
+                                        <a href="{{ route('admin.dashboard') }}"
+                                            class="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 font-semibold text-purple-600">
+                                            Panel de Admin
+                                        </a>
+                                    @elseif(auth()->user()->isCook())
+                                        <a href="{{ route('cook.dashboard') }}"
+                                            class="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 font-semibold text-purple-600">
+                                            Panel de Cocinero
+                                        </a>
+                                    @elseif(auth()->user()->isDeliveryDriver())
+                                        <a href="{{ route('delivery-driver.dashboard') }}"
+                                            class="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 font-semibold text-blue-600">Panel
+                                            de Repartidor
+                                        </a>
+                                    @endif
+
+                                    <a href="{{ route('profile.edit') }}"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50">Mi
+                                        Perfil</a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit"
+                                            onclick="event.preventDefault(); this.closest('form').submit();"
+                                            class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50">
+                                            Cerrar Sesión
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}"
+                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
+                            Ingresar
+                        </a>
+                        <a href="{{ route('register') }}"
+                            class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
+                            Registrarse
+                        </a>
+                    @endauth
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button type="button" class="text-gray-700 hover:text-purple-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    @if(session('success'))
+        <div class="container mx-auto px-4 mt-4">
+            <div
+                class="bg-gradient-to-r from-green-400 to-emerald-500 text-white px-6 py-4 rounded-xl shadow-lg flex items-center">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                {{ session('success') }}
+            </div>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="container mx-auto px-4 mt-4">
+            <div
+                class="bg-gradient-to-r from-red-400 to-pink-500 text-white px-6 py-4 rounded-xl shadow-lg flex items-center">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                {{ session('error') }}
+            </div>
+        </div>
+    @endif
+
+    <!-- Main Content -->
+    <main>
+        @yield('content')
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-gray-900 via-purple-900 to-pink-900 text-white">
+        <div class="container mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                <div class="col-span-2 mr-20 pr-2">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-3">
+                        <img src="{{ asset('storage/front/logo-w.webp') }}" alt="Cocinarte Logo"
+                            class="h-16 w-100 mb-2">
+                    </a>
+                    <p class="text-gray-300">Conectando cocineros caseros con comensales que buscan autenticidad y
+                        sabor.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Para Clientes</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="{{ route('marketplace.catalog') }}"
+                                class="hover:text-orange-400 transition">Explorar Cocineros</a></li>
+                        <li><a href="#" class="hover:text-orange-400 transition">Cómo Funciona</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Para Cocineros</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="{{ route('register') }}" class="hover:text-pink-400 transition">Registrarse</a>
+                        </li>
+                        <li><a href="#" class="hover:text-pink-400 transition">Beneficios</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Para Repartidores</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="{{ route('register') }}" class="hover:text-pink-400 transition">Registrarse</a>
+                        </li>
+                        <li><a href="#" class="hover:text-pink-400 transition">Beneficios</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Contacto</h4>
+                    <p class="text-gray-300">Bell Ville, Córdoba</p>
+                    <p class="text-gray-300">info@cocinarte.com</p>
+                </div>
+            </div>
+            <div class="border-t border-white mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Cocinarte. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Cart Button -->
+    <a href="{{ route('cart.index') }}" id="floating-cart-btn"
+        class="fixed bottom-8 right-8 bg-gradient-to-r from-orange-500 to-pink-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 {{ count(session('cart', [])) > 0 ? 'flex' : 'hidden' }} items-center justify-center">
+        <div class="relative">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span id="floating-cart-count"
+                class="absolute -top-2 -right-2 bg-white text-pink-600 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-pink-100">
+                {{ count(session('cart', [])) }}
+            </span>
+        </div>
+    </a>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const floatingBtn = document.getElementById('floating-cart-btn');
+            const floatingCount = document.getElementById('floating-cart-count');
+
+            // Intercept all forms that post to cart.add
+            document.body.addEventListener('submit', function (e) {
+                if (e.target.tagName === 'FORM' && e.target.action.includes('cart/add')) {
+                    e.preventDefault();
+
+                    const form = e.target;
+                    const formData = new FormData(form);
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+
+                    // Loading state
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `
+                        <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Agregando...
+                    `;
+
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Update floating button
+                                floatingCount.textContent = data.cart_count;
+                                floatingBtn.classList.remove('hidden');
+                                floatingBtn.classList.add('flex');
+
+                                // Animation
+                                floatingBtn.classList.add('scale-125');
+                                setTimeout(() => floatingBtn.classList.remove('scale-125'), 200);
+
+                                // You could also show a toast here
+                                // showToast(data.message); // If you have a toast function
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            // Fallback to normal submit if ajax fails
+                            form.submit();
+                        })
+                        .finally(() => {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+                        });
+                }
+            });
+        });
+    </script>
+
+    @stack('scripts')
+</body>
+
+</html>
