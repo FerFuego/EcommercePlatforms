@@ -13,71 +13,109 @@
             Pedidos Disponibles
         </h1>
 
-        @if($availableOrders->isEmpty())
-            <div class="bg-white rounded-2xl shadow-xl p-12 text-center">
-                <div class="text-6xl mb-4">📭</div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-2">No hay pedidos disponibles</h3>
-                <p class="text-gray-600">Vuelve más tarde o amplía tu área de cobertura</p>
-            </div>
-        @else
-            <!-- Map View -->
-            <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
-                <div id="map" style="height: 500px; border-radius: 1rem;"></div>
-            </div>
-
-            <!-- List View -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($availableOrders as $order)
-                    <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition" id="order-{{ $order->id }}">
-                        <div class="flex items-center justify-between mb-4">
-                            <div>
-                                <h3 class="text-xl font-bold">Pedido #{{ $order->id }}</h3>
-                                @if($order->status === 'preparing')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 mt-1">
-                                        ⏳ En Preparación (Reservar)
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1">
-                                        🚀 Listo para Retiro
-                                    </span>
-                                @endif
-                            </div>
-                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
-                                ${{ number_format($order->delivery_fee ?? 500, 0) }}
-                            </span>
-                        </div>
-
-                        <div class="space-y-3 mb-4">
-                            <div class="flex items-start space-x-2">
-                                <span class="text-gray-600">📍 Retiro:</span>
-                                <span class="font-semibold">{{ $order->cook->user->name }}</span>
-                            </div>
-                            <div class="flex items-start space-x-2">
-                                <span class="text-gray-600">📦 Items:</span>
-                                <span>{{ $order->items->count() }} productos</span>
-                            </div>
-                            <div class="flex items-start space-x-2">
-                                <span class="text-gray-600">💰 Total:</span>
-                                <span class="font-bold">${{ number_format($order->total_amount, 0) }}</span>
-                            </div>
-                            @if($order->status === 'preparing')
-                                <p class="text-sm text-yellow-700 bg-yellow-50 p-2 rounded">
-                                    ⚠️ El pedido se está preparando. Al aceptar, lo reservas y se te notificará cuando esté listo.
-                                </p>
-                            @endif
-                        </div>
-
-                        <form action="{{ route('delivery-driver.orders.accept', $order->id) }}" method="POST">
-                            @csrf
-                            <button type="submit"
-                                class="w-full bg-gradient-to-r {{ $order->status === 'preparing' ? 'from-yellow-500 to-orange-600' : 'from-green-500 to-emerald-600' }} text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-                                {{ $order->status === 'preparing' ? '⏳ Reservar Pedido' : '✓ Aceptar Pedido' }}
-                            </button>
-                        </form>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="bg-white rounded-2xl shadow-xl p-6 relative overflow-hidden">
+                @if(auth()->user()->is_suspended)
+                    <div class="absolute inset-0 bg-gray-100 bg-opacity-50 z-10 flex items-center justify-center backdrop-blur-sm">
+                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">Suspendido</span>
                     </div>
-                @endforeach
+                @endif
+
+                <h3 class="text-xl font-bold mb-4">Acciones Rápidas</h3>
+                <div class="space-y-3 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none' : '' }}">
+                    @if($driver->is_approved)
+                        <a href="{{ route('delivery-driver.dashboard') }}" 
+                            class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            🚴 Dashboard
+                        </a>
+                        <a href="{{ route('delivery-driver.orders.available') }}"
+                            class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            🗺️ Ver Pedidos Disponibles
+                        </a>
+                        <a href="{{ route('delivery-driver.orders.index') }}"
+                            class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            📦 Mis Entregas
+                        </a>
+                        <a href="{{ route('delivery-driver.earnings') }}"
+                            class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            💰 Ver Ganancias
+                        </a>
+                    @endif
+                    <a href="{{ route('delivery-driver.profile.edit') }}"
+                        class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                        ⚙️ Editar Perfil
+                    </a>
+                </div>
             </div>
-        @endif
+
+            <div class="g:col-span-2 col-span-2">
+                @if($availableOrders->isEmpty())
+                    <div class="bg-white rounded-2xl shadow-xl p-12 text-center">
+                        <div class="text-6xl mb-4">📭</div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">No hay pedidos disponibles</h3>
+                        <p class="text-gray-600">Vuelve más tarde o amplía tu área de cobertura</p>
+                    </div>
+                @else
+                    <!-- Map View -->
+                    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
+                        <div id="map" style="height: 500px; border-radius: 1rem;"></div>
+                    </div>
+
+                    <!-- List View -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach($availableOrders as $order)
+                            <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition" id="order-{{ $order->id }}">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-xl font-bold">Pedido #{{ $order->id }}</h3>
+                                        @if($order->status === 'preparing')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 mt-1">
+                                                ⏳ En Preparación (Reservar)
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1">
+                                                🚀 Listo para Retiro
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
+                                        ${{ number_format($order->delivery_fee ?? 500, 0) }}
+                                    </span>
+                                </div>
+
+                                <div class="space-y-3 mb-4">
+                                    <div class="flex items-start space-x-2">
+                                        <span class="text-gray-600">📍 Retiro:</span>
+                                        <span class="font-semibold">{{ $order->cook->user->name }}</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <span class="text-gray-600">📦 Items:</span>
+                                        <span>{{ $order->items->count() }} productos</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <span class="text-gray-600">💰 Total:</span>
+                                        <span class="font-bold">${{ number_format($order->total_amount, 0) }}</span>
+                                    </div>
+                                    @if($order->status === 'preparing')
+                                        <p class="text-sm text-yellow-700 bg-yellow-50 p-2 rounded">
+                                            ⚠️ El pedido se está preparando. Al aceptar, lo reservas y se te notificará cuando esté listo.
+                                        </p>
+                                    @endif
+                                </div>
+
+                                <form action="{{ route('delivery-driver.orders.accept', $order->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-full bg-gradient-to-r {{ $order->status === 'preparing' ? 'from-yellow-500 to-orange-600' : 'from-green-500 to-emerald-600' }} text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+                                        {{ $order->status === 'preparing' ? '⏳ Reservar Pedido' : '✓ Aceptar Pedido' }}
+                                    </button>
+                                </form>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 
     @push('scripts')

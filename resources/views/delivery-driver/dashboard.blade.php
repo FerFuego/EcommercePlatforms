@@ -5,7 +5,7 @@
 @section('content')
     <div class="container mx-auto px-4 py-12">
         <!-- Header -->
-        <div class="mb-8">
+        <div>
             <h1 class="text-4xl font-bold mb-2">
                 <span class="bg-gradient-to-r from-orange-600 via-orange-600 to-purple-600 bg-clip-text text-transparent">
                     ¡Hola, {{ auth()->user()->name }}!
@@ -68,16 +68,20 @@
                     </h3>
                     <div class="space-y-3 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none' : '' }}">
                         @if($driver->is_approved)
+                            <a href="{{ route('delivery-driver.dashboard') }}"
+                                class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                                🚴 Dashboard
+                            </a>
                             <a href="{{ route('delivery-driver.orders.available') }}"
-                                class="block bg-gradient-to-r from-blue-500 to-cyan-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                                class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                                 🗺️ Ver Pedidos Disponibles
                             </a>
                             <a href="{{ route('delivery-driver.orders.index') }}"
-                                class="block bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                                class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                                 📦 Mis Entregas
                             </a>
                             <a href="{{ route('delivery-driver.earnings') }}"
-                                class="block bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                                class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                                 💰 Ver Ganancias
                             </a>
                         @endif
