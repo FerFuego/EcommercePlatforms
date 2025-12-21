@@ -3,11 +3,9 @@
 @section('title', 'Editar Perfil de Cocinero')
 
 @section('content')
-    <div class="container mx-auto px-4 py-12 max-w-4xl">
+    <div class="container mx-auto px-4 py-12">
         <div class="flex items-center justify-between mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Editar Perfil</h1>
-            ← Volver al Dashboard
-            </a>
         </div>
 
         @if(auth()->user()->is_suspended)
@@ -26,7 +24,47 @@
             </div>
         @endif
 
-        <form action="{{ route('cook.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Quick Actions -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-xl p-6 relative overflow-hidden">
+                    @if(auth()->user()->is_suspended)
+                        <div
+                            class="absolute inset-0 bg-gray-100 bg-opacity-50 z-10 flex items-center justify-center backdrop-blur-sm">
+                            <span
+                                class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">Suspendido</span>
+                        </div>
+                    @endif
+                    <h3 class="text-xl font-bold mb-4">
+                        Acciones Rápidas
+                    </h3>
+                    <div class="space-y-3 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none' : '' }}">
+                        <a href="{{ route('cook.dashboard') }}"
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Dashboard
+                        </a>
+                        <a href="{{ route('cook.dishes.create') }}"
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Nuevo Plato
+                        </a>
+                        <a href="{{ route('cook.dishes.index') }}"
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Mis Platos
+                        </a>
+                        <a href="{{ route('cook.orders.index') }}"
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Ver Pedidos
+                        </a>
+                        <a href="{{ route('cook.profile.edit') }}"
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Configuración
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2">
+                <form action="{{ route('cook.profile.update') }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-8">
             @csrf
             @method('PUT')
 
@@ -34,7 +72,7 @@
             <div class="bg-white rounded-2xl shadow-lg p-8">
                 <h2 class="text-2xl font-bold mb-6 text-gray-800">Información General</h2>
 
-                <div class="space-y-6">
+                <div class="flex flex-col gap-8">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Biografía / Descripción</label>
                         <textarea name="bio" rows="4" required
@@ -161,6 +199,9 @@
                 </button>
             </div>
         </form>
+            </div>
+        </div>
+
     </div>
 
     @push('styles')
@@ -221,11 +262,11 @@
                                 const div = document.createElement('div');
                                 div.className = 'relative group animate-fade-in';
                                 div.innerHTML = `
-                                                                                    <img src="${e.target.result}" class="w-full h-32 object-cover rounded-xl shadow-md border-2 border-purple-100">
-                                                                                    <div class="absolute top-2 right-2">
-                                                                                        <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">Nuevo</span>
-                                                                                    </div>
-                                                                                `;
+                                                                                                                    <img src="${e.target.result}" class="w-full h-32 object-cover rounded-xl shadow-md border-2 border-purple-100">
+                                                                                                                    <div class="absolute top-2 right-2">
+                                                                                                                        <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">Nuevo</span>
+                                                                                                                    </div>
+                                                                                                                `;
                                 container.appendChild(div);
                             }
                             reader.readAsDataURL(file);

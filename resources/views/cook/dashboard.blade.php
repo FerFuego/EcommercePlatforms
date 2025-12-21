@@ -58,26 +58,29 @@
                                 class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">Suspendido</span>
                         </div>
                     @endif
-                    <h3
-                        class="text-xl font-bold mb-6 bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+                    <h3 class="text-xl font-bold mb-4">
                         Acciones Rápidas
                     </h3>
                     <div class="space-y-3 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none' : '' }}">
+                        <a href="{{ route('cook.dashboard') }}"
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Dashboard
+                        </a>
                         <a href="{{ route('cook.dishes.create') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            ➕ Nuevo Plato
+                            Nuevo Plato
                         </a>
                         <a href="{{ route('cook.dishes.index') }}"
-                            class="block bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            🍱 Mis Platos
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Mis Platos
                         </a>
                         <a href="{{ route('cook.orders.index') }}"
-                            class="block bg-gradient-to-r from-blue-500 to-cyan-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            📦 Ver Pedidos
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Ver Pedidos
                         </a>
                         <a href="{{ route('cook.profile.edit') }}"
-                            class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            ⚙️ Configuración
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Configuración
                         </a>
                     </div>
                 </div>
