@@ -69,25 +69,25 @@
                     <div class="space-y-3 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none' : '' }}">
                         @if($driver->is_approved)
                             <a href="{{ route('delivery-driver.dashboard') }}"
-                                class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                                🚴 Dashboard
+                                class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                                Dashboard
                             </a>
                             <a href="{{ route('delivery-driver.orders.available') }}"
-                                class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                                🗺️ Ver Pedidos Disponibles
+                                class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                                Ver Pedidos Disponibles
                             </a>
                             <a href="{{ route('delivery-driver.orders.index') }}"
-                                class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                                📦 Mis Entregas
+                                class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                                Mis Entregas
                             </a>
                             <a href="{{ route('delivery-driver.earnings') }}"
-                                class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                                💰 Ver Ganancias
+                                class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                                Ver Ganancias
                             </a>
                         @endif
                         <a href="{{ route('delivery-driver.profile.edit') }}"
-                            class="block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            ⚙️ Editar Perfil
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Editar Perfil
                         </a>
                     </div>
                 </div>
