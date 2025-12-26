@@ -11,7 +11,8 @@
     <meta name="description" content="{{ $globalSettings['meta_description'] ?? 'La mejor comida casera.' }}">
 
     <!-- Tailwind CSS -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/chatbot.css', 'resources/js/chatbot.js'])
+
 
     <!-- Leaflet CSS para mapas -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -340,6 +341,8 @@
     </script>
 
     @stack('scripts')
+
+    @include('partials.chatbot')
 </body>
 
 </html>
