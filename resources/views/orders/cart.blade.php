@@ -12,7 +12,7 @@
 
     @if(empty($cart))
         <div class="bg-white rounded-2xl shadow-xl p-12 text-center">
-            <div class="text-8xl mb-4">🛍️</div>
+            <div class="text-8xl mb-4">🍽️</div>
             <h2 class="text-2xl font-bold text-gray-800 mb-3">Tu carrito está vacío</h2>
             <p class="text-gray-600 mb-6">¡Explora nuestros cocineros y encuentra algo delicioso!</p>
             <a href="{{ route('marketplace.catalog') }}" class="inline-block bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">

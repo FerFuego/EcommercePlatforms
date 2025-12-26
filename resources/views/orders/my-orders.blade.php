@@ -21,7 +21,7 @@
                                     <div class="flex items-center space-x-3 mb-2">
                                         <h3 class="text-2xl font-bold text-gray-800">Pedido #{{ $order->id }}</h3>
                                         <span class="px-3 py-1 rounded-full text-xs font-bold
-                                                                                                    {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
+                                                                {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
                         ($order->status == 'rejected_by_cook' ? 'bg-red-100 text-red-800' :
                             ($order->status == 'awaiting_cook_acceptance' ? 'bg-yellow-100 text-yellow-800' :
                                 'bg-blue-100 text-blue-800')) }}" data-order-status-label="{{ $order->id }}">
@@ -99,6 +99,16 @@
                                         class="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
                                         ⭐ Calificar
                                     </button>
+                                @endif
+
+                                @if($order->status === 'delivered')
+                                    <form action="{{ route('orders.reorder', $order->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            class="px-6 py-3 bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
+                                            + Repetir Pedido
+                                        </button>
+                                    </form>
                                 @endif
                             </div>
                         </div>

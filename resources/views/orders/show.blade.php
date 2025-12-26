@@ -97,6 +97,16 @@
                                 @endif
                             </div>
                         @endif
+
+                        <div class="mt-6 flex justify-end">
+                            <form action="{{ route('orders.reorder', $order->id) }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-gradient-to-r from-green-500 to-teal-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-xl transition shadow-md flex items-center">
+                                    <span class="mr-2">🛒</span> Volver a Pedir
+                                </button>
+                            </form>
+                        </div>
                     @endif
 
                     <!-- Rejection Reason (if rejected) -->

@@ -320,4 +320,77 @@ class OrderController extends Controller
 
         return back()->with('success', 'Estado actualizado');
     }
+
+    /**
+     * Volver a realizar un pedido (reorder)
+     */
+    public function reorder($orderId)
+    {
+        $originalOrder = Order::with('items.dish.cook.user')->findOrFail($orderId);
+
+        // Verificar pertenencia
+        if ($originalOrder->customer_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $cart = session()->get('cart', []);
+
+        // Validar cocinero si ya hay items en el carrito
+        if (!empty($cart) && $cart[0]['cook_id'] !== $originalOrder->cook_id) {
+            return back()->with('error', 'Tu carrito ya tiene items de otro cocinero. Vacía tu carrito primero o pide platos del mismo cocinero.');
+        }
+
+        $addedCount = 0;
+        $unavailableCount = 0;
+
+        foreach ($originalOrder->items as $item) {
+            $dish = $item->dish;
+
+            // Verificar si el plato existe, está activo y tiene stock
+            if ($dish && $dish->is_active && $dish->available_stock > 0) {
+                // Determinar cantidad a agregar (mínimo entre lo pedido originalmente y el stock actual)
+                $quantityToAdd = min($item->quantity, $dish->available_stock);
+
+                // Buscar si ya está en el carrito para actualizar cantidad
+                $foundIndex = -1;
+                foreach ($cart as $index => $cartItem) {
+                    if ($cartItem['dish_id'] === $dish->id) {
+                        $foundIndex = $index;
+                        break;
+                    }
+                }
+
+                if ($foundIndex !== -1) {
+                    // Actualizar cantidad sin exceder stock
+                    $cart[$foundIndex]['quantity'] = min($cart[$foundIndex]['quantity'] + $quantityToAdd, $dish->available_stock);
+                } else {
+                    // Agregar nuevo item
+                    $cart[] = [
+                        'dish_id' => $dish->id,
+                        'cook_id' => $dish->cook_id,
+                        'name' => $dish->name,
+                        'price' => $dish->price,
+                        'quantity' => $quantityToAdd,
+                        'photo_url' => $dish->photo_url,
+                    ];
+                }
+                $addedCount++;
+            } else {
+                $unavailableCount++;
+            }
+        }
+
+        if ($addedCount === 0) {
+            return back()->with('error', 'Lo sentimos, ninguno de los productos de este pedido está disponible actualmente.');
+        }
+
+        session()->put('cart', $cart);
+
+        $message = "Se han agregado {$addedCount} productos a tu carrito.";
+        if ($unavailableCount > 0) {
+            $message .= " ({$unavailableCount} productos no estaban disponibles y no se agregaron).";
+        }
+
+        return redirect()->route('cart.index')->with('success', $message);
+    }
 }

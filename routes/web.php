@@ -71,6 +71,9 @@ Route::middleware(['auth'])->group(function () {
 
         // Reviews
         Route::post('/{orderId}/review', [ReviewController::class, 'store'])->name('review.store');
+
+        // Reorder
+        Route::post('/{orderId}/reorder', [OrderController::class, 'reorder'])->name('reorder');
     });
 });
 

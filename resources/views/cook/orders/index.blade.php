@@ -88,7 +88,7 @@
                                                 <div class="flex items-center space-x-3 mb-2">
                                                     <h3 class="text-xl font-bold text-gray-800">#{{ $order->id }}</h3>
                                                     <span class="px-3 py-1 rounded-full text-xs font-bold
-                                                                                                        {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
+                                                                                                                            {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
                                 ($order->status == 'rejected_by_cook' ? 'bg-red-100 text-red-800' :
                                     ($order->status == 'awaiting_cook_acceptance' ? 'bg-yellow-100 text-yellow-800' :
                                         'bg-blue-100 text-blue-800')) }}" data-order-status-label="{{ $order->id }}">
@@ -180,7 +180,7 @@
                                                             </div>
                                                             <span
                                                                 class="text-xs px-2 py-1 rounded-full font-semibold
-                                                                                                                        {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                                                                                                                                        {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
                                                                 {{ match ($order->deliveryAssignment->status) {
                                                 'assigned' => 'Asignado',
                                                 'picked_up' => 'Recogido',
@@ -248,7 +248,7 @@
                     </div>
                 @else
                     <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
-                        <div class="text-8xl mb-4">📭</div>
+                        <div class="text-8xl mb-4">🍽️</div>
                         <h2 class="text-2xl font-bold text-gray-800 mb-3">No hay pedidos
                             {{ request('status') ? 'en esta categoría' : 'todavía' }}
                         </h2>
