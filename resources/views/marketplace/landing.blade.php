@@ -303,7 +303,7 @@
                             <video class="w-full h-full rounded-2xl"
                                 poster="{{ asset('storage/front/delivery_poster.webp') }}" width="100%" height="auto"
                                 controls>
-                                <source src="{{ asset('storage/video/presentation.mp4') }}" type="video/mp4">
+                                <source src="{{ asset('storage/video/cocinarte-repartidores.mp4') }}" type="video/mp4">
                                 Tu navegador no soporta la etiqueta de video.
                             </video>
                         </div>

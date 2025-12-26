@@ -16,7 +16,7 @@
             </div>
             <a href="{{ route('cook.dishes.create') }}"
                 class="bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-                ➕ Nuevo Plato
+                + Nuevo Plato
             </a>
         </div>
 
