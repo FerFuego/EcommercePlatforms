@@ -65,7 +65,7 @@
 
                 @if($deliveries->isEmpty())
                     <div class="bg-white rounded-2xl shadow-xl p-12 text-center">
-                        <div class="text-6xl mb-4">📭</div>
+                        <div class="text-6xl mb-4">🍽️</div>
                         <h3 class="text-2xl font-bold text-gray-800 mb-2">No hay entregas</h3>
                         <p class="text-gray-600">
                             @if($status === 'active')
@@ -91,7 +91,7 @@
                                                     ${{ number_format($delivery->delivery_fee, 0) }}</p>
                                                 <span
                                                     class="px-3 py-1 rounded-full text-sm font-semibold
-                                                                                                                                                                                                                {{ $delivery->status === 'delivered' ? 'bg-green-100 text-green-800' :
+                                                                                                                                                                                                                                    {{ $delivery->status === 'delivered' ? 'bg-green-100 text-green-800' :
                                 ($delivery->status === 'rejected' ? 'bg-red-100 text-red-800' :
                                     ($delivery->status === 'delayed' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800')) }}">
                                                     {{ match ($delivery->status) {

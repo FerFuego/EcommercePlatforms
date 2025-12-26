@@ -90,7 +90,7 @@
 
                     @if($deliveries->isEmpty())
                         <div class="text-center py-12">
-                            <div class="text-6xl mb-4">📭</div>
+                            <div class="text-6xl mb-4">🍽️</div>
                             <h3 class="text-2xl font-bold text-gray-800 mb-2">No hay entregas en este período</h3>
                             <p class="text-gray-600">Ajusta los filtros para ver más resultados</p>
                         </div>

@@ -51,7 +51,7 @@
             <div class="g:col-span-2 col-span-2">
                 @if($availableOrders->isEmpty())
                     <div class="bg-white rounded-2xl shadow-xl p-12 text-center">
-                        <div class="text-6xl mb-4">📭</div>
+                        <div class="text-6xl mb-4">🍽️</div>
                         <h3 class="text-2xl font-bold text-gray-800 mb-2">No hay pedidos disponibles</h3>
                         <p class="text-gray-600">Vuelve más tarde o amplía tu área de cobertura</p>
                     </div>

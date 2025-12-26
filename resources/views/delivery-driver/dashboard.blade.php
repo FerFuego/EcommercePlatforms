@@ -206,7 +206,7 @@
                                     </div>
                     @empty
                         <div class="text-center py-12">
-                            <div class="text-5xl mb-3">📭</div>
+                            <div class="text-5xl mb-3">🍽️</div>
                             <p class="text-gray-500">No hay entregas recientes</p>
                         </div>
                     @endforelse
