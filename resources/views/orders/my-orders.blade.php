@@ -21,7 +21,7 @@
                                     <div class="flex items-center space-x-3 mb-2">
                                         <h3 class="text-2xl font-bold text-gray-800">Pedido #{{ $order->id }}</h3>
                                         <span class="px-3 py-1 rounded-full text-xs font-bold
-                                                                                        {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
+                                                                                                    {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
                         ($order->status == 'rejected_by_cook' ? 'bg-red-100 text-red-800' :
                             ($order->status == 'awaiting_cook_acceptance' ? 'bg-yellow-100 text-yellow-800' :
                                 'bg-blue-100 text-blue-800')) }}" data-order-status-label="{{ $order->id }}">
@@ -182,7 +182,13 @@
                 document.getElementById('rating').value = stars;
                 const buttons = document.querySelectorAll('.star-btn');
                 buttons.forEach((btn, index) => {
-                    btn.style.opacity = index < stars ? '1' : '0.3';
+                    if (index < stars) {
+                        btn.style.color = '#fbbf24'; // yellow-400
+                        btn.style.opacity = '1';
+                    } else {
+                        btn.style.color = '#d1d5db'; // gray-300
+                        btn.style.opacity = '1';
+                    }
                 });
             }
         </script>

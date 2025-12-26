@@ -6,7 +6,7 @@
 <div class="container mx-auto px-4 py-12">
     <h1 class="text-4xl font-bold mb-8">
         <span class="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
-            Tu Carrito 🛒
+            Tu Carrito
         </span>
     </h1>
 

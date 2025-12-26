@@ -17,17 +17,28 @@
                 </div>
                 <div class="mt-4 md:mt-0">
                     <span class="px-6 py-3 rounded-full text-lg font-bold shadow-sm
-                                        @if($order->status === 'delivered') bg-green-100 text-green-700
-                                        @elseif($order->status === 'preparing') bg-blue-100 text-blue-700
-                                        @elseif($order->status === 'awaiting_cook_acceptance') bg-yellow-100 text-yellow-700
-                                        @elseif($order->status === 'ready_for_pickup') bg-purple-100 text-purple-700
-                                        @elseif($order->status === 'on_the_way') bg-indigo-100 text-indigo-700
-                                        @elseif($order->status === 'cancelled') bg-red-100 text-red-700
-                                        @elseif($order->status === 'rejected_by_cook') bg-orange-100 text-orange-700
-                                        @else bg-gray-100 text-gray-700
-                                        @endif"
-                        data-order-status-label="{{ $order->id }}">
-                        {{ ucfirst(str_replace('_', ' ', $order->status)) }}
+                        @if($order->status === 'delivered') bg-green-100 text-green-700
+                                    @elseif($order->status === 'preparing') bg-blue-100 text-blue-700
+                                    @elseif($order->status === 'awaiting_cook_acceptance') bg-yellow-100 text-yellow-700
+                                    @elseif($order->status === 'ready_for_pickup') bg-purple-100 text-purple-700
+                                    @elseif($order->status === 'on_the_way') bg-indigo-100 text-indigo-700
+                                    @elseif($order->status === 'cancelled') bg-red-100 text-red-700
+                                    @elseif($order->status === 'rejected_by_cook') bg-orange-100 text-orange-700
+                                    @else bg-gray-100 text-gray-700
+                                    @endif">
+                    {{ match ($order->status) {
+                        'pending_payment' => '⏳ Pendiente de Pago',
+                        'paid' => '✓ Pagado',
+                        'awaiting_cook_acceptance' => '⏰ Esperando Confirmación',
+                        'rejected_by_cook' => '❌ Rechazado',
+                        'preparing' => '👨‍🍳 En Preparación',
+                        'ready_for_pickup' => '✅ Listo para Retiro',
+                        'assigned_to_delivery' => '🛵 En Camino',
+                        'on_the_way' => '🚗 En Camino',
+                        'delivered' => '✓ Entregado',
+                        'cancelled' => '❌ Cancelado',
+                        default => $order->status
+                    } }}
                     </span>
                 </div>
             </div>
@@ -47,15 +58,15 @@
                                     @csrf
                                     <div class="mb-4">
                                         <label class="block text-sm font-semibold text-gray-700 mb-2">Puntuación</label>
-                                        <div class="flex items-center space-x-4">
+                                        <div class="flex items-center space-x-2">
                                             @for($i = 1; $i <= 5; $i++)
-                                                <label class="cursor-pointer hover:scale-110 transition-transform">
-                                                    <input type="radio" name="rating" value="{{ $i }}" class="peer sr-only" required>
-                                                    <span
-                                                        class="text-3xl text-gray-300 peer-checked:text-yellow-400 hover:text-yellow-300 transition-colors">★</span>
-                                                </label>
+                                                <button type="button" onclick="setRating({{ $i }})"
+                                                    class="star-btn text-4xl text-gray-300 hover:scale-110 transition-all focus:outline-none">
+                                                    ★
+                                                </button>
                                             @endfor
                                         </div>
+                                        <input type="hidden" name="rating" id="rating_value" required>
                                     </div>
                                     <div class="mb-4">
                                         <label class="block text-sm font-semibold text-gray-700 mb-2">Comentario (Opcional)</label>
@@ -333,4 +344,21 @@
             </div>
         </div>
     </div>
+@push('scripts')
+<script>
+    function setRating(rating) {
+        document.getElementById('rating_value').value = rating;
+        const stars = document.querySelectorAll('.star-btn');
+        stars.forEach((star, index) => {
+            if (index < rating) {
+                star.classList.remove('text-gray-300');
+                star.classList.add('text-yellow-400');
+            } else {
+                star.classList.remove('text-yellow-400');
+                star.classList.add('text-gray-300');
+            }
+        });
+    }
+</script>
+@endpush
 @endsection
