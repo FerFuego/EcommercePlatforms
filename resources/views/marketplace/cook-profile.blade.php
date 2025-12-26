@@ -12,7 +12,7 @@
                 <div class="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full filter blur-3xl"></div>
             </div>
 
-            <div class="relative z-10 flex items-center space-x-8">
+            <div class="relative z-10 flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-8">
                 @if($cook->user->profile_photo_path)
                     <img src="{{ asset('storage/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}"
                         class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-2xl">

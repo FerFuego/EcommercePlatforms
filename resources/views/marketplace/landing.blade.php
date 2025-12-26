@@ -426,23 +426,57 @@
                 x-transition:enter-end="opacity-100 transform scale-100" class="max-w-3xl mx-auto space-y-6">
 
                 <div class="bg-gray-50 rounded-2xl p-6 hover:bg-orange-50 transition-colors">
-                    <h3 class="font-bold text-lg text-gray-800 mb-2">¿Cómo realizo un pedido?</h3>
-                    <p class="text-gray-600">Es muy simple: ingresa tu dirección para ver cocineros cercanos, elige tus
-                        platos favoritos y selecciona si prefieres delivery o retiro. El pago se realiza de forma segura a
-                        través de la plataforma.</p>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1 mr-4">
+                            <div
+                                class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-600">
+                                🛒
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">¿Cómo realizo un pedido?</h3>
+                            <p class="text-gray-600">Es muy simple: ingresa tu dirección para ver cocineros cercanos, elige
+                                tus
+                                platos favoritos y selecciona si prefieres delivery o retiro. El pago se realiza de forma
+                                segura a
+                                través de la plataforma.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="bg-gray-50 rounded-2xl p-6 hover:bg-orange-50 transition-colors">
-                    <h3 class="font-bold text-lg text-gray-800 mb-2">¿Es seguro comer comida casera?</h3>
-                    <p class="text-gray-600">Absolutamente. Todos nuestros cocineros pasan por un proceso de verificación y
-                        validación de identidad. Además, el sistema de reseñas te permite ver la experiencia de otros
-                        comensales.</p>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1 mr-4">
+                            <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-600">
+                                🛡️
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">¿Es seguro comer comida casera?</h3>
+                            <p class="text-gray-600">Absolutamente. Todos nuestros cocineros pasan por un proceso de
+                                verificación y
+                                validación de identidad. Además, el sistema de reseñas te permite ver la experiencia de
+                                otros
+                                comensales.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="bg-gray-50 rounded-2xl p-6 hover:bg-orange-50 transition-colors">
-                    <h3 class="font-bold text-lg text-gray-800 mb-2">¿Qué métodos de pago aceptan?</h3>
-                    <p class="text-gray-600">Aceptamos todas las tarjetas de crédito, débito y dinero en cuenta a través de
-                        MercadoPago, garantizando la seguridad de tu transacción.</p>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1 mr-4">
+                            <div
+                                class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
+                                💳
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">¿Qué métodos de pago aceptan?</h3>
+                            <p class="text-gray-600">Aceptamos todas las tarjetas de crédito, débito y dinero en cuenta a
+                                través de
+                                MercadoPago, garantizando la seguridad de tu transacción.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 

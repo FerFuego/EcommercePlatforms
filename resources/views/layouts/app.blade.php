@@ -170,13 +170,95 @@
 
                 <!-- Mobile menu button -->
                 <div class="md:hidden">
-                    <button type="button" class="text-gray-700 hover:text-purple-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="mobile-menu-button" type="button"
+                        class="text-gray-700 hover:text-purple-600 focus:outline-none">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-white border-t border-gray-100 shadow-xl overflow-hidden transition-all duration-300">
+            <div class="px-4 pt-2 pb-6 space-y-1">
+                @auth
+                    @if(auth()->user()->isCook())
+                        <a href="{{ route('cook.dashboard') }}"
+                            class="block px-4 py-3 text-gray-700 hover:bg-purple-50 rounded-xl font-medium transition-colors">
+                            👨‍🍳 Mi Cocina
+                        </a>
+                    @endif
+
+                    @if(auth()->user()->isDeliveryDriver())
+                        <a href="{{ route('delivery-driver.dashboard') }}"
+                            class="block px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl font-medium transition-colors">
+                            🚴 Mi Panel
+                        </a>
+                    @endif
+
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}"
+                            class="block px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl font-medium transition-colors">
+                            🛡️ Admin
+                        </a>
+                    @endif
+
+                    @if(auth()->user()->isCustomer())
+                        <a href="{{ route('marketplace.catalog') }}"
+                            class="block px-4 py-3 text-gray-700 hover:bg-orange-50 rounded-xl font-medium transition-colors">
+                            🔍 Explorar
+                        </a>
+                        <a href="{{ route('orders.my') }}"
+                            class="block px-4 py-3 text-gray-700 hover:bg-pink-50 rounded-xl font-medium transition-colors flex items-center justify-between">
+                            <span>📦 Mis Pedidos</span>
+                            @if($pendingCount > 0)
+                                <span
+                                    class="bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs rounded-full px-2 py-1">{{ $pendingCount }}</span>
+                            @endif
+                        </a>
+                        <a href="{{ route('cart.index') }}"
+                            class="block px-4 py-3 text-gray-700 hover:bg-orange-50 rounded-xl font-medium transition-colors flex items-center justify-between">
+                            <span>🛒 Carrito</span>
+                            @if(count($cart) > 0)
+                                <span
+                                    class="bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ count($cart) }}</span>
+                            @endif
+                        </a>
+                    @endif
+
+                    <div class="border-t border-gray-100 my-2 pt-2">
+                        <a href="{{ route('profile.edit') }}"
+                            class="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl font-medium transition-colors">
+                            👤 Mi Perfil
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="w-full text-left block px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl font-medium transition-colors">
+                                🚪 Cerrar Sesión
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <div class="space-y-3 pt-2">
+                        <a href="{{ route('marketplace.catalog') }}"
+                            class="block px-4 py-3 text-center text-gray-700 font-bold hover:bg-gray-50 rounded-xl transition-all">
+                            Explorar
+                        </a>
+                        <a href="{{ route('login') }}"
+                            class="block px-4 py-3 text-center text-gray-700 font-bold hover:bg-gray-50 rounded-xl transition-all">
+                            Ingresar
+                        </a>
+                        <a href="{{ route('register') }}"
+                            class="block px-4 py-4 text-center bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white rounded-xl font-bold shadow-lg">
+                            Registrarse
+                        </a>
+                    </div>
+                @endauth
             </div>
         </div>
     </nav>
@@ -261,7 +343,7 @@
 
     <!-- Floating Cart Button -->
     <a href="{{ route('cart.index') }}" id="floating-cart-btn"
-        class="fixed bottom-8 right-8 bg-gradient-to-r from-orange-500 to-pink-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 {{ count(session('cart', [])) > 0 ? 'flex' : 'hidden' }} items-center justify-center">
+        class="fixed bottom-8 right-8 bg-gradient-to-r from-orange-500 to-pink-600 text-white p-3 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 {{ count(session('cart', [])) > 0 ? 'flex' : 'hidden' }} items-center justify-center">
         <div class="relative">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -279,6 +361,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuBtn = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
             const floatingBtn = document.getElementById('floating-cart-btn');
             const floatingCount = document.getElementById('floating-cart-count');
 

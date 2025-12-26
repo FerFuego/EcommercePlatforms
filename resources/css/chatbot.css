@@ -1,15 +1,15 @@
 /* Chatbot Styles */
 #chatbot-container {
     position: fixed;
-    bottom: 2rem;
+    bottom: 6rem;
     right: 2rem;
     z-index: 1000;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 #chatbot-button {
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
     box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
