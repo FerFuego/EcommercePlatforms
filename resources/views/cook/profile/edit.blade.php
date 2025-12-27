@@ -79,11 +79,25 @@
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition">{{ old('bio', $cook->bio) }}</textarea>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Radio de Cobertura (km)</label>
                             <input type="number" name="coverage_radius_km"
                                 value="{{ old('coverage_radius_km', $cook->coverage_radius_km) }}" required min="1" max="50"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Horario Apertura</label>
+                            <input type="time" name="opening_time"
+                                value="{{ old('opening_time', $cook->opening_time ? \Carbon\Carbon::parse($cook->opening_time)->format('H:i') : '') }}"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Horario Cierre</label>
+                            <input type="time" name="closing_time"
+                                value="{{ old('closing_time', $cook->closing_time ? \Carbon\Carbon::parse($cook->closing_time)->format('H:i') : '') }}"
                                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition">
                         </div>
 
@@ -96,7 +110,7 @@
                                         class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-pink-600">
                                     </div>
                                 </label>
-                                <span class="ml-3 text-gray-700 font-semibold">Perfil Activo (Recibir Pedidos)</span>
+                                <span class="ml-3 text-gray-700 font-semibold">Perfil Activo</span>
                             </label>
                         </div>
                     </div>

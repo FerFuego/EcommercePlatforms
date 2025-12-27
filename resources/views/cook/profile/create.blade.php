@@ -76,11 +76,25 @@
                         📍 Detectar Mi Ubicación Automáticamente
                     </button>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Radio de Cobertura (km) *</label>
-                        <input type="number" name="coverage_radius_km" value="{{ old('coverage_radius_km', 10) }}" required
-                            min="1" max="50"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Radio de Cobertura (km) *</label>
+                            <input type="number" name="coverage_radius_km" value="{{ old('coverage_radius_km', 10) }}"
+                                required min="1" max="50"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Horario Apertura</label>
+                            <input type="time" name="opening_time" value="{{ old('opening_time') }}"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Horario Cierre</label>
+                            <input type="time" name="closing_time" value="{{ old('closing_time') }}"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition">
+                        </div>
                     </div>
                 </div>
             </div>

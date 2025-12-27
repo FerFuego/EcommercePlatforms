@@ -98,15 +98,6 @@
                             </div>
                         @endif
 
-                        <div class="mt-6 flex justify-end">
-                            <form action="{{ route('orders.reorder', $order->id) }}" method="POST">
-                                @csrf
-                                <button type="submit"
-                                    class="bg-gradient-to-r from-green-500 to-teal-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-xl transition shadow-md flex items-center">
-                                    <span class="mr-2">🛒</span> Volver a Pedir
-                                </button>
-                            </form>
-                        </div>
                     @endif
 
                     <!-- Rejection Reason (if rejected) -->
@@ -306,14 +297,30 @@
                         </div>
 
                         <div class="space-y-3 text-sm text-gray-600 border-t border-gray-100 pt-4">
-                            <p class="flex items-center">
-                                <span class="mr-2">📍</span> {{ $order->cook->user->address }}
-                            </p>
-                            @if($order->cook->user->phone)
+                            <div class="flex text-gray-700">
+                                <svg class="w-6 h-6 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span class="font-semibold mr-1">Dirección:</span> {{ $order->cook->user->address }}
+                            </div>
+                            @if($order->cook->opening_time && $order->cook->closing_time)
+                                <div class="flex text-gray-700">
+                                    <svg class="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span class="font-semibold mr-1">Horario:</span>
+                                    {{ \Carbon\Carbon::parse($order->cook->opening_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($order->cook->closing_time)->format('H:i') }}
+                                </div>
+                            @endif
+                            <!-- @if($order->cook->user->phone)
                                 <p class="flex items-center">
                                     <span class="mr-2">📞</span> {{ $order->cook->user->phone }}
                                 </p>
-                            @endif
+                            @endif -->
                         </div>
 
                         <a href="{{ route('marketplace.cook.profile', $order->cook->id) }}"
@@ -346,10 +353,21 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('orders.my') }}"
-                        class="block w-full bg-gray-800 text-white text-center py-3 rounded-xl font-bold hover:bg-gray-900 transition shadow-lg">
-                        ← Volver a Mis Pedidos
-                    </a>
+                    <div class="w-full justify-center">
+                        <form action="{{ route('orders.reorder', $order->id) }}" method="POST" class="w-full">
+                            @csrf
+                            <button type="submit"
+                                class="bg-gradient-to-r from-green-500 to-teal-600 text-white text-center px-8 py-3 rounded-xl font-bold hover:shadow-xl transition shadow-md flex items-center justify-center w-full">
+                                <span class="mr-2">+</span> Volver a Pedir
+                            </button>
+                        </form>
+                        
+                        <a href="{{ route('orders.my') }}"
+                            class="block w-full bg-gradient-to-r from-gray-500 to-gray-600 text-white mt-2 px-6 py-3 rounded-xl font-semibold text-center shadow-lg hover:shadow-xl transition-all">
+                            ← Volver a Mis Pedidos
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </div>

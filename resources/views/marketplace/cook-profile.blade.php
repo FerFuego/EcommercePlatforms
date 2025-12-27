@@ -192,9 +192,26 @@
                                 @endif
 
                                 <div class="p-6">
-                                    <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $dish->name }}</h3>
+                                    <h3 class="text-xl font-bold text-gray-800">{{ $dish->name }}</h3>
                                     <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $dish->description }}</p>
-
+                                    <div class="flex justify-between items-start mb-2">
+                                        @if(!empty($dish->available_days))
+                                            <span class="text-[10px] px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full font-bold uppercase tracking-wider">
+                                                @php
+                                                    $days = [
+                                                        1 => 'Lun', 2 => 'Mar', 3 => 'Mié', 4 => 'Jue',
+                                                        5 => 'Vie', 6 => 'Sáb', 7 => 'Dom'
+                                                    ];
+                                                    $available = array_map(fn($d) => $days[$d] ?? '', $dish->available_days);
+                                                    echo implode(', ', $available);
+                                                @endphp
+                                            </span>
+                                        @else
+                                            <span class="text-[10px] px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-bold uppercase tracking-wider">
+                                                Todos los días
+                                            </span>
+                                        @endif
+                                    </div>
                                     <div class="flex items-center justify-between mb-4">
                                         <span
                                             class="text-2xl font-bold text-pink-600">${{ number_format($dish->price, 0) }}</span>
@@ -300,14 +317,14 @@
                     <h3 class="text-2xl font-bold mb-6">Información</h3>
 
                     <div class="space-y-4 mb-6">
-                        <div class="flex items-center text-gray-700">
+                        <!-- <div class="flex items-center text-gray-700">
                             <svg class="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                             {{ $cook->user->email }}
-                        </div>
-                        @if($cook->user->phone)
+                        </div> -->
+                        <!-- @if($cook->user->phone)
                             <div class="flex items-center text-gray-700">
                                 <svg class="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -315,7 +332,7 @@
                                 </svg>
                                 {{ $cook->user->phone }}
                             </div>
-                        @endif
+                        @endif -->
                         <div class="flex items-center text-gray-700">
                             <svg class="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -325,6 +342,17 @@
                             </svg>
                             {{ $cook->user->address }}
                         </div>
+
+                        @if($cook->opening_time && $cook->closing_time)
+                            <div class="flex items-center text-gray-700">
+                                <svg class="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span class="font-semibold mr-1">Horario:</span>
+                                {{ \Carbon\Carbon::parse($cook->opening_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($cook->closing_time)->format('H:i') }}
+                            </div>
+                        @endif
                     </div>
 
                     <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl p-4 mb-6">

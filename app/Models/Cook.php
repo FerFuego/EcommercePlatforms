@@ -25,6 +25,8 @@ class Cook extends Model
         'dni_photo',
         'food_handler_declaration',
         'is_approved',
+        'opening_time',
+        'closing_time',
     ];
 
     protected $casts = [

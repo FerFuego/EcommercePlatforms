@@ -120,6 +120,8 @@ class CookDashboardController extends Controller
             'location_lat' => 'required|numeric',
             'location_lng' => 'required|numeric',
             'active' => 'boolean',
+            'opening_time' => 'nullable|date_format:H:i',
+            'closing_time' => 'nullable|date_format:H:i',
         ]);
 
         $data = [
@@ -128,6 +130,8 @@ class CookDashboardController extends Controller
             'location_lat' => $request->location_lat,
             'location_lng' => $request->location_lng,
             'active' => $request->boolean('active'),
+            'opening_time' => $request->opening_time,
+            'closing_time' => $request->closing_time,
         ];
 
         // Actualizar fotos de cocina si se suben nuevas

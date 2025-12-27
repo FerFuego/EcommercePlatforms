@@ -332,7 +332,7 @@
                 <div>
                     <h4 class="font-semibold mb-4">Contacto</h4>
                     <p class="text-gray-300">Bell Ville, Córdoba</p>
-                    <p class="text-gray-300">info@cocinarte.com</p>
+                    <p class="text-gray-300">info@cocinarte.app</p>
                 </div>
             </div>
             <div class="border-t border-white mt-8 pt-8 text-center text-gray-400">
