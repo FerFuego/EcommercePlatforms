@@ -59,7 +59,7 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Dirección Completa *</label>
-                                <input type="text" name="delivery_address"
+                                <input type="text" name="delivery_address" id="delivery_address"
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition"
                                     placeholder="Calle, número, piso, depto" value="{{ auth()->user()->address ?? '' }}">
                             </div>
@@ -249,11 +249,35 @@
             }
 
             function getCurrentLocation() {
+                const addressInput = document.getElementById('delivery_address');
+                const originalPlaceholder = addressInput.placeholder;
+
                 if (navigator.geolocation) {
+                    addressInput.placeholder = "Detectando ubicación...";
+
                     navigator.geolocation.getCurrentPosition(position => {
-                        document.getElementById('delivery_lat').value = position.coords.latitude.toFixed(4);
-                        document.getElementById('delivery_lng').value = position.coords.longitude.toFixed(4);
-                        alert('✅ Ubicación detectada');
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        document.getElementById('delivery_lat').value = lat.toFixed(4);
+                        document.getElementById('delivery_lng').value = lng.toFixed(4);
+
+                        // Reverse Geocoding with Nominatim (OpenStreetMap)
+                        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data && data.display_name) {
+                                    addressInput.value = data.display_name;
+                                }
+                                addressInput.placeholder = originalPlaceholder;
+                            })
+                            .catch(error => {
+                                console.error('Error in reverse geocoding:', error);
+                                addressInput.placeholder = originalPlaceholder;
+                            });
+                    }, error => {
+                        console.error('Geolocation error:', error);
+                        addressInput.placeholder = originalPlaceholder;
                     });
                 }
             }

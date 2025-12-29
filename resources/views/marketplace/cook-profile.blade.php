@@ -181,7 +181,106 @@
                     <p class="text-gray-700 leading-relaxed">{{ $cook->bio }}</p>
                 </div>
 
-                <!-- Kitchen Photos -->
+                <!-- Menu -->
+                <div class="">
+                    <h2 class="text-2xl font-bold mb-6">
+                        Menú Disponible
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        @forelse($cook->dishes as $dish)
+                            <div
+                                class="group bg-gradient-to-br from-gray-50 to-pink-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                                @if($dish->photo_url)
+                                    <img src="{{ Storage::url($dish->photo_url) }}" alt="{{ $dish->name }}"
+                                        class="w-full h-48 object-cover group-hover:scale-110 transition-transform">
+                                @else
+                                    <div
+                                        class="w-full h-48 bg-gradient-to-br from-orange-300 to-pink-400 flex items-center justify-center text-6xl">
+                                        🍲
+                                    </div>
+                                @endif
+
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold text-gray-800">{{ $dish->name }}</h3>
+                                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $dish->description }}</p>
+                                    <div class="flex justify-between items-start mb-2">
+                                        @if(!empty($dish->available_days))
+                                            <span class="text-[10px] px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full font-bold uppercase tracking-wider">
+                                                @php
+                                                    $days = [
+                                                        1 => 'Lun', 2 => 'Mar', 3 => 'Mié', 4 => 'Jue',
+                                                        5 => 'Vie', 6 => 'Sáb', 7 => 'Dom'
+                                                    ];
+                                                    $available = array_map(fn($d) => $days[$d] ?? '', $dish->available_days);
+                                                    echo implode(', ', $available);
+                                                @endphp
+                                            </span>
+                                        @else
+                                            <span class="text-[10px] px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-bold uppercase tracking-wider">
+                                                Todos los días
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span
+                                            class="text-2xl font-bold text-pink-600">${{ number_format($dish->price, 0) }}</span>
+                                        <span class="text-sm text-gray-500">
+                                            @if($dish->available_stock > 0)
+                                                ✅ {{ $dish->available_stock }} disponibles
+                                            @else
+                                                ❌ Agotado
+                                            @endif
+                                        </span>
+                                    </div>
+
+                                    @if($dish->diet_tags && count($dish->diet_tags) > 0)
+                                        <div class="flex flex-wrap gap-2 mb-4">
+                                            @foreach($dish->diet_tags as $tag)
+                                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full font-semibold">
+                                                    {{ ucfirst($tag) }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @endif
+
+                                    @if($dish->available_stock > 0 && $dish->is_active)
+                                        @if($dish->optionGroups->count() > 0)
+                                            <button type="button" 
+                                                onclick="openCustomizationModal({{ json_encode($dish) }}, {{ json_encode($dish->optionGroups->load('options')) }})"
+                                                class="w-full flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center">
+                                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                                                </svg>
+                                                Personalizar y Ordenar
+                                            </button>
+                                        @else
+                                            <form action="{{ route('cart.add', $dish->id) }}" method="POST">
+                                                @csrf
+                                                <div class="flex items-center space-x-2">
+                                                    <input type="number" name="quantity" value="1" min="1"
+                                                        max="{{ $dish->available_stock }}"
+                                                        class="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-purple-500">
+                                                    <button type="submit"
+                                                        class="flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
+                                                        Ordenar
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        @endif
+                                    @endif
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-span-2 text-center py-12">
+                                <div class="text-6xl mb-4">🍽️</div>
+                                <p class="text-gray-500">Aún no hay platos disponibles</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                 <!-- Kitchen Photos -->
                 @if($cook->kitchen_photos && count($cook->kitchen_photos) > 0)
                     <div class="bg-white rounded-2xl shadow-lg p-8">
                         <h2 class="text-2xl font-bold mb-6">Mi Cocina</h2>
@@ -206,7 +305,7 @@
 
                     <!-- Lightbox Modal -->
                     <div id="lightbox"
-                        class="fixed inset-0 z-50 hidden bg-black bg-opacity-90 flex items-center justify-center opacity-0 transition-opacity duration-300">
+                        class="fixed inset-0 z-50 hidden mt-0 bg-black bg-opacity-90 flex items-center justify-center opacity-0 transition-opacity duration-300">
                         <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-50">
                             <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
@@ -289,105 +388,6 @@
                         });
                     </script>
                 @endif
-
-                <!-- Menu -->
-                <div class="bg-white rounded-2xl shadow-lg p-8">
-                    <h2 class="text-2xl font-bold mb-6">
-                        Menú Disponible
-                    </h2>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        @forelse($cook->dishes as $dish)
-                            <div
-                                class="group bg-gradient-to-br from-gray-50 to-pink-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
-                                @if($dish->photo_url)
-                                    <img src="{{ Storage::url($dish->photo_url) }}" alt="{{ $dish->name }}"
-                                        class="w-full h-48 object-cover group-hover:scale-110 transition-transform">
-                                @else
-                                    <div
-                                        class="w-full h-48 bg-gradient-to-br from-orange-300 to-pink-400 flex items-center justify-center text-6xl">
-                                        🍲
-                                    </div>
-                                @endif
-
-                                <div class="p-6">
-                                    <h3 class="text-xl font-bold text-gray-800">{{ $dish->name }}</h3>
-                                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $dish->description }}</p>
-                                    <div class="flex justify-between items-start mb-2">
-                                        @if(!empty($dish->available_days))
-                                            <span class="text-[10px] px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full font-bold uppercase tracking-wider">
-                                                @php
-                                                    $days = [
-                                                        1 => 'Lun', 2 => 'Mar', 3 => 'Mié', 4 => 'Jue',
-                                                        5 => 'Vie', 6 => 'Sáb', 7 => 'Dom'
-                                                    ];
-                                                    $available = array_map(fn($d) => $days[$d] ?? '', $dish->available_days);
-                                                    echo implode(', ', $available);
-                                                @endphp
-                                            </span>
-                                        @else
-                                            <span class="text-[10px] px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-bold uppercase tracking-wider">
-                                                Todos los días
-                                            </span>
-                                        @endif
-                                    </div>
-                                    <div class="flex items-center justify-between mb-4">
-                                        <span
-                                            class="text-2xl font-bold text-pink-600">${{ number_format($dish->price, 0) }}</span>
-                                        <span class="text-sm text-gray-500">
-                                            @if($dish->available_stock > 0)
-                                                ✅ {{ $dish->available_stock }} disponibles
-                                            @else
-                                                ❌ Agotado
-                                            @endif
-                                        </span>
-                                    </div>
-
-                                    @if($dish->diet_tags && count($dish->diet_tags) > 0)
-                                        <div class="flex flex-wrap gap-2 mb-4">
-                                            @foreach($dish->diet_tags as $tag)
-                                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full font-semibold">
-                                                    {{ ucfirst($tag) }}
-                                                </span>
-                                            @endforeach
-                                        </div>
-                                    @endif
-
-                                    @if($dish->available_stock > 0 && $dish->is_active)
-                                        @if($dish->optionGroups->count() > 0)
-                                            <button type="button" 
-                                                onclick="openCustomizationModal({{ json_encode($dish) }}, {{ json_encode($dish->optionGroups->load('options')) }})"
-                                                class="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-4 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center">
-                                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                                                </svg>
-                                                Personalizar y Ordenar
-                                            </button>
-                                        @else
-                                            <form action="{{ route('cart.add', $dish->id) }}" method="POST">
-                                                @csrf
-                                                <div class="flex items-center space-x-2">
-                                                    <input type="number" name="quantity" value="1" min="1"
-                                                        max="{{ $dish->available_stock }}"
-                                                        class="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-purple-500">
-                                                    <button type="submit"
-                                                        class="flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
-                                                        Ordenar
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        @endif
-                                    @endif
-                                </div>
-                            </div>
-                        @empty
-                            <div class="col-span-2 text-center py-12">
-                                <div class="text-6xl mb-4">🍽️</div>
-                                <p class="text-gray-500">Aún no hay platos disponibles</p>
-                            </div>
-                        @endforelse
-                    </div>
-                </div>
 
                 <!-- Reviews -->
                 <div class="bg-white rounded-2xl shadow-lg p-8">
@@ -488,7 +488,7 @@
                     <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl p-4 mb-6">
                         <p class="text-sm text-gray-700">
                             <span class="font-semibold">⏱️ Tiempo de preparación:</span>
-                            Típicamente {{ $cook->dishes->avg('preparation_time_minutes') ?? 30 }} minutos
+                            Aproximadamente {{ number_format($cook->dishes->avg('preparation_time_minutes') ?? 30, 0) }} minutos
                         </p>
                     </div>
 

@@ -2,13 +2,37 @@
 
 @section('title', '¡Pedido Realizado!')
 
+@push('styles')
+    <style>
+        @keyframes success-pop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .animate-success-pop {
+            animation: success-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="container mx-auto px-4 py-12">
         <div class="max-w-2xl mx-auto">
             <!-- Success Animation -->
             <div class="text-center mb-8">
                 <div
-                    class="inline-block bg-gradient-to-br from-green-400 to-emerald-500 rounded-full p-8 shadow-2xl mb-6 animate-bounce">
+                    class="inline-block bg-gradient-to-br from-green-400 to-emerald-500 rounded-full p-8 shadow-2xl mb-6 animate-success-pop">
                     <svg class="w-24 h-24 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                     </svg>
