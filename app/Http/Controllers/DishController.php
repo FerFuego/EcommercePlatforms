@@ -42,6 +42,7 @@ class DishController extends Controller
             'preparation_time_minutes' => 'required|integer|min:10',
             'delivery_method' => 'required|in:pickup,delivery,both',
             'diet_tags' => 'nullable|array',
+            'option_groups' => 'nullable|array',
         ]);
 
         $cook = auth()->user()->cook;
@@ -62,6 +63,27 @@ class DishController extends Controller
             'is_active' => true,
         ]);
 
+        // Guardar Grupos de Opciones
+        if ($request->has('option_groups')) {
+            foreach ($request->option_groups as $groupData) {
+                $group = $dish->optionGroups()->create([
+                    'name' => $groupData['name'],
+                    'min_options' => $groupData['min_options'] ?? 0,
+                    'max_options' => $groupData['max_options'] ?? 1,
+                    'is_required' => isset($groupData['is_required']),
+                ]);
+
+                if (isset($groupData['options'])) {
+                    foreach ($groupData['options'] as $optionData) {
+                        $group->options()->create([
+                            'name' => $optionData['name'],
+                            'additional_price' => $optionData['additional_price'] ?? 0,
+                        ]);
+                    }
+                }
+            }
+        }
+
         return redirect()->route('cook.dishes.index')
             ->with('success', '¡Plato creado exitosamente!');
     }
@@ -72,7 +94,7 @@ class DishController extends Controller
     public function edit($id)
     {
         $cook = auth()->user()->cook;
-        $dish = $cook->dishes()->findOrFail($id);
+        $dish = $cook->dishes()->with('optionGroups.options')->findOrFail($id);
 
         return view('cook.dishes.edit', compact('dish'));
     }
@@ -97,6 +119,7 @@ class DishController extends Controller
             'delivery_method' => 'required|in:pickup,delivery,both',
             'diet_tags' => 'nullable|array',
             'is_active' => 'boolean',
+            'option_groups' => 'nullable|array',
         ]);
 
         // Actualizar foto si se sube una nueva
@@ -116,6 +139,28 @@ class DishController extends Controller
             'diet_tags' => $request->diet_tags ?? [],
             'is_active' => $request->boolean('is_active', true),
         ]);
+
+        // Sincronizar Opciones (Simplificado: borrar y recrear para esta fase)
+        $dish->optionGroups()->delete();
+        if ($request->has('option_groups')) {
+            foreach ($request->option_groups as $groupData) {
+                $group = $dish->optionGroups()->create([
+                    'name' => $groupData['name'],
+                    'min_options' => $groupData['min_options'] ?? 0,
+                    'max_options' => $groupData['max_options'] ?? 1,
+                    'is_required' => isset($groupData['is_required']),
+                ]);
+
+                if (isset($groupData['options'])) {
+                    foreach ($groupData['options'] as $optionData) {
+                        $group->options()->create([
+                            'name' => $optionData['name'],
+                            'additional_price' => $optionData['additional_price'] ?? 0,
+                        ]);
+                    }
+                }
+            }
+        }
 
         return redirect()->route('cook.dishes.index')
             ->with('success', 'Plato actualizado exitosamente');

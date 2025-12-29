@@ -1,8 +1,127 @@
 @extends('layouts.app')
 
-@section('title', $cook->user->name . ' - Cocinero')
+@section('title', $cook->user->name)
 
 @section('content')
+    <!-- Customization Modal -->
+    <div id="customization-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm" onclick="closeCustomizationModal()"></div>
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg relative z-10 overflow-hidden flex flex-col max-h-[90vh]">
+            <!-- Header -->
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <div>
+                    <h3 id="modal-dish-name" class="text-2xl font-bold text-gray-800">Nombre del Plato</h3>
+                    <p id="modal-dish-price" class="text-pink-600 font-bold">$0</p>
+                </div>
+                <button onclick="closeCustomizationModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <form id="customization-form" action="" method="POST" class="flex flex-col flex-1 overflow-hidden">
+                @csrf
+                <div id="modal-options-container" class="flex-1 overflow-y-auto p-6 space-y-8">
+                    <!-- Options injected by JS -->
+                </div>
+
+                <!-- Footer -->
+                <div class="p-6 bg-gray-50 border-t border-gray-100 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600 font-medium">Cantidad:</span>
+                        <div class="flex items-center space-x-3">
+                            <button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center hover:bg-gray-50 transition">-</button>
+                            <input type="number" name="quantity" id="modal-quantity" value="1" min="1" class="w-12 text-center font-bold text-lg bg-transparent border-0 focus:ring-0">
+                            <button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center hover:bg-gray-50 transition">+</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">
+                        Agregar al Carrito
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        function openCustomizationModal(dish, groups) {
+            const modal = document.getElementById('customization-modal');
+            const form = document.getElementById('customization-form');
+            const container = document.getElementById('modal-options-container');
+            
+            form.action = `/cart/add/${dish.id}`;
+            document.getElementById('modal-dish-name').textContent = dish.name;
+            document.getElementById('modal-dish-price').textContent = `$${new Intl.NumberFormat().format(dish.price)}`;
+            document.getElementById('modal-quantity').value = 1;
+            document.getElementById('modal-quantity').max = dish.available_stock;
+
+            container.innerHTML = '';
+            
+            groups.forEach(group => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'space-y-4';
+                
+                const badge = group.is_required ? 
+                    '<span class="ml-2 px-2 py-0.5 bg-red-100 text-red-600 text-[10px] uppercase font-bold rounded">Obligatorio</span>' : 
+                    '<span class="ml-2 px-2 py-0.5 bg-gray-100 text-gray-500 text-[10px] uppercase font-bold rounded">Opcional</span>';
+
+                groupDiv.innerHTML = `
+                    <div class="flex items-center justify-between sticky top-0 bg-white py-1 z-10">
+                        <h4 class="font-bold text-gray-800 text-lg">${group.name} ${badge}</h4>
+                        <span class="text-xs text-gray-400">Máx. ${group.max_options}</span>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3">
+                        ${group.options.map(option => `
+                            <label class="flex items-center justify-between p-4 rounded-2xl border-2 border-gray-100 hover:border-purple-200 cursor-pointer transition-all has-[:checked]:border-purple-500 has-[:checked]:bg-purple-50">
+                                <div class="flex items-center">
+                                    <input type="${group.max_options > 1 ? 'checkbox' : 'radio'}" 
+                                        name="options[${group.id}][]" 
+                                        value="${option.id}"
+                                        class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500 mr-3"
+                                        onchange="validateGroupSelection(this, ${group.max_options})">
+                                    <span class="font-medium text-gray-700">${option.name}</span>
+                                </div>
+                                ${option.additional_price > 0 ? `<span class="text-purple-600 font-bold">+$${new Intl.NumberFormat().format(option.additional_price)}</span>` : ''}
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(groupDiv);
+            });
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCustomizationModal() {
+            document.getElementById('customization-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function updateModalQuantity(change) {
+            const input = document.getElementById('modal-quantity');
+            const newValue = parseInt(input.value) + change;
+            if (newValue >= 1 && newValue <= parseInt(input.max)) {
+                input.value = newValue;
+            }
+        }
+
+        function validateGroupSelection(input, max) {
+            if (input.type === 'checkbox') {
+                const name = input.name;
+                const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+                if (checked.length > max) {
+                    input.checked = false;
+                    alert(`Solo puedes elegir hasta ${max} opciones para este grupo.`);
+                }
+            }
+        }
+    </script>
+    @endpush
+
     <div class="container mx-auto px-4 py-12">
         <!-- Cover Header -->
         <div
@@ -235,18 +354,29 @@
                                     @endif
 
                                     @if($dish->available_stock > 0 && $dish->is_active)
-                                        <form action="{{ route('cart.add', $dish->id) }}" method="POST">
-                                            @csrf
-                                            <div class="flex items-center space-x-2">
-                                                <input type="number" name="quantity" value="1" min="1"
-                                                    max="{{ $dish->available_stock }}"
-                                                    class="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-purple-500">
-                                                <button type="submit"
-                                                    class="flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
-                                                    Ordenar
-                                                </button>
-                                            </div>
-                                        </form>
+                                        @if($dish->optionGroups->count() > 0)
+                                            <button type="button" 
+                                                onclick="openCustomizationModal({{ json_encode($dish) }}, {{ json_encode($dish->optionGroups->load('options')) }})"
+                                                class="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-4 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center">
+                                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                                                </svg>
+                                                Personalizar y Ordenar
+                                            </button>
+                                        @else
+                                            <form action="{{ route('cart.add', $dish->id) }}" method="POST">
+                                                @csrf
+                                                <div class="flex items-center space-x-2">
+                                                    <input type="number" name="quantity" value="1" min="1"
+                                                        max="{{ $dish->available_stock }}"
+                                                        class="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-purple-500">
+                                                    <button type="submit"
+                                                        class="flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
+                                                        Ordenar
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        @endif
                                     @endif
                                 </div>
                             </div>

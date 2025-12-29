@@ -182,7 +182,19 @@
                                 @endif
                                 <div class="flex-1">
                                     <p class="font-semibold text-sm">{{ $item['name'] }}</p>
-                                    <p class="text-xs text-gray-600">x{{ $item['quantity'] }}</p>
+
+                                    @if(!empty($item['options']))
+                                        <div class="mt-0.5 space-y-0.5">
+                                            @foreach($item['options'] as $option)
+                                                <p class="text-[10px] text-gray-500 flex items-center">
+                                                    <span class="mr-1 text-purple-400">•</span>
+                                                    {{ $option['name'] }}
+                                                </p>
+                                            @endforeach
+                                        </div>
+                                    @endif
+
+                                    <p class="text-xs text-gray-600 mt-1">x{{ $item['quantity'] }}</p>
                                 </div>
                                 <span class="font-bold">${{ number_format($item['price'] * $item['quantity'], 0) }}</span>
                             </div>

@@ -48,6 +48,14 @@ class Dish extends Model
     }
 
     /**
+     * Relación con grupos de opciones
+     */
+    public function optionGroups(): HasMany
+    {
+        return $this->hasMany(DishOptionGroup::class);
+    }
+
+    /**
      * Relación con Orders (a través de OrderItems)
      */
     public function orders()

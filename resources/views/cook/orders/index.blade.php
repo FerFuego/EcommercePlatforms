@@ -88,7 +88,7 @@
                                                 <div class="flex items-center space-x-3 mb-2">
                                                     <h3 class="text-xl font-bold text-gray-800">#{{ $order->id }}</h3>
                                                     <span class="px-3 py-1 rounded-full text-xs font-bold
-                                                                                                                            {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
+                                                                                                                                                {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
                                 ($order->status == 'rejected_by_cook' ? 'bg-red-100 text-red-800' :
                                     ($order->status == 'awaiting_cook_acceptance' ? 'bg-yellow-100 text-yellow-800' :
                                         'bg-blue-100 text-blue-800')) }}" data-order-status-label="{{ $order->id }}">
@@ -129,10 +129,21 @@
                                         <!-- Items -->
                                         <div class="bg-gray-50 rounded-xl p-4 mb-4">
                                             @foreach($order->items as $item)
-                                                <div
-                                                    class="flex items-center justify-between py-2 {{ !$loop->last ? 'border-b border-gray-200' : '' }}">
-                                                    <span class="text-sm">{{ $item->quantity }}x {{ $item->dish->name }}</span>
-                                                    <span class="text-sm font-semibold">${{ number_format($item->total_price, 0) }}</span>
+                                                <div class="py-2 {{ !$loop->last ? 'border-b border-gray-200' : '' }}">
+                                                    <div class="flex items-center justify-between">
+                                                        <span class="text-sm font-bold">{{ $item->quantity }}x {{ $item->dish->name }}</span>
+                                                        <span class="text-sm font-semibold">${{ number_format($item->total_price, 0) }}</span>
+                                                    </div>
+                                                    @if($item->options->count() > 0)
+                                                        <div class="mt-1 ml-4 space-y-1">
+                                                            @foreach($item->options as $option)
+                                                                <div class="text-[10px] text-gray-500 flex items-center">
+                                                                    <span class="mr-1 text-purple-400">•</span>
+                                                                    {{ $option->dishOption->name }}
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             @endforeach
                                         </div>
@@ -180,7 +191,7 @@
                                                             </div>
                                                             <span
                                                                 class="text-xs px-2 py-1 rounded-full font-semibold
-                                                                                                                                                        {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                                                                                                                                                                        {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
                                                                 {{ match ($order->deliveryAssignment->status) {
                                                 'assigned' => 'Asignado',
                                                 'picked_up' => 'Recogido',

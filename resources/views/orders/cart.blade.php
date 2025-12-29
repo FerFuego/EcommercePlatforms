@@ -37,7 +37,22 @@
                         
                         <div class="flex-1">
                             <h3 class="text-xl font-bold text-gray-800">{{ $item['name'] }}</h3>
-                            <p class="text-gray-600">Cantidad: {{ $item['quantity'] }}</p>
+                            
+                            @if(!empty($item['options']))
+                                <div class="mt-1 space-y-1">
+                                    @foreach($item['options'] as $option)
+                                        <div class="flex items-center text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full w-fit">
+                                            <span class="mr-1">✨</span>
+                                            {{ $option['name'] }}
+                                            @if($option['price'] > 0)
+                                                <span class="ml-1 font-bold text-purple-600">(+${{ number_format($option['price'], 0) }})</span>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            <p class="text-gray-600 mt-2">Cantidad: {{ $item['quantity'] }}</p>
                             <p class="text-lg font-bold text-pink-600">${{ number_format($item['price'] * $item['quantity'], 0) }}</p>
                         </div>
                         

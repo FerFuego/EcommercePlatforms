@@ -25,7 +25,7 @@ class OrderController extends Controller
      */
     public function addToCart(Request $request, $dishId)
     {
-        $dish = Dish::with('cook')->findOrFail($dishId);
+        $dish = Dish::with(['cook', 'optionGroups.options'])->findOrFail($dishId);
 
         if (!$dish->isAvailableToday() || $dish->available_stock < 1) {
             return back()->with('error', 'Este plato no está disponible');
@@ -44,13 +44,42 @@ class OrderController extends Controller
             return back()->with('error', 'Stock insuficiente');
         }
 
+        // Procesar opciones seleccionadas
+        $selectedOptions = [];
+        $additionalPrice = 0;
+
+        if ($request->has('options')) {
+            foreach ($request->options as $groupId => $optionIds) {
+                // $optionIds could be a single ID or an array depending on min/max
+                if (!is_array($optionIds)) {
+                    $optionIds = [$optionIds];
+                }
+
+                foreach ($optionIds as $optionId) {
+                    $option = \App\Models\DishOption::find($optionId);
+                    if ($option) {
+                        $selectedOptions[] = [
+                            'id' => $option->id,
+                            'name' => $option->name,
+                            'price' => $option->additional_price,
+                        ];
+                        $additionalPrice += $option->additional_price;
+                    }
+                }
+            }
+        }
+
+        $finalPrice = $dish->price + $additionalPrice;
+
         $cart[] = [
             'dish_id' => $dish->id,
             'cook_id' => $dish->cook_id,
             'name' => $dish->name,
-            'price' => $dish->price,
+            'price' => $finalPrice,
+            'base_price' => $dish->price,
             'quantity' => $quantity,
             'photo_url' => $dish->photo_url,
+            'options' => $selectedOptions,
         ];
 
         session()->put('cart', $cart);
@@ -162,13 +191,25 @@ class OrderController extends Controller
                     throw new \Exception("Stock insuficiente para {$dish->name}");
                 }
 
-                OrderItem::create([
+                $orderItem = OrderItem::create([
                     'order_id' => $order->id,
                     'dish_id' => $item['dish_id'],
                     'quantity' => $item['quantity'],
                     'unit_price' => $item['price'],
                     'total_price' => $item['price'] * $item['quantity'],
                 ]);
+
+                // Guardar opciones del item
+                if (!empty($item['options'])) {
+                    foreach ($item['options'] as $optionData) {
+                        \App\Models\OrderItemOption::create([
+                            'order_item_id' => $orderItem->id,
+                            'dish_option_id' => $optionData['id'],
+                            'quantity' => 1, // Por ahora 1, podrías permitir cantidades en el futuro
+                            'price' => $optionData['price'],
+                        ]);
+                    }
+                }
             }
 
             // Si es MercadoPago, redirigir a la pasarela

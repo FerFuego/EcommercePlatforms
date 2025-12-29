@@ -213,7 +213,22 @@
                                         @endif
                                         <div>
                                             <p class="font-bold text-lg text-gray-800">{{ $item->dish->name }}</p>
-                                            <p class="text-gray-600">Cantidad: {{ $item->quantity }}</p>
+                                            
+                                            @if($item->options->count() > 0)
+                                                <div class="mt-1 space-y-1">
+                                                    @foreach($item->options as $option)
+                                                        <div class="flex items-center text-xs text-gray-500 bg-gray-50 px-2 py-0.5 rounded-lg w-fit border border-gray-100">
+                                                            <span class="mr-1 text-purple-500">•</span>
+                                                            {{ $option->dishOption->name }}
+                                                            @if($option->price > 0)
+                                                                <span class="ml-1 font-bold text-purple-600">(+${{ number_format($option->price, 0) }})</span>
+                                                            @endif
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+
+                                            <p class="text-gray-600 mt-2">Cantidad: {{ $item->quantity }}</p>
                                             <p class="text-sm text-gray-500">${{ number_format($item->unit_price, 0) }} c/u</p>
                                         </div>
                                     </div>
