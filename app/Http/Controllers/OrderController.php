@@ -178,6 +178,8 @@ class OrderController extends Controller
                 'scheduled_time' => $request->scheduled_time,
             ]);
 
+            $order->logEvent('order_placed', 'El pedido fue realizado por el cliente');
+
             // Calcular comisión
             $commissionPercentage = \App\Models\Setting::get('commission_rate', 15);
             $order->calculateCommission($commissionPercentage / 100);
@@ -221,6 +223,9 @@ class OrderController extends Controller
                 // Para cash/transfer, marcar como pendiente de aceptación del cocinero
                 $order->status = Order::STATUS_AWAITING_COOK;
                 $order->save();
+
+                $method = $request->payment_method === 'cash' ? 'Efectivo' : 'Transferencia';
+                $order->logEvent('awaiting_cook', "Pedido pendiente de pago/aceptación via {$method}");
             }
 
             DB::commit();

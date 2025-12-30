@@ -195,6 +195,56 @@
                         </div>
                     @endif
 
+                    <!-- Timeline / Order Tracking -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <span class="mr-2">🕒</span> Seguimiento del Pedido
+                        </h2>
+                        <div class="relative pl-8 space-y-6">
+                            <!-- Vertical Line -->
+                            <div class="absolute left-3 top-2 bottom-2 w-0.5 bg-gray-200"></div>
+
+                            @foreach($order->logs as $log)
+                                <div class="relative">
+                                    <!-- Dot -->
+                                    <div class="absolute -left-[24px] top-1.5 w-4 h-4 rounded-full border-2 border-white shadow-sm
+                                        {{ $loop->first ? 'bg-green-500 ring-4 ring-green-100' : 'bg-gray-400' }}">
+                                    </div>
+                                    
+                                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                                        <div>
+                                            <p class="font-bold text-gray-800 {{ $loop->first ? 'text-lg text-green-700' : 'text-sm' }}">
+                                                {{ $log->description }}
+                                            </p>
+                                            @if($log->user)
+                                                <p class="text-[10px] text-gray-400 flex items-center mt-0.5">
+                                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                    </svg>
+                                                    Realizado por {{ $log->user->name }}
+                                                </p>
+                                            @endif
+                                        </div>
+                                        <div class="text-right shrink-0">
+                                            <span class="text-xs font-bold text-gray-500 whitespace-nowrap bg-gray-100 px-2 py-1 rounded-lg">
+                                                {{ $log->created_at->format('H:i') }}
+                                            </span>
+                                            <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-bold">
+                                                {{ $log->created_at->format('d/m/y') }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    @if($log->metadata && !empty($log->metadata['reason']))
+                                        <div class="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded-lg border border-red-100 italic">
+                                            "{{ $log->metadata['reason'] }}"
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
                     <!-- Items -->
                     <div class="bg-white rounded-2xl shadow-lg p-6">
                         <h2 class="text-xl font-bold mb-6">Items del Pedido</h2>
@@ -345,7 +395,7 @@
                     </div>
 
                     <!-- Order Summary -->
-                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200">
+                    <div class="rounded-2xl p-6 bg-white rounded-2xl shadow-lg p-6">
                         <h3 class="text-lg font-bold mb-4">Resumen de Costos</h3>
                         <div class="space-y-2 text-gray-600">
                             <div class="flex justify-between">
@@ -402,6 +452,19 @@
             }
         });
     }
+
+    // Real-time Updates with Laravel Echo
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.Echo) {
+            window.Echo.private('order.{{ $order->id }}')
+                .listen('OrderStatusUpdated', (e) => {
+                    console.log('Order status updated:', e);
+                    // For now, a simple reload is the most reliable way 
+                    // to update all complex UI components (timeline, badges, forms)
+                    window.location.reload();
+                });
+        }
+    });
 </script>
 @endpush
 @endsection

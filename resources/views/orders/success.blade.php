@@ -202,4 +202,18 @@
             </p>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            // Real-time Updates with Laravel Echo
+            document.addEventListener('DOMContentLoaded', function () {
+                if (window.Echo) {
+                    window.Echo.private('order.{{ $order->id }}')
+                        .listen('OrderStatusUpdated', (e) => {
+                            console.log('Order status updated:', e);
+                            window.location.reload();
+                        });
+                }
+            });
+        </script>
+    @endpush
 @endsection

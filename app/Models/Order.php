@@ -101,6 +101,28 @@ class Order extends Model
     }
 
     /**
+     * Relación con los logs del pedido
+     */
+    public function logs(): HasMany
+    {
+        return $this->hasMany(OrderLog::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Registrar un evento en el log
+     */
+    public function logEvent(string $event, string $description, array $metadata = []): void
+    {
+        $this->logs()->create([
+            'user_id' => auth()->id(),
+            'status' => $this->status,
+            'event' => $event,
+            'description' => $description,
+            'metadata' => $metadata,
+        ]);
+    }
+
+    /**
      * Marcar como pagado
      */
     public function markAsPaid(string $paymentId = null): void
@@ -112,6 +134,10 @@ class Order extends Model
         }
         $this->status = self::STATUS_AWAITING_COOK;
         $this->save();
+
+        $this->logEvent('payment_approved', 'El pago fue aprobado por MercadoPago', [
+            'payment_id' => $paymentId
+        ]);
 
         event(new \App\Events\OrderStatusUpdated($this));
 
@@ -136,6 +162,8 @@ class Order extends Model
         $this->status = self::STATUS_PREPARING;
         $this->save();
 
+        $this->logEvent('cook_accepted', 'El cocinero aceptó el pedido y comenzó la preparación');
+
         event(new \App\Events\OrderStatusUpdated($this));
         $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
     }
@@ -153,6 +181,10 @@ class Order extends Model
         $this->rejection_reason = $reason;
         $this->save();
 
+        $this->logEvent('cook_rejected', 'El cocinero rechazó el pedido', [
+            'reason' => $reason
+        ]);
+
         event(new \App\Events\OrderStatusUpdated($this));
         $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
     }
@@ -164,6 +196,8 @@ class Order extends Model
     {
         $this->status = self::STATUS_PREPARING;
         $this->save();
+
+        $this->logEvent('status_change', 'El pedido cambió a estado: Preparando');
 
         event(new \App\Events\OrderStatusUpdated($this));
         $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
@@ -182,6 +216,9 @@ class Order extends Model
         }
         $this->save();
 
+        $desc = $this->delivery_type === 'delivery' ? 'Pedido listo para asignación de delivery' : 'Pedido listo para ser retirado por el cliente';
+        $this->logEvent('order_ready', $desc);
+
         event(new \App\Events\OrderStatusUpdated($this));
         $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
     }
@@ -193,6 +230,8 @@ class Order extends Model
     {
         $this->status = self::STATUS_ON_THE_WAY;
         $this->save();
+
+        $this->logEvent('on_the_way', 'El pedido está en camino a la dirección de entrega');
 
         event(new \App\Events\OrderStatusUpdated($this));
         $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
@@ -206,6 +245,8 @@ class Order extends Model
         $this->status = self::STATUS_DELIVERED;
         $this->completed_at = now();
         $this->save();
+
+        $this->logEvent('order_delivered', 'Pedido entregado exitosamente');
 
         event(new \App\Events\OrderStatusUpdated($this));
         $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
@@ -221,6 +262,10 @@ class Order extends Model
             $this->rejection_reason = $reason;
         }
         $this->save();
+
+        $this->logEvent('order_cancelled', 'El pedido fue cancelado', [
+            'reason' => $reason
+        ]);
 
         event(new \App\Events\OrderStatusUpdated($this));
         $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));

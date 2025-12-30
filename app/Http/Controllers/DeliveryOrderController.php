@@ -115,6 +115,9 @@ class DeliveryOrderController extends Controller
             'delivery_fee' => $deliveryFee,
         ]);
 
+        $order->logEvent('driver_assigned', "Repartidor asignado: {$driver->user->name}");
+        event(new \App\Events\OrderStatusUpdated($order));
+
         return redirect()->route('delivery-driver.orders.index')
             ->with('success', 'Pedido aceptado exitosamente. Dirígete al punto de retiro.');
     }
@@ -169,6 +172,13 @@ class DeliveryOrderController extends Controller
             $delivery->picked_up_at = now();
             $delivery->order->status = Order::STATUS_ON_THE_WAY;
             $delivery->order->save();
+            $delivery->order->logEvent('picked_up', 'El repartidor retiró el pedido de la cocina');
+            event(new \App\Events\OrderStatusUpdated($delivery->order));
+        }
+
+        if ($validated['status'] === 'on_the_way') {
+            $delivery->order->logEvent('on_the_way', 'El pedido está en camino a tu dirección');
+            event(new \App\Events\OrderStatusUpdated($delivery->order));
         }
 
         if ($validated['status'] === 'delivered') {
@@ -176,6 +186,8 @@ class DeliveryOrderController extends Controller
             $delivery->order->status = Order::STATUS_DELIVERED;
             $delivery->order->completed_at = now();
             $delivery->order->save();
+            $delivery->order->logEvent('order_delivered', 'Pedido entregado por el repartidor');
+            event(new \App\Events\OrderStatusUpdated($delivery->order));
 
             // Actualizar ganancias del repartidor
             $driver->addEarnings((float) $delivery->delivery_fee);
