@@ -30,7 +30,7 @@ class ProfileController extends Controller
         $request->user()->fill($request->validated());
 
         if ($request->hasFile('photo')) {
-            $path = Storage::disk('uploads')->putFile('profile-photos', $request->file('photo'));
+            $path = Storage::disk('uploads')->putFile('profile_photos', $request->file('photo'));
             $request->user()->profile_photo_path = $path;
         }
 
