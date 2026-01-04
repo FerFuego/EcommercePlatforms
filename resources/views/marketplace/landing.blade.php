@@ -70,7 +70,7 @@
                             <div
                                 class="bg-white p-4 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform hover-card">
                                 <div class="w-full h-48 bg-gray-100 rounded-2xl overflow-hidden">
-                                    <img src="{{ asset('storage/front/pasta_casera.png') }}" alt="Pasta Casera"
+                                    <img src="{{ asset('assets/front/pasta_casera.png') }}" alt="Pasta Casera"
                                         class="w-full h-full object-cover">
                                 </div>
                                 <p class="mt-3 font-semibold text-gray-800">Pasta Casera</p>
@@ -79,7 +79,7 @@
                             <div
                                 class="bg-white p-4 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform hover-card">
                                 <div class="w-full h-48 bg-gray-100 rounded-2xl overflow-hidden">
-                                    <img src="{{ asset('storage/front/ensalada_casera.png') }}" alt="Ensalada Fresca"
+                                    <img src="{{ asset('assets/front/ensalada_casera.png') }}" alt="Ensalada Fresca"
                                         class="w-full h-full object-cover">
                                 </div>
                                 <p class="mt-3 font-semibold text-gray-800">Ensalada Fresca</p>
@@ -90,7 +90,7 @@
                             <div
                                 class="bg-white p-4 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform hover-card">
                                 <div class="w-full h-48 bg-gray-100 rounded-2xl overflow-hidden">
-                                    <img src="{{ asset('storage/front/pollo_curry_casero.png') }}" alt="Curry de Pollo"
+                                    <img src="{{ asset('assets/front/pollo_curry_casero.png') }}" alt="Curry de Pollo"
                                         class="w-full h-full object-cover">
                                 </div>
                                 <p class="mt-3 font-semibold text-gray-800">Curry de Pollo</p>
@@ -99,7 +99,7 @@
                             <div
                                 class="bg-white p-4 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform hover-card">
                                 <div class="w-full h-48 bg-gray-100 rounded-2xl overflow-hidden">
-                                    <img src="{{ asset('storage/front/torta_casera.png') }}" alt="Torta Casera"
+                                    <img src="{{ asset('assets/front/torta_casera.png') }}" alt="Torta Casera"
                                         class="w-full h-full object-cover">
                                 </div>
                                 <p class="mt-3 font-semibold text-gray-800">Torta Casera</p>
@@ -261,9 +261,9 @@
                     <div class="bg-white p-2 rounded-3xl shadow-2xl">
                         <div
                             class="aspect-video bg-gradient-to-br from-purple-200 via-pink-200 to-orange-200 rounded-2xl flex items-center justify-center text-8xl">
-                            <video class="w-full h-full rounded-2xl" poster="{{ asset('storage/front/cubierta.webp') }}"
+                            <video class="w-full h-full rounded-2xl" poster="{{ asset('assets/front/cubierta.webp') }}"
                                 width="100%" height="auto" controls>
-                                <source src="{{ asset('storage/video/presentation.mp4') }}" type="video/mp4">
+                                <source src="{{ asset('assets/video/presentation.mp4') }}" type="video/mp4">
                                 Tu navegador no soporta la etiqueta de video.
                             </video>
                         </div>
@@ -301,9 +301,9 @@
                         <div
                             class="aspect-video bg-gradient-to-br from-blue-200 via-indigo-200 to-cyan-200 rounded-2xl flex items-center justify-center text-8xl">
                             <video class="w-full h-full rounded-2xl"
-                                poster="{{ asset('storage/front/delivery_poster.webp') }}" width="100%" height="auto"
+                                poster="{{ asset('assets/front/delivery_poster.webp') }}" width="100%" height="auto"
                                 controls>
-                                <source src="{{ asset('storage/video/cocinarte-repartidores.mp4') }}" type="video/mp4">
+                                <source src="{{ asset('assets/video/cocinarte-repartidores.mp4') }}" type="video/mp4">
                                 Tu navegador no soporta la etiqueta de video.
                             </video>
                         </div>

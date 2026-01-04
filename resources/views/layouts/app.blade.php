@@ -44,7 +44,7 @@
                 <!-- Logo -->
                 <div class="flex-shrink-0">
                     <a href="{{ route('home') }}" class="flex items-center space-x-3">
-                        <img src="{{ asset('storage/front/logo-8.webp') }}" alt="Logo" class="h-16 w-100">
+                        <img src="{{ asset('assets/front/logo-8.webp') }}" alt="Logo" class="h-16 w-100">
                     </a>
                 </div>
 
@@ -299,8 +299,7 @@
             <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <div class="col-span-2 mr-20 pr-2">
                     <a href="{{ route('home') }}" class="flex items-center space-x-3">
-                        <img src="{{ asset('storage/front/logo-w.webp') }}" alt="Cocinarte Logo"
-                            class="h-16 w-100 mb-2">
+                        <img src="{{ asset('assets/front/logo-w.webp') }}" alt="Cocinarte Logo" class="h-16 w-100 mb-2">
                     </a>
                     <p class="text-gray-300">Conectando cocineros caseros con comensales que buscan autenticidad y
                         sabor.</p>

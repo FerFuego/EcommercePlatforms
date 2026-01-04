@@ -39,7 +39,7 @@
             <!-- Logo -->
             <div class="flex items-center justify-center h-20 border-b border-gray-200">
                 <a href="{{ route('home') }}" class="flex items-center space-x-2">
-                    <img src="{{ asset('storage/front/logo-8.webp') }}" alt="Cocinarte Logo" class="h-12 w-auto mb-2">
+                    <img src="{{ asset('assets/front/logo-8.webp') }}" alt="Cocinarte Logo" class="h-12 w-auto mb-2">
                     <span
                         class="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Admin</span>
                 </a>
