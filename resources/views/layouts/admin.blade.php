@@ -151,7 +151,7 @@
             <!-- Mobile Header -->
             <div class="md:hidden flex items-center justify-between bg-white border-b border-gray-200 px-4 py-3">
                 <a href="{{ route('home') }}">
-                    <img src="{{ asset('storage/front/logo-6.webp') }}" alt="Logo" class="h-10 w-auto">
+                    <img src="{{ asset('assets/front/logo-6.webp') }}" alt="Logo" class="h-10 w-auto">
                 </a>
                 <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
                     class="text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500">

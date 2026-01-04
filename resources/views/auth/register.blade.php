@@ -5,16 +5,16 @@
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 flex items-center justify-center py-12 px-4"
         x-data="{
-                    step: {{ $errors->has('name') || $errors->has('email') || $errors->has('phone') ? 2 : ($errors->has('password') ? 3 : 1) }},
-                    role: '{{ old('role', 'customer') }}',
-                    nextStep() { if(this.step < 3) this.step++ },
-                    prevStep() { if(this.step > 1) this.step-- }
-                }">
+                        step: {{ $errors->has('name') || $errors->has('email') || $errors->has('phone') ? 2 : ($errors->has('password') ? 3 : 1) }},
+                        role: '{{ old('role', 'customer') }}',
+                        nextStep() { if(this.step < 3) this.step++ },
+                        prevStep() { if(this.step > 1) this.step-- }
+                    }">
         <div class="max-w-md w-full">
             <!-- Logo/Header -->
             <div class="text-center mb-8">
                 <div class="inline-flex items-center justify-center w-20 h-20 mb-4">
-                    <img src="{{ asset('storage/front/icon.png') }}" alt="Logo" class="h-20 w-auto">
+                    <img src="{{ asset('assets/front/icon.png') }}" alt="Logo" class="h-20 w-auto">
                 </div>
                 <h2
                     class="text-4xl font-bold bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">

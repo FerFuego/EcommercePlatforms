@@ -10,7 +10,7 @@
             <div class="text-center mb-8">
                 <div class="inline-flex items-center justify-center w-20 h-20 mb-4">
                     <span class="text-4xl">
-                        <img src="{{ asset('storage/front/icon.png') }}" alt="Logo" class="h-20 w-100">
+                        <img src="{{ asset('assets/front/icon.png') }}" alt="Logo" class="h-20 w-100">
                     </span>
                 </div>
                 <h2
