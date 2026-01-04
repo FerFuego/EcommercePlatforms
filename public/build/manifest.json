@@ -1,0 +1,32 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-DLYz0pzX.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/css/chatbot.css": {
+    "file": "assets/chatbot-DAolIFZv.css",
+    "src": "resources/css/chatbot.css",
+    "isEntry": true,
+    "name": "chatbot",
+    "names": [
+      "chatbot.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-Dm6g7D7Y.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/chatbot.js": {
+    "file": "assets/chatbot-BIoV-AwW.js",
+    "name": "chatbot",
+    "src": "resources/js/chatbot.js",
+    "isEntry": true
+  }
+}
