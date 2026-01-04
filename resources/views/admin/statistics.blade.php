@@ -169,7 +169,7 @@
                                         {{ $index + 1 }}
                                     </span>
                                     @if($cook->user->profile_photo_path)
-                                        <img src="{{ asset('storage/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}" class="w-10 h-10 rounded-full object-cover border border-yellow-200">
+                                        <img src="{{ asset('uploads/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}" class="w-10 h-10 rounded-full object-cover border border-yellow-200">
                                     @else
                                         <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-sm font-bold text-yellow-600 border border-yellow-200">
                                             {{ substr($cook->user->name, 0, 1) }}

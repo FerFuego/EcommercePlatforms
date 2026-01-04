@@ -49,7 +49,7 @@ class DishController extends Controller
         $cook = auth()->user()->cook;
 
         // Subir foto del plato
-        $photoPath = Storage::disk('public')->putFile('dishes', $request->file('photo'));
+        $photoPath = Storage::disk('uploads')->putFile('dishes', $request->file('photo'));
 
         $dish = $cook->dishes()->create([
             'name' => $request->name,
@@ -125,7 +125,7 @@ class DishController extends Controller
 
         // Actualizar foto si se sube una nueva
         if ($request->hasFile('photo')) {
-            $photoPath = Storage::disk('public')->putFile('dishes', $request->file('photo'));
+            $photoPath = Storage::disk('uploads')->putFile('dishes', $request->file('photo'));
             $dish->photo_url = $photoPath;
         }
 

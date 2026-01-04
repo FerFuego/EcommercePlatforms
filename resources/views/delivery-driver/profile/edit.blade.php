@@ -74,7 +74,7 @@
                         <div class="mb-6">
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Foto de Perfil</label>
                             @if($driver->profile_photo)
-                                <img src="{{ Storage::url($driver->profile_photo) }}" alt="Profile"
+                                <img src="{{ asset('uploads/' . $driver->profile_photo) }}" alt="Profile"
                                     class="w-32 h-32 object-cover rounded-full mb-3">
                             @endif
                             <input type="file" name="profile_photo" accept="image/*"
@@ -117,7 +117,7 @@
                             <div class="mt-4">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Foto del Vehículo</label>
                                 @if($driver->vehicle_photo)
-                                    <img src="{{ Storage::url($driver->vehicle_photo) }}" alt="Vehicle"
+                                    <img src="{{ asset('uploads/' . $driver->vehicle_photo) }}" alt="Vehicle"
                                         class="w-48 h-32 object-cover rounded-lg mb-3">
                                 @endif
                                 <input type="file" name="vehicle_photo" accept="image/*"

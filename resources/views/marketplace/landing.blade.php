@@ -615,7 +615,7 @@
                             <div>
                                 <div class="flex items-center mb-4">
                                     @if($review->customer->profile_photo_path)
-                                        <img src="{{ asset('storage/' . $review->customer->profile_photo_path) }}"
+                                        <img src="{{ asset('uploads/' . $review->customer->profile_photo_path) }}"
                                             alt="{{ $review->customer->name }}"
                                             class="w-12 h-12 rounded-full object-cover mr-4 border-2 border-orange-100">
                                     @else

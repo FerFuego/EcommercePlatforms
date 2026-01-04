@@ -88,7 +88,7 @@
                                                 <div class="flex items-center space-x-3 mb-2">
                                                     <h3 class="text-xl font-bold text-gray-800">#{{ $order->id }}</h3>
                                                     <span class="px-3 py-1 rounded-full text-xs font-bold
-                                                                                                                                                {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
+                                                                                                                                                                    {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
                                 ($order->status == 'rejected_by_cook' ? 'bg-red-100 text-red-800' :
                                     ($order->status == 'awaiting_cook_acceptance' ? 'bg-yellow-100 text-yellow-800' :
                                         'bg-blue-100 text-blue-800')) }}" data-order-status-label="{{ $order->id }}">
@@ -164,7 +164,7 @@
                                                         @endphp
                                                         <div class="flex items-center space-x-2">
                                                             @if($driver && $driver->profile_photo)
-                                                                <img src="{{ Storage::url($driver->profile_photo) }}"
+                                                                <img src="{{ asset('uploads/' . $driver->profile_photo) }}"
                                                                     alt="{{ $order->deliveryAssignment->deliveryUser->name }}"
                                                                     class="w-8 h-8 object-cover rounded-full">
                                                             @else
@@ -191,7 +191,7 @@
                                                             </div>
                                                             <span
                                                                 class="text-xs px-2 py-1 rounded-full font-semibold
-                                                                                                                                                                                        {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                                                                                                                                                                                                        {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
                                                                 {{ match ($order->deliveryAssignment->status) {
                                                 'assigned' => 'Asignado',
                                                 'picked_up' => 'Recogido',

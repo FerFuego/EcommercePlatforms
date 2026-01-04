@@ -90,14 +90,14 @@ class DeliveryDriverController extends Controller
         ]);
 
         // Subir fotos
-        $validated['dni_photo'] = Storage::disk('public')->putFile('delivery-drivers/dni', $request->file('dni_photo'));
+        $validated['dni_photo'] = Storage::disk('uploads')->putFile('delivery-drivers/dni', $request->file('dni_photo'));
 
         if ($request->hasFile('profile_photo')) {
-            $validated['profile_photo'] = Storage::disk('public')->putFile('delivery-drivers/profiles', $request->file('profile_photo'));
+            $validated['profile_photo'] = Storage::disk('uploads')->putFile('delivery-drivers/profiles', $request->file('profile_photo'));
         }
 
         if ($request->hasFile('vehicle_photo')) {
-            $validated['vehicle_photo'] = Storage::disk('public')->putFile('delivery-drivers/vehicles', $request->file('vehicle_photo'));
+            $validated['vehicle_photo'] = Storage::disk('uploads')->putFile('delivery-drivers/vehicles', $request->file('vehicle_photo'));
         }
 
         $validated['user_id'] = auth()->id();
@@ -146,16 +146,16 @@ class DeliveryDriverController extends Controller
         // Actualizar fotos si se suben nuevas
         if ($request->hasFile('profile_photo')) {
             if ($driver->profile_photo) {
-                Storage::disk('public')->delete($driver->profile_photo);
+                Storage::disk('uploads')->delete($driver->profile_photo);
             }
-            $validated['profile_photo'] = Storage::disk('public')->putFile('delivery-drivers/profiles', $request->file('profile_photo'));
+            $validated['profile_photo'] = Storage::disk('uploads')->putFile('delivery-drivers/profiles', $request->file('profile_photo'));
         }
 
         if ($request->hasFile('vehicle_photo')) {
             if ($driver->vehicle_photo) {
-                Storage::disk('public')->delete($driver->vehicle_photo);
+                Storage::disk('uploads')->delete($driver->vehicle_photo);
             }
-            $validated['vehicle_photo'] = Storage::disk('public')->putFile('delivery-drivers/vehicles', $request->file('vehicle_photo'));
+            $validated['vehicle_photo'] = Storage::disk('uploads')->putFile('delivery-drivers/vehicles', $request->file('vehicle_photo'));
         }
 
         $driver->update($validated);

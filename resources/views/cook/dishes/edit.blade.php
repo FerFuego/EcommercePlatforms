@@ -57,7 +57,7 @@
                             <label for="photo"
                                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer bg-gradient-to-br from-gray-50 to-pink-50 hover:bg-gradient-to-br hover:from-orange-50 hover:to-pink-100 transition-all overflow-hidden relative">
                                 @if($dish->photo_url)
-                                    <img src="{{ Storage::url($dish->photo_url) }}" alt="{{ $dish->name }}" id="preview-image"
+                                    <img src="{{ asset('uploads/' . $dish->photo_url) }}" alt="{{ $dish->name }}" id="preview-image"
                                         class="w-full h-full object-cover">
                                 @else
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6">

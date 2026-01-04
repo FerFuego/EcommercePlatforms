@@ -79,7 +79,7 @@
                         class="bg-gradient-to-br from-orange-50 to-pink-50 rounded-2xl shadow-lg p-8 border-2 border-orange-200">
                         <div class="flex items-center space-x-4">
                             @if($cook->user->profile_photo_path)
-                                <img src="{{ asset('storage/' . $cook->user->profile_photo_path) }}"
+                                <img src="{{ asset('uploads/' . $cook->user->profile_photo_path) }}"
                                     alt="{{ $cook->user->name }}"
                                     class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md">
                             @else
@@ -154,7 +154,7 @@
                     <!-- Cook Info Mini -->
                     <div class="flex items-center space-x-3 mb-6 p-3 bg-gray-50 rounded-xl border border-gray-100">
                         @if($cook->user->profile_photo_path)
-                            <img src="{{ asset('storage/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}"
+                            <img src="{{ asset('uploads/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}"
                                 class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm">
                         @else
                             <div
@@ -172,7 +172,7 @@
                         @foreach($cart as $item)
                             <div class="flex items-center space-x-3 pb-3 border-b border-gray-100">
                                 @if($item['photo_url'])
-                                    <img src="{{ Storage::url($item['photo_url']) }}" alt="{{ $item['name'] }}"
+                                    <img src="{{ asset('uploads/' . $item['photo_url']) }}" alt="{{ $item['name'] }}"
                                         class="w-16 h-16 object-cover rounded-lg">
                                 @else
                                     <div

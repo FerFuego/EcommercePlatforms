@@ -117,7 +117,7 @@
                 <div class="flex items-center mb-4">
                     @if (auth()->user()->profile_photo_path)
                         <img class="h-10 w-10 rounded-full object-cover border border-gray-200"
-                            src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}"
+                            src="{{ asset('uploads/' . auth()->user()->profile_photo_path) }}"
                             alt="{{ auth()->user()->name }}" />
                     @else
                         <div

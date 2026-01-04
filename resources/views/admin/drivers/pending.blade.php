@@ -24,7 +24,7 @@
                         <div class="flex items-start justify-between">
                             <div class="flex items-start space-x-4 flex-1">
                                 @if($driver->profile_photo)
-                                    <img src="{{ Storage::url($driver->profile_photo) }}" alt="{{ $driver->user->name }}"
+                                    <img src="{{ asset('uploads/' . $driver->profile_photo) }}" alt="{{ $driver->user->name }}"
                                         class="w-20 h-20 object-cover rounded-full">
                                 @else
                                     <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-cyan-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">

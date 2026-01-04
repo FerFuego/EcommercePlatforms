@@ -51,7 +51,7 @@
                             <div class="shrink-0">
                                 @if ($user->profile_photo_path)
                                     <img class="h-24 w-24 object-cover rounded-full border-4 border-purple-100 shadow-md"
-                                        src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="{{ $user->name }}" />
+                                        src="{{ asset('uploads/' . $user->profile_photo_path) }}" alt="{{ $user->name }}" />
                                 @else
                                     <div
                                         class="h-24 w-24 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-3xl font-bold border-4 border-purple-100 shadow-md">
@@ -62,12 +62,12 @@
                             <label class="block">
                                 <span class="sr-only">Choose profile photo</span>
                                 <input type="file" name="photo" class="block w-full text-sm text-slate-500
-                                                                  file:mr-4 file:py-2 file:px-4
-                                                                  file:rounded-full file:border-0
-                                                                  file:text-sm file:font-semibold
-                                                                  file:bg-purple-50 file:text-purple-700
-                                                                  hover:file:bg-purple-100
-                                                                " />
+                                                                      file:mr-4 file:py-2 file:px-4
+                                                                      file:rounded-full file:border-0
+                                                                      file:text-sm file:font-semibold
+                                                                      file:bg-purple-50 file:text-purple-700
+                                                                      hover:file:bg-purple-100
+                                                                    " />
                             </label>
                         </div>
 

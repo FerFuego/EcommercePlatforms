@@ -162,7 +162,7 @@
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
                         @foreach($cook->kitchen_photos as $photo)
                             <div class="relative group" id="photo-{{ md5($photo) }}">
-                                <img src="{{ Storage::url($photo) }}" alt="Cocina"
+                                <img src="{{ asset('uploads/' . $photo) }}" alt="Cocina"
                                     class="w-full h-48 object-cover rounded-xl shadow-md">
                                 <button type="button" onclick="deletePhoto('{{ $photo }}', 'photo-{{ md5($photo) }}')"
                                     class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600">

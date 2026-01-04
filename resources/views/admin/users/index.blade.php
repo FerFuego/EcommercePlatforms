@@ -76,7 +76,7 @@
                             <td class="px-2 py-4">
                                 <div class="flex items-center space-x-3">
                                     @if($user->profile_photo_path)
-                                        <img src="{{ Storage::url($user->profile_photo_path) }}" alt="{{ $user->name }}"
+                                        <img src="{{ asset('uploads/' . $user->profile_photo_path) }}" alt="{{ $user->name }}"
                                             class="w-10 h-10 object-cover rounded-full">
                                     @else
                                         <div
@@ -266,7 +266,7 @@
 
                 const details = data.details;
                 let html = '';
-                const storageUrl = path => path ? `/storage/${path}` : null;
+                const storageUrl = path => path ? `/uploads/${path}` : null;
 
                 if (data.role === 'cook') {
                     // Set correct routes (adjust as needed based on your routes file)

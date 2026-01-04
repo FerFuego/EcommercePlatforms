@@ -128,7 +128,7 @@
                                 @endphp
                                 <div class="flex items-center space-x-4 mb-4">
                                     @if($driver && $driver->profile_photo)
-                                        <img src="{{ Storage::url($driver->profile_photo) }}" alt="{{ $order->deliveryAssignment->deliveryUser->name }}"
+                                        <img src="{{ asset('uploads/' . $driver->profile_photo) }}" alt="{{ $order->deliveryAssignment->deliveryUser->name }}"
                                             class="w-16 h-16 object-cover rounded-full">
                                     @else
                                         <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-cyan-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
@@ -253,7 +253,7 @@
                                 <div class="flex items-center justify-between py-4 border-b border-gray-100 last:border-0">
                                     <div class="flex items-center space-x-4">
                                         @if($item->dish->photo_url)
-                                            <img src="{{ Storage::url($item->dish->photo_url) }}" alt="{{ $item->dish->name }}"
+                                            <img src="{{ asset('uploads/' . $item->dish->photo_url) }}" alt="{{ $item->dish->name }}"
                                                 class="w-20 h-20 object-cover rounded-xl shadow-sm">
                                         @else
                                             <div
@@ -343,7 +343,7 @@
                         <h3 class="text-lg font-bold mb-4">Cocinero</h3>
                         <div class="flex items-center space-x-4 mb-4">
                             @if($order->cook->user->profile_photo_path)
-                                <img src="{{ asset('storage/' . $order->cook->user->profile_photo_path) }}"
+                                <img src="{{ asset('uploads/' . $order->cook->user->profile_photo_path) }}"
                                     alt="{{ $order->cook->user->name }}"
                                     class="w-16 h-16 rounded-full object-cover border-2 border-purple-100 shadow-md">
                             @else

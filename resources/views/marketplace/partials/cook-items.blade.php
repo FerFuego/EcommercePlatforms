@@ -6,7 +6,7 @@
         <div class="bg-gradient-to-r from-orange-400 to-pink-500 p-6 text-white">
             <div class="flex items-center space-x-4">
                 @if($cook->user->profile_photo_path)
-                    <img src="{{ asset('storage/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}"
+                    <img src="{{ asset('uploads/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}"
                         class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-lg">
                 @else
                     <div

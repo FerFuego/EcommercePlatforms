@@ -17,7 +17,7 @@
                 <div class="bg-white rounded-2xl shadow-xl p-6">
                     <div class="flex items-start space-x-6">
                         @if($driver->profile_photo)
-                            <img src="{{ Storage::url($driver->profile_photo) }}" alt="{{ $driver->user->name }}"
+                            <img src="{{ asset('uploads/' . $driver->profile_photo) }}" alt="{{ $driver->user->name }}"
                                 class="w-32 h-32 object-cover rounded-full">
                         @else
                             <div
@@ -61,7 +61,7 @@
                 <div class="bg-white rounded-2xl shadow-xl p-6">
                     <h3 class="text-xl font-bold mb-4">Documento de Identidad</h3>
                     @if($driver->dni_photo)
-                        <img src="{{ Storage::url($driver->dni_photo) }}" alt="DNI"
+                        <img src="{{ asset('uploads/' . $driver->dni_photo) }}" alt="DNI"
                             class="w-full max-w-md rounded-lg shadow-lg">
                     @else
                         <p class="text-gray-600">No disponible</p>
@@ -90,7 +90,7 @@
                         </div>
                     </div>
                     @if($driver->vehicle_photo)
-                        <img src="{{ Storage::url($driver->vehicle_photo) }}" alt="Vehicle"
+                        <img src="{{ asset('uploads/' . $driver->vehicle_photo) }}" alt="Vehicle"
                             class="w-full max-w-md rounded-lg shadow-lg">
                     @endif
                 </div>

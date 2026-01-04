@@ -26,7 +26,7 @@
                 @foreach($cart as $index => $item)
                     <div class="bg-white rounded-2xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl transition-shadow">
                         @if($item['photo_url'])
-                            <img src="{{ Storage::url($item['photo_url']) }}" 
+                            <img src="{{ asset('uploads/' . $item['photo_url']) }}" 
                                  alt="{{ $item['name'] }}" 
                                  class="w-24 h-24 object-cover rounded-xl">
                         @else

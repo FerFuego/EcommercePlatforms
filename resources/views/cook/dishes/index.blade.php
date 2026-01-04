@@ -67,7 +67,7 @@
                                 <!-- Image -->
                                 <div class="relative">
                                     @if($dish->photo_url)
-                                        <img src="{{ Storage::url($dish->photo_url) }}" alt="{{ $dish->name }}"
+                                        <img src="{{ asset('uploads/' . $dish->photo_url) }}" alt="{{ $dish->name }}"
                                             class="w-full h-48 object-cover group-hover:scale-105 transition-transform">
                                     @else
                                         <div

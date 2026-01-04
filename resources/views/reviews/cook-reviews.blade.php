@@ -42,7 +42,7 @@
                         <div class="border-b border-gray-100 pb-8 last:border-0 last:pb-0">
                             <div class="flex items-start space-x-4">
                                 @if($review->customer->profile_photo_path)
-                                    <img src="{{ asset('storage/' . $review->customer->profile_photo_path) }}"
+                                    <img src="{{ asset('uploads/' . $review->customer->profile_photo_path) }}"
                                         alt="{{ $review->customer->name }}"
                                         class="w-12 h-12 rounded-full object-cover border-2 border-purple-100">
                                 @else

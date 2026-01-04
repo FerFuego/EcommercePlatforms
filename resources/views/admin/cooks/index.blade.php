@@ -38,7 +38,7 @@
                     <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-6 text-white">
                         <div class="flex items-center space-x-4">
                             @if($cook->user->profile_photo_path)
-                                <img src="{{ asset('storage/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}" class="w-16 h-16 rounded-full object-cover border-2 border-white">
+                                <img src="{{ asset('uploads/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}" class="w-16 h-16 rounded-full object-cover border-2 border-white">
                             @else
                                 <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-3xl font-bold text-purple-600">
                                     {{ strtoupper(substr($cook->user->name, 0, 1)) }}

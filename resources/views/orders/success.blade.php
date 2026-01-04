@@ -52,7 +52,7 @@
                 <!-- Cook Info -->
                 <div class="flex items-center space-x-4 p-4 bg-gradient-to-r from-orange-50 to-pink-50 rounded-xl mb-6">
                     @if($order->cook->user->profile_photo_path)
-                        <img src="{{ asset('storage/' . $order->cook->user->profile_photo_path) }}"
+                        <img src="{{ asset('uploads/' . $order->cook->user->profile_photo_path) }}"
                             alt="{{ $order->cook->user->name }}"
                             class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md">
                     @else
@@ -76,7 +76,7 @@
                         <div class="flex items-center justify-between py-3 border-b border-gray-100">
                             <div class="flex items-center space-x-3">
                                 @if($item->dish->photo_url)
-                                    <img src="{{ Storage::url($item->dish->photo_url) }}" alt="{{ $item->dish->name }}"
+                                    <img src="{{ asset('uploads/' . $item->dish->photo_url) }}" alt="{{ $item->dish->name }}"
                                         class="w-16 h-16 object-cover rounded-lg">
                                 @else
                                     <div

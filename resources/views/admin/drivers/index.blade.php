@@ -47,7 +47,7 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center space-x-3">
                                         @if($driver->profile_photo)
-                                            <img src="{{ Storage::url($driver->profile_photo) }}" alt="{{ $driver->user->name }}"
+                                            <img src="{{ asset('uploads/' . $driver->profile_photo) }}" alt="{{ $driver->user->name }}"
                                                 class="w-12 h-12 object-cover rounded-full">
                                         @else
                                             <div

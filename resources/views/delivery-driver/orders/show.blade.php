@@ -31,7 +31,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <h1 class="text-3xl font-bold">Pedido #{{ $delivery->order_id }}</h1>
                         <span class="px-4 py-2 rounded-full text-sm font-bold
-                                                 {{ $delivery->status === 'delivered' ? 'bg-green-100 text-green-800' :
+                                                     {{ $delivery->status === 'delivered' ? 'bg-green-100 text-green-800' :
         ($delivery->status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800') }}">
                             {{ match ($delivery->status) {
         'assigned' => '📋 Asignado',
@@ -83,7 +83,7 @@
                             <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
                                 <div class="flex items-center space-x-4">
                                     @if($item->dish->image)
-                                        <img src="{{ Storage::url($item->dish->image) }}" alt="{{ $item->dish->name }}"
+                                        <img src="{{ asset('uploads/' . $item->dish->image) }}" alt="{{ $item->dish->name }}"
                                             class="w-16 h-16 object-cover rounded-lg">
                                     @endif
                                     <div>

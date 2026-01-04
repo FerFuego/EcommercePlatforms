@@ -133,7 +133,7 @@
 
             <div class="relative z-10 flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-8">
                 @if($cook->user->profile_photo_path)
-                    <img src="{{ asset('storage/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}"
+                    <img src="{{ asset('uploads/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}"
                         class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-2xl">
                 @else
                     <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-6xl shadow-2xl">
@@ -192,7 +192,7 @@
                             <div
                                 class="group bg-gradient-to-br from-gray-50 to-pink-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
                                 @if($dish->photo_url)
-                                    <img src="{{ Storage::url($dish->photo_url) }}" alt="{{ $dish->name }}"
+                                    <img src="{{ asset('uploads/' . $dish->photo_url) }}" alt="{{ $dish->name }}"
                                         class="w-full h-48 object-cover group-hover:scale-110 transition-transform">
                                 @else
                                     <div
@@ -288,7 +288,7 @@
                             @foreach($cook->kitchen_photos as $index => $photo)
                                 <div class="relative group cursor-pointer overflow-hidden rounded-xl"
                                     onclick="openLightbox({{ $index }})">
-                                    <img src="{{ Storage::url($photo) }}" alt="Cocina"
+                                    <img src="{{ asset('uploads/' . $photo) }}" alt="Cocina"
                                         class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
                                     <div
                                         class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
@@ -331,7 +331,7 @@
                     </div>
 
                     <script>
-                        const photos = @json(array_map(fn($p) => Storage::url($p), $cook->kitchen_photos));
+                        const photos = @json(array_map(fn($p) => asset('uploads/' . $p), $cook->kitchen_photos));
                         let currentIndex = 0;
                         const lightbox = document.getElementById('lightbox');
                         const lightboxImg = document.getElementById('lightbox-img');
@@ -398,7 +398,7 @@
                             <div class="border-b border-gray-100 pb-6 last:border-0">
                                 <div class="flex items-start space-x-4">
                                     @if($review->customer->profile_photo_path)
-                                        <img src="{{ asset('storage/' . $review->customer->profile_photo_path) }}"
+                                        <img src="{{ asset('uploads/' . $review->customer->profile_photo_path) }}"
                                             alt="{{ $review->customer->name }}"
                                             class="w-12 h-12 rounded-full object-cover border-2 border-purple-100">
                                     @else

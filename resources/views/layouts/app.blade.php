@@ -113,7 +113,7 @@
                             <button class="flex items-center space-x-2 text-gray-700 hover:text-purple-600">
                                 @if (auth()->user()->profile_photo_path)
                                     <img class="h-10 w-10 rounded-full object-cover border-2 border-purple-200"
-                                        src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}"
+                                        src="{{ asset('uploads/' . auth()->user()->profile_photo_path) }}"
                                         alt="{{ auth()->user()->name }}" />
                                 @else
                                     <div
