@@ -90,14 +90,14 @@ class DeliveryDriverController extends Controller
         ]);
 
         // Subir fotos
-        $validated['dni_photo'] = $request->file('dni_photo')->store('delivery-drivers/dni', 'public');
+        $validated['dni_photo'] = Storage::disk('public')->putFile('delivery-drivers/dni', $request->file('dni_photo'));
 
         if ($request->hasFile('profile_photo')) {
-            $validated['profile_photo'] = $request->file('profile_photo')->store('delivery-drivers/profiles', 'public');
+            $validated['profile_photo'] = Storage::disk('public')->putFile('delivery-drivers/profiles', $request->file('profile_photo'));
         }
 
         if ($request->hasFile('vehicle_photo')) {
-            $validated['vehicle_photo'] = $request->file('vehicle_photo')->store('delivery-drivers/vehicles', 'public');
+            $validated['vehicle_photo'] = Storage::disk('public')->putFile('delivery-drivers/vehicles', $request->file('vehicle_photo'));
         }
 
         $validated['user_id'] = auth()->id();
@@ -148,14 +148,14 @@ class DeliveryDriverController extends Controller
             if ($driver->profile_photo) {
                 Storage::disk('public')->delete($driver->profile_photo);
             }
-            $validated['profile_photo'] = $request->file('profile_photo')->store('delivery-drivers/profiles', 'public');
+            $validated['profile_photo'] = Storage::disk('public')->putFile('delivery-drivers/profiles', $request->file('profile_photo'));
         }
 
         if ($request->hasFile('vehicle_photo')) {
             if ($driver->vehicle_photo) {
                 Storage::disk('public')->delete($driver->vehicle_photo);
             }
-            $validated['vehicle_photo'] = $request->file('vehicle_photo')->store('delivery-drivers/vehicles', 'public');
+            $validated['vehicle_photo'] = Storage::disk('public')->putFile('delivery-drivers/vehicles', $request->file('vehicle_photo'));
         }
 
         $driver->update($validated);

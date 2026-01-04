@@ -63,12 +63,12 @@ class CookDashboardController extends Controller
         ]);
 
         // Subir DNI
-        $dniPath = $request->file('dni_photo')->store('cooks/dni', 'public');
+        $dniPath = Storage::disk('public')->putFile('cooks/dni', $request->file('dni_photo'));
 
         // Subir fotos de cocina
         $kitchenPhotos = [];
         foreach ($request->file('kitchen_photos') as $photo) {
-            $kitchenPhotos[] = $photo->store('cooks/kitchens', 'public');
+            $kitchenPhotos[] = Storage::disk('public')->putFile('cooks/kitchens', $photo);
         }
 
         // Crear perfil de cocinero
@@ -138,7 +138,7 @@ class CookDashboardController extends Controller
         if ($request->hasFile('kitchen_photos')) {
             $kitchenPhotos = [];
             foreach ($request->file('kitchen_photos') as $photo) {
-                $kitchenPhotos[] = $photo->store('cooks/kitchens', 'public');
+                $kitchenPhotos[] = Storage::disk('public')->putFile('cooks/kitchens', $photo);
             }
             // Merge with existing photos
             $currentPhotos = $cook->kitchen_photos ?? [];

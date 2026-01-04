@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Dish;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DishController extends Controller
 {
@@ -48,7 +49,7 @@ class DishController extends Controller
         $cook = auth()->user()->cook;
 
         // Subir foto del plato
-        $photoPath = $request->file('photo')->store('dishes', 'public');
+        $photoPath = Storage::disk('public')->putFile('dishes', $request->file('photo'));
 
         $dish = $cook->dishes()->create([
             'name' => $request->name,
@@ -124,7 +125,7 @@ class DishController extends Controller
 
         // Actualizar foto si se sube una nueva
         if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('dishes', 'public');
+            $photoPath = Storage::disk('public')->putFile('dishes', $request->file('photo'));
             $dish->photo_url = $photoPath;
         }
 
