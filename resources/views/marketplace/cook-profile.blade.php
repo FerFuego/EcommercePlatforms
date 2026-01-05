@@ -247,7 +247,11 @@
                                     @if($dish->available_stock > 0 && $dish->is_active)
                                         @if($dish->optionGroups->count() > 0)
                                             <button type="button" 
-                                                onclick="openCustomizationModal({{ json_encode($dish) }}, {{ json_encode($dish->optionGroups->load('options')) }})"
+                                                @auth
+                                                    onclick="openCustomizationModal({{ json_encode($dish) }}, {{ json_encode($dish->optionGroups->load('options')) }})"
+                                                @else
+                                                    onclick="showLoginModal()"
+                                                @endauth
                                                 class="w-full flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center">
                                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
@@ -255,18 +259,25 @@
                                                 Personalizar y Ordenar
                                             </button>
                                         @else
-                                            <form action="{{ route('cart.add', $dish->id) }}" method="POST">
-                                                @csrf
-                                                <div class="flex items-center space-x-2">
-                                                    <input type="number" name="quantity" value="1" min="1"
-                                                        max="{{ $dish->available_stock }}"
-                                                        class="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-purple-500">
-                                                    <button type="submit"
-                                                        class="flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
-                                                        Ordenar
-                                                    </button>
-                                                </div>
-                                            </form>
+                                            @auth
+                                                <form action="{{ route('cart.add', $dish->id) }}" method="POST">
+                                                    @csrf
+                                                    <div class="flex items-center space-x-2">
+                                                        <input type="number" name="quantity" value="1" min="1"
+                                                            max="{{ $dish->available_stock }}"
+                                                            class="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-purple-500">
+                                                        <button type="submit"
+                                                            class="flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
+                                                            Ordenar
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            @else
+                                                <button type="button" onclick="showLoginModal()"
+                                                    class="w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
+                                                    Ordenar
+                                                </button>
+                                            @endauth
                                         @endif
                                     @endif
                                 </div>

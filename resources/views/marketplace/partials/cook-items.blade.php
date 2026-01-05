@@ -80,11 +80,25 @@
                 </div>
             @endif
 
-            <!-- Action Button -->
-            <a href="{{ route('marketplace.cook.profile', $cook) }}"
-                class="block w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-3 rounded-xl font-semibold text-center hover:shadow-lg transform hover:scale-105 transition-all">
-                Ver Menú Completo
-            </a>
+            <!-- Action Buttons -->
+            <div class="flex flex-col space-y-2">
+                <a href="{{ route('marketplace.cook.profile', $cook) }}"
+                    class="block w-full bg-gray-50 text-gray-700 px-4 py-3 rounded-xl font-semibold text-center hover:bg-gray-100 transition-all border-2 border-gray-100">
+                    Ver Menú Completo
+                </a>
+
+                @guest
+                    <button type="button" onclick="showLoginModal()"
+                        class="block w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-3 rounded-xl font-semibold text-center hover:shadow-lg transform hover:scale-105 transition-all">
+                        Ordenar Ahora
+                    </button>
+                @else
+                    <a href="{{ route('marketplace.cook.profile', $cook) }}"
+                        class="block w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-3 rounded-xl font-semibold text-center hover:shadow-lg transform hover:scale-105 transition-all">
+                        Ordenar Ahora
+                    </a>
+                @endguest
+            </div>
         </div>
     </div>
 @endforeach

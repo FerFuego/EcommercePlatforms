@@ -433,6 +433,65 @@
     @stack('scripts')
 
     @include('partials.chatbot')
+
+    <!-- Login Required Modal -->
+    <div id="login-required-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity duration-300"
+            onclick="hideLoginModal()"></div>
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden transform transition-all duration-300 scale-95 opacity-0"
+            id="login-modal-content">
+            <div class="p-8 text-center">
+                <!-- Logo -->
+                <div class="mb-6 flex justify-center">
+                    <img src="{{ asset('assets/front/logo-8.webp') }}" alt="Cocinarte" class="h-20 w-auto">
+                </div>
+
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">¡Casi listo para ordenar!</h3>
+                <p class="text-gray-600 mb-8">Para disfrutar de los mejores sabores caseros, primero debes ingresar a tu
+                    cuenta o registrarte.</p>
+
+                <div class="space-y-3">
+                    <a href="{{ route('login') }}"
+                        class="block w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">
+                        Ingresar
+                    </a>
+                    <a href="{{ route('register') }}"
+                        class="block w-full bg-gray-50 text-gray-700 py-4 rounded-2xl font-bold text-lg border-2 border-gray-100 hover:bg-gray-100 transition-all">
+                        Crear una Cuenta
+                    </a>
+                </div>
+
+                <button onclick="hideLoginModal()"
+                    class="mt-6 text-sm text-gray-400 hover:text-gray-600 font-medium transition-colors">
+                    Quizás más tarde
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLoginModal() {
+            const modal = document.getElementById('login-required-modal');
+            const content = document.getElementById('login-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideLoginModal() {
+            const modal = document.getElementById('login-required-modal');
+            const content = document.getElementById('login-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+    </script>
 </body>
 
 </html>
