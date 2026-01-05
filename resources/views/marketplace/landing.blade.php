@@ -225,7 +225,7 @@
                             </div>
                             <div>
                                 <h4 class="font-bold text-lg">Comisión Baja</h4>
-                                <p class="text-gray-600">Solo 12% por venta, tú te quedas con el resto</p>
+                                <p class="text-gray-600">Solo {{ $globalSettings['commission_rate'] ?? 15 }}% por venta, tú te quedas con el resto</p>
                             </div>
                         </div>
 
@@ -511,7 +511,7 @@
                         </div>
                         <div>
                             <h3 class="font-bold text-lg text-gray-800 mb-2">¿Cómo funcionan las comisiones?</h3>
-                            <p class="text-gray-600">Cocinarte cobra una comisión del <strong>12%</strong> sobre el valor
+                            <p class="text-gray-600">Cocinarte cobra una comisión del <strong>{{ $globalSettings['commission_rate'] ?? 15 }}%</strong> sobre el valor
                                 total de cada venta realizada. Esta comisión cubre los costos de procesamiento de pagos,
                                 mantenimiento de la plataforma y publicidad para traerte más clientes.</p>
                         </div>

@@ -205,7 +205,7 @@
                         @error('payment_details')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
-                        <p class="text-xs text-gray-500 mt-1">Recibirás tus pagos automáticamente en esta cuenta (menos 12%
+                        <p class="text-xs text-gray-500 mt-1">Recibirás tus pagos automáticamente en esta cuenta (menos {{ $globalSettings['commission_rate'] ?? 15 }}%
                             de comisión)</p>
                     </div>
                 </div>
