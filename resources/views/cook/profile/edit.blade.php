@@ -339,6 +339,29 @@
             function updateInputs(lat, lng) {
                 document.getElementById('location_lat').value = lat.toFixed(4);
                 document.getElementById('location_lng').value = lng.toFixed(4);
+                
+                // Reverse Geocoding con Nominatim
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.display_name) {
+                            const addr = data.address;
+                            let cleanAddress = '';
+                            
+                            if (addr.road) {
+                                cleanAddress = addr.road;
+                                if (addr.house_number) cleanAddress += ' ' + addr.house_number;
+                                if (addr.city || addr.town || addr.village) {
+                                    cleanAddress += ', ' + (addr.city || addr.town || addr.village);
+                                }
+                            } else {
+                                cleanAddress = data.display_name;
+                            }
+                            
+                            document.querySelector('[name="address"]').value = cleanAddress;
+                        }
+                    })
+                    .catch(error => console.error('Error in reverse geocoding:', error));
             }
 
             function detectLocation() {

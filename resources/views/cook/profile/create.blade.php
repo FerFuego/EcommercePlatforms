@@ -66,7 +66,8 @@
                 <div class="space-y-6">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Dirección de la Cocina *</label>
-                        <input type="text" name="address" required value="{{ old('address', auth()->user()->address) }}"
+                        <input type="text" name="address" id="address" required
+                            value="{{ old('address', auth()->user()->address) }}"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition"
                             placeholder="Ej: Av. Principal 123, Bell Ville">
                         @error('address')
@@ -75,14 +76,25 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <input type="hidden" name="location_lat" value="{{ old('location_lat') }}">
-                        <input type="hidden" name="location_lng" value="{{ old('location_lng') }}">
+                        <input type="hidden" name="location_lat" id="location_lat" value="{{ old('location_lat') }}">
+                        <input type="hidden" name="location_lng" id="location_lng" value="{{ old('location_lng') }}">
                     </div>
 
+                    <div id="map" class="h-[300px] w-full rounded-xl shadow-md border-2 border-gray-100 z-0"></div>
+
                     <button type="button" onclick="detectLocation()"
-                        class="bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition">
-                        📍 Detectar Mi Ubicación Automáticamente
+                        class="w-full bg-blue-50 text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-blue-100 transition flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        📍 Detectar Mi Ubicación y Dirección
                     </button>
+                    <p class="text-xs text-gray-500 text-center">Arrastra el marcador en el mapa para ajustar tu ubicación
+                        exacta</p>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
@@ -234,19 +246,96 @@
 
     @push('scripts')
         <script>
+            let map, marker;
+
+            function initMap() {
+                // Posición inicial: Bell Ville, Córdoba (o una por defecto)
+                const defaultLat = -32.6471;
+                const defaultLng = -63.0347;
+
+                const lat = parseFloat(document.getElementById('location_lat').value) || defaultLat;
+                const lng = parseFloat(document.getElementById('location_lng').value) || defaultLng;
+
+                map = L.map('map').setView([lat, lng], 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                marker = L.marker([lat, lng], {
+                    draggable: true
+                }).addTo(map);
+
+                marker.on('dragend', function (event) {
+                    const position = marker.getLatLng();
+                    updateLocationData(position.lat, position.lng);
+                });
+
+                map.on('click', function (e) {
+                    marker.setLatLng(e.latlng);
+                    updateLocationData(e.latlng.lat, e.latlng.lng);
+                });
+            }
+
+            function updateLocationData(lat, lng) {
+                document.getElementById('location_lat').value = lat.toFixed(4);
+                document.getElementById('location_lng').value = lng.toFixed(4);
+
+                // Reverse Geocoding con Nominatim
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.display_name) {
+                            // Intentamos obtener una dirección más limpia (Calle y Número si están disponibles)
+                            const addr = data.address;
+                            let cleanAddress = '';
+
+                            if (addr.road) {
+                                cleanAddress = addr.road;
+                                if (addr.house_number) cleanAddress += ' ' + addr.house_number;
+                                if (addr.city || addr.town || addr.village) {
+                                    cleanAddress += ', ' + (addr.city || addr.town || addr.village);
+                                }
+                            } else {
+                                cleanAddress = data.display_name;
+                            }
+
+                            document.getElementById('address').value = cleanAddress;
+                        }
+                    })
+                    .catch(error => console.error('Error in reverse geocoding:', error));
+            }
+
             function detectLocation() {
                 if (navigator.geolocation) {
+                    const btn = event.currentTarget;
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '⌛ Detectando...';
+                    btn.disabled = true;
+
                     navigator.geolocation.getCurrentPosition(position => {
-                        document.querySelector('[name="location_lat"]').value = position.coords.latitude.toFixed(4);
-                        document.querySelector('[name="location_lng"]').value = position.coords.longitude.toFixed(4);
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        marker.setLatLng([lat, lng]);
+                        map.setView([lat, lng], 16);
+                        updateLocationData(lat, lng);
+
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
                         alert('✅ Ubicación detectada correctamente');
                     }, error => {
-                        alert('❌ No se pudo detectar la ubicación. Por favor ingresa las coordenadas manualmente.');
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        alert('❌ No se pudo detectar la ubicación. Por favor selecciona tu posición en el mapa.');
                     });
                 } else {
                     alert('❌ Tu navegador no soporta geolocalización');
                 }
             }
+
+            // Inicializar mapa al cargar el DOM
+            document.addEventListener('DOMContentLoaded', initMap);
         </script>
     @endpush
 
