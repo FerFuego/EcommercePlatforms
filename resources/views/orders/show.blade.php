@@ -47,7 +47,7 @@
                 <!-- Main Content -->
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Review Section -->
-                    @if($order->status === 'delivered')
+                    @if($order->status === 'delivered' && auth()->user() && auth()->user()->isCustomer())
                         @if(!$order->review)
                             <div
                                 class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl shadow-lg p-6 border border-purple-100">
@@ -300,11 +300,11 @@
                             </h3>
                             <p class="text-gray-700 font-medium">
                                 {{ match ($order->payment_method) {
-        'mercadopago' => 'MercadoPago',
-        'cash' => 'Efectivo',
-        'transfer' => 'Transferencia Bancaria',
-        default => $order->payment_method
-    } }}
+                                    'mercadopago' => 'MercadoPago',
+                                    'cash' => 'Efectivo',
+                                    'transfer' => 'Transferencia Bancaria',
+                                    default => $order->payment_method
+                                } }}
                             </p>
                             <p class="text-sm text-gray-500 mt-1">
                                 Total: ${{ number_format($order->total_amount, 0) }}
@@ -418,20 +418,23 @@
                         </div>
                     </div>
 
-                    <div class="w-full justify-center">
-                        <form action="{{ route('orders.reorder', $order->id) }}" method="POST" class="w-full">
-                            @csrf
-                            <button type="submit"
-                                class="bg-gradient-to-r from-green-500 to-teal-600 text-white text-center px-8 py-3 rounded-xl font-bold hover:shadow-xl transition shadow-md flex items-center justify-center w-full">
-                                <span class="mr-2">+</span> Volver a Pedir
-                            </button>
-                        </form>
-                        
-                        <a href="{{ route('orders.my') }}"
-                            class="block w-full bg-gradient-to-r from-gray-500 to-gray-600 text-white mt-2 px-6 py-3 rounded-xl font-semibold text-center shadow-lg hover:shadow-xl transition-all">
-                            ← Volver a Mis Pedidos
-                        </a>
-                    </div>
+                    @if (auth()->user() && auth()->user()->isCustomer())
+                        <div class="w-full justify-center">
+                            <form action="{{ route('orders.reorder', $order->id) }}" method="POST" class="w-full">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-gradient-to-r from-green-500 to-teal-600 text-white text-center px-8 py-3 rounded-xl font-bold hover:shadow-xl transition shadow-md flex items-center justify-center w-full">
+                                    <span class="mr-2">+</span> Volver a Pedir
+                                </button>
+                            </form>
+                            
+                            <a href="{{ route('orders.my') }}"
+                                class="block w-full bg-gradient-to-r from-gray-500 to-gray-600 text-white mt-2 px-6 py-3 rounded-xl font-semibold text-center shadow-lg hover:shadow-xl transition-all">
+                                ← Volver a Mis Pedidos
+                            </a>
+                        </div>
+                    @endif
+
 
                 </div>
             </div>
