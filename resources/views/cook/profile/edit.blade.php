@@ -7,6 +7,21 @@
         <div class="flex items-center justify-between mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Editar Perfil</h1>
         </div>
+        @if ($errors->any())
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8 rounded-r-xl shadow-md" role="alert">
+                <div class="flex items-center mb-2">
+                    <svg class="h-5 w-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="font-bold">Hubo algunos problemas con la actualización:</p>
+                </div>
+                <ul class="list-disc list-inside text-sm">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         @if(auth()->user()->is_suspended)
             <div class="bg-red-500 text-white px-6 py-4 rounded-2xl shadow-lg mb-8">
@@ -92,6 +107,9 @@
                             <input type="time" name="opening_time"
                                 value="{{ old('opening_time', $cook->opening_time ? \Carbon\Carbon::parse($cook->opening_time)->format('H:i') : '') }}"
                                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition">
+                            @error('opening_time')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div>
@@ -99,6 +117,9 @@
                             <input type="time" name="closing_time"
                                 value="{{ old('closing_time', $cook->closing_time ? \Carbon\Carbon::parse($cook->closing_time)->format('H:i') : '') }}"
                                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition">
+                            @error('closing_time')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="flex items-center pt-6">
@@ -115,24 +136,20 @@
                         </div>
                     </div>
 
-                    <!-- Location Map -->
                     <div class="border-t border-gray-100 pt-6">
                         <label class="block text-sm font-semibold text-gray-700 mb-4">Ubicación de la Cocina</label>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="text-xs text-gray-500">Latitud</label>
-                                <input type="text" name="location_lat" id="location_lat"
-                                    value="{{ old('location_lat', $cook->location_lat) }}" readonly
-                                    class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm">
-                            </div>
-                            <div>
-                                <label class="text-xs text-gray-500">Longitud</label>
-                                <input type="text" name="location_lng" id="location_lng"
-                                    value="{{ old('location_lng', $cook->location_lng) }}" readonly
-                                    class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm">
-                            </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Dirección de la Cocina *</label>
+                            <input type="text" name="address" required value="{{ old('address', $cook->user->address) }}"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition">
+                            @error('address')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
+
+                        <input type="hidden" name="location_lat" id="location_lat" value="{{ old('location_lat', $cook->location_lat) }}">
+                        <input type="hidden" name="location_lng" id="location_lng" value="{{ old('location_lng', $cook->location_lng) }}">
 
                         <div id="map" class="h-[300px] w-full rounded-xl shadow-md mb-4 z-0"></div>
 

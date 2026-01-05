@@ -53,13 +53,14 @@ class CookDashboardController extends Controller
             'dni_photo' => 'required|image|max:2048',
             'kitchen_photos' => 'required|array|min:3|max:5',
             'kitchen_photos.*' => 'image|max:2048',
-            'address' => 'required|string',
-            'location_lat' => 'required|numeric',
-            'location_lng' => 'required|numeric',
+            'location_lat' => 'nullable|numeric',
+            'location_lng' => 'nullable|numeric',
+            'address' => 'required|string|max:255',
             'coverage_radius_km' => 'required|numeric|min:1|max:50',
-            'payout_method' => 'required|string',
-            'payout_details' => 'required|array',
-            'food_handler_declaration' => 'accepted',
+            'payment_details' => 'required|string',
+            'opening_time' => 'nullable|date_format:H:i',
+            'closing_time' => 'nullable|date_format:H:i',
+            'terms' => 'accepted',
         ]);
 
         // Subir DNI
@@ -71,6 +72,9 @@ class CookDashboardController extends Controller
             $kitchenPhotos[] = Storage::disk('uploads')->putFile('cooks/kitchens', $photo);
         }
 
+        // Actualizar dirección en el usuario
+        auth()->user()->update(['address' => $request->address]);
+
         // Crear perfil de cocinero
         $cook = Cook::create([
             'user_id' => auth()->id(),
@@ -80,8 +84,10 @@ class CookDashboardController extends Controller
             'location_lat' => $request->location_lat,
             'location_lng' => $request->location_lng,
             'coverage_radius_km' => $request->coverage_radius_km,
-            'payout_method' => $request->payout_method,
-            'payout_details' => $request->payout_details,
+            'payout_method' => 'CBU/Alias',
+            'payout_details' => ['identifier' => $request->payment_details],
+            'opening_time' => $request->opening_time,
+            'closing_time' => $request->closing_time,
             'food_handler_declaration' => true,
             'is_approved' => false, // Requiere aprobación de admin
             'active' => false,
@@ -117,8 +123,9 @@ class CookDashboardController extends Controller
             'kitchen_photos' => 'nullable|array|max:5',
             'kitchen_photos.*' => 'image|max:2048',
             'coverage_radius_km' => 'required|numeric|min:1|max:50',
-            'location_lat' => 'required|numeric',
-            'location_lng' => 'required|numeric',
+            'location_lat' => 'nullable|numeric',
+            'location_lng' => 'nullable|numeric',
+            'address' => 'required|string|max:255',
             'active' => 'boolean',
             'opening_time' => 'nullable|date_format:H:i',
             'closing_time' => 'nullable|date_format:H:i',
@@ -146,6 +153,9 @@ class CookDashboardController extends Controller
         }
 
         $cook->update($data);
+
+        // Actualizar dirección en el usuario
+        auth()->user()->update(['address' => $request->address]);
 
         return back()->with('success', 'Perfil actualizado exitosamente');
     }
