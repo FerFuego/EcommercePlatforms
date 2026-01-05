@@ -40,9 +40,10 @@ return [
 
         'uploads' => [
             'driver' => 'local',
-            'root' => public_path('uploads'),
+            'root' => is_dir(base_path('../uploads')) ? base_path('../uploads') : public_path('uploads'),
             'url' => env('APP_URL') . '/uploads',
             'visibility' => 'public',
+            'throw' => false,
         ],
 
 
