@@ -37,8 +37,7 @@
 <body class="bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 min-h-screen">
 
     <!-- Navbar -->
-    <nav
-        class="bg-white/90 backdrop-blur-lg shadow-lg sticky top-0 z-50 border-b-2 border-gradient-to-r from-orange-400 via-pink-500 to-purple-600">
+    <nav class="bg-white/90 backdrop-blur-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
