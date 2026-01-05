@@ -205,8 +205,8 @@
                         photo_path: '{{ $cook->user->profile_photo_path }}'
                     });
                 @endforeach
-                // Intentar tomar ubicación real del usuario al cargar
-                    if (navigator.geolocation) {
+                        // Intentar tomar ubicación real del usuario al cargar
+                            if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
                             const lat = position.coords.latitude;
@@ -238,7 +238,7 @@
             function addCookToMap(cook) {
 
                 // filtrar por radio (evito cocineros, fuera del radio)
-                const radiusKm = parseInt(document.getElementById("radiusSelect").value);
+                const radiusKm = parseFloat(document.getElementById("radiusSelect").value);
                 if (userLocation) {
                     const dist = calculateDistance(userLocation.lat, userLocation.lng, cook.lat, cook.lng);
                     if (dist > radiusKm) return; // fuera del radio -> no agregar marker
@@ -253,7 +253,7 @@
 
                 let imageHtml = '';
                 if (cook.photo_path) {
-                    imageHtml = `<img src="/storage/${cook.photo_path}" class="w-16 h-16 rounded-full object-cover mx-auto mb-2 border-2 border-orange-500 shadow-sm">`;
+                    imageHtml = `<img src="/uploads/${cook.photo_path}" class="w-16 h-16 rounded-full object-cover mx-auto mb-2 border-2 border-orange-500 shadow-sm">`;
                 } else {
                     imageHtml = `<div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2 border-2 border-orange-500 text-orange-600 font-bold text-xl shadow-sm">${cook.name.charAt(0).toUpperCase()}</div>`;
                 }
@@ -274,10 +274,10 @@
                 const userIcon = L.divIcon({
                     className: 'user-marker',
                     html: `<div class="bg-blue-500 w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-4 border-white animate-pulse">
-                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
-                        </svg>
-                    </div>`,
+                                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>`,
                     iconSize: [32, 32]
                 });
 
@@ -411,16 +411,9 @@
                 });
             }
 
-            // Calculate distance using Haversine formula
+            // Calculate distance using Leaflet's accurate method
             function calculateDistance(lat1, lon1, lat2, lon2) {
-                const R = 6371; // Earth radius in km
-                const dLat = (lat2 - lat1) * Math.PI / 180;
-                const dLon = (lon2 - lon1) * Math.PI / 180;
-                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                return R * c;
+                return map.distance([lat1, lon1], [lat2, lon2]) / 1000;
             }
 
             // Calculate delivery fee based on distance
@@ -508,23 +501,11 @@
                             document.getElementById('cooksContainer').insertAdjacentHTML('beforeend', data.html);
                         }
 
-                        // Update Map (only on filter change/replace)
-                        if (replace && data.mapCooks) {
-                            updateMapMarkers(data.mapCooks);
-                        }
-
-                        // Update URL history (only on replace, to keep filter state)
-                        if (replace) {
-                            window.history.pushState({}, '', url);
-                        }
-
-                        // Handle expanded radius
+                        // Handle expanded radius (Move this BEFORE updateMapMarkers so filtering uses new radius)
                         if (data.expandedRadius) {
-                            // Update UI
                             const radiusSelect = document.getElementById('radiusSelect');
                             const radiusInput = document.getElementById('radiusInput');
 
-                            // Add 50km option if not exists
                             if (!radiusSelect.querySelector('option[value="50"]')) {
                                 const option = document.createElement('option');
                                 option.value = "50";
@@ -535,8 +516,17 @@
                             radiusSelect.value = data.newRadius;
                             radiusInput.value = data.newRadius;
 
-                            // Show notification
-                            showToast(`No encontramos cocineros en ${getUrlParameter('radius') || 10}km. Ampliamos la búsqueda a 50km.`);
+                            // 🔥 Redibujar el círculo del usuario con el nuevo radio
+                            if (userLocation) {
+                                showUserLocation(userLocation.lat, userLocation.lng);
+                            }
+                            
+                            showToast(`No encontramos cocineros en el radio seleccionado. Ampliamos la búsqueda a 50km.`);
+                        }
+
+                        // Update Map (only on filter change/replace)
+                        if (replace && data.mapCooks) {
+                            updateMapMarkers(data.mapCooks);
                         }
 
                         // Update distances for new cards
@@ -582,7 +572,7 @@
                 cookMarkers.forEach(({ marker }) => map.removeLayer(marker));
                 cookMarkers = [];
 
-                const radiusKm = parseInt(document.getElementById("radiusSelect").value);
+                const radiusKm = parseFloat(document.getElementById("radiusSelect").value);
 
                 cooks.forEach(cook => {
 
@@ -620,7 +610,7 @@
                 @if(isset($expandedRadius) && $expandedRadius)
                     showToast('No encontramos cocineros en el radio seleccionado. Ampliamos la búsqueda a 50km.');
                 @endif
-                });
+                        });
             // Reinit radius on radius change
             document.getElementById('radiusSelect').addEventListener('change', function () {
                 const radius = this.value;

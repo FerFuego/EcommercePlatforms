@@ -90,11 +90,10 @@ class Cook extends Model
                      * sin(radians(location_lat))))";
 
         return $query
-            ->selectRaw("*, {$haversine} AS distance")
             ->whereRaw("{$haversine} < ?", [$radius])
             ->where('is_approved', true)
             ->where('active', true)
-            ->orderBy('distance');
+            ->orderByRaw("{$haversine} ASC");
     }
 
     /**
