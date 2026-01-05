@@ -189,9 +189,8 @@
                 map = L.map('map').setView([defaultLat, defaultLng], 16);
                 map.setMaxZoom(20);
 
-                L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; Stadia Maps &copy; OpenMapTiles &copy; OpenStreetMap contributors',
-                    maxZoom: 20
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
 
                 // Add cooks to map (Using mapCooks variable which contains ALL matching cooks, not just paginated ones)
@@ -206,8 +205,8 @@
                         photo_path: '{{ $cook->user->profile_photo_path }}'
                     });
                 @endforeach
-                                                                                                                                            // Intentar tomar ubicación real del usuario al cargar
-                                                                                                                                                if (navigator.geolocation) {
+                // Intentar tomar ubicación real del usuario al cargar
+                    if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
                             const lat = position.coords.latitude;
@@ -275,10 +274,10 @@
                 const userIcon = L.divIcon({
                     className: 'user-marker',
                     html: `<div class="bg-blue-500 w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-4 border-white animate-pulse">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </svg>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>`,
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>`,
                     iconSize: [32, 32]
                 });
 
@@ -621,7 +620,7 @@
                 @if(isset($expandedRadius) && $expandedRadius)
                     showToast('No encontramos cocineros en el radio seleccionado. Ampliamos la búsqueda a 50km.');
                 @endif
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    });
+                });
             // Reinit radius on radius change
             document.getElementById('radiusSelect').addEventListener('change', function () {
                 const radius = this.value;
