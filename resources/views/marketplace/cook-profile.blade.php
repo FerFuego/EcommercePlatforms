@@ -141,7 +141,21 @@
                     </div>
                 @endif
                 <div class="text-white">
-                    <h1 class="text-4xl font-bold mb-2">{{ $cook->user->name }}</h1>
+                    <div class="flex items-center gap-4 mb-2">
+                        <h1 class="text-4xl font-bold">{{ $cook->user->name }}</h1>
+                        @auth
+                            @if(auth()->user()->isCustomer())
+                                <button onclick="toggleFavorite(event, {{ $cook->id }})" 
+                                    id="fav-btn-{{ $cook->id }}"
+                                    class="p-2 rounded-full bg-white/20 hover:bg-white/40 transition-all backdrop-blur-sm group">
+                                    <svg id="heart-icon-{{ $cook->id }}" class="w-6 h-6 transition-colors {{ auth()->user()->isFavorite($cook->id) ? 'text-red-500 fill-current' : 'text-white fill-none group-hover:text-red-200' }}" 
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                                    </svg>
+                                </button>
+                            @endif
+                        @endauth
+                    </div>
                     <div class="flex items-center space-x-4 mb-3">
                         <div class="flex items-center">
                             @for($i = 0; $i < 5; $i++)

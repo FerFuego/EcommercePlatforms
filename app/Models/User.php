@@ -125,4 +125,21 @@ class User extends Authenticatable
     {
         return $this->role === 'delivery_driver';
     }
+
+    /**
+     * Relación con Cocineros Favoritos
+     */
+    public function favoriteCooks(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Cook::class, 'favorite_cooks')
+            ->withTimestamps();
+    }
+
+    /**
+     * Verificar si un cocinero es favorito
+     */
+    public function isFavorite(int $cookId): bool
+    {
+        return $this->favoriteCooks()->where('cook_id', $cookId)->exists();
+    }
 }
