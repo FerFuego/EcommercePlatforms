@@ -4,11 +4,25 @@
 
 @section('content')
     <div class="container mx-auto px-4 py-12">
-        <h1 class="text-4xl font-bold mb-8">
-            <span class="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
-                Mis Pedidos
-            </span>
-        </h1>
+        <!-- Header -->
+        <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-4xl font-bold mb-2">
+                    <span class="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
+                        Mis Pedidos
+                    </span>
+                </h1>
+                <p class="text-gray-600">Historial de tus pedidos</p>
+            </div>
+            <a href="{{ route('marketplace.catalog') }}"
+                class="inline-flex items-center text-purple-600 font-semibold hover:text-purple-700 transition">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Volver al Explorador
+            </a>
+        </div>
 
         @if($orders->count() > 0)
             <div class="space-y-6">

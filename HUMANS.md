@@ -21,6 +21,10 @@
  Crear migración de tabla orders (pedidos con estados)
  Crear migración de tabla order_items (items dentro de pedidos)
  Crear migración de tabla reviews (reseñas)
+  Crear migración de tabla order_logs (logs de eventos)
+  Crear migración de tabla favorite_cooks (pivot para favoritos) [NEW]
+  Agregar campos de programación a dishes y cooks [NEW]
+  Agregar campo notes a orders [NEW]
  Crear migración de tabla delivery_assignments (opcional post-MVP)
 
 ## Fase 4: Modelos y Relaciones
@@ -157,10 +161,14 @@ Checkout
 Pago (MercadoPago)
    ↓
 ¿Pago OK?
-   ├─ NO → Error / Reintentar
-   └─ SÍ → Pedido generado
-   ↓
-Notificación al cocinero
+    ├─ NO → Error / Reintentar
+    └─ SÍ → Pedido generado
+    ↓
+¿Tipo de pedido?
+    ├─ Inmediato → Flujo normal
+    └─ Programado → Validar horas cocinero + stock porción diaria
+    ↓
+    Notificación al cocinero
    ↓
 Cocinero acepta / rechaza
    ├─ Rechaza → Notificar cliente / devolución
@@ -305,6 +313,8 @@ delivered
 
 cancelled
 
+scheduled [NEW]
+
 
 
 # Diagrama de Tablas
@@ -318,9 +328,17 @@ cancelled
            │ password_hash        │
            │ role                 │
            │ phone                │
-           │ address              │
-           └─────────┬────────────┘
-                     │ 1–1
+            │ address              │
+            └─────────┬────────────┘
+                      │ 1–N
+                      │
+            ┌─────────▼───────────┐
+            │   FAVORITE_COOKS    │
+            │─────────────────────│
+            │ user_id FK          │
+            │ cook_id FK          │
+            └─────────────────────┘
+                     │ N–1
                      │
            ┌─────────▼───────────┐
            │        COOKS        │
@@ -331,8 +349,9 @@ cancelled
            │ rating_avg          │
            │ rating_count        │
            │ location_lat        │
-           │ location_lng        │
-           └─────────┬───────────┘
+            │ location_lng        │
+            │ max_scheduled_portions_per_day │ [NEW]
+            └─────────┬───────────┘
                      │ 1–N
                      │
            ┌─────────▼───────────┐
@@ -344,8 +363,9 @@ cancelled
            │ description          │
            │ price                │
            │ photo_url            │
-           │ available_stock      │
-           └─────────┬────────────┘
+            │ available_stock      │
+            │ is_schedulable      │ [NEW]
+            └─────────┬────────────┘
                      │ 1–N
                      │
            ┌─────────▼───────────┐
@@ -368,9 +388,11 @@ cancelled
            │ status               │
            │ delivery_type        │
            │ delivery_address     │
-           │ total_amount         │
-           │ payment_id           │
-           └─────────┬────────────┘
+            │ total_amount         │
+            │ payment_id           │
+            │ scheduled_time       │ [NEW]
+            │ notes (text)         │ [NEW]
+            └─────────┬────────────┘
                      │ 1–1
                      │
            ┌─────────▼───────────┐
@@ -383,6 +405,18 @@ cancelled
            │ rating               │
            │ comment              │
            └──────────────────────┘
+
+            ┌──────────────────────┐
+            │      ORDER_LOGS      │
+            │──────────────────────│
+            │ id PK                │
+            │ order_id FK          │
+            │ user_id FK           │
+            │ status               │
+            │ event                │
+            │ description          │
+            │ metadata (json)      │
+            └──────────────────────┘
 
             OPTIONAL DELIVERY MODULE
 
@@ -431,7 +465,10 @@ cancelled
 5. ReviewController
 - store() - Crear review
 - cookReviews() - Ver reviews de un cocinero
-6. AdminController
+6. FavoriteController ⭐ [NEW]
+- index() - Lista de cocineros favoritos del cliente
+- toggle() - Alternar favorito (AJAX)
+7. AdminController
 - index() - Dashboard con métricas
 - pendingCooks() - Cocineros pendientes
 - showCook() - Ver solicitud
@@ -446,6 +483,12 @@ Cart badge con contador
 User dropdown menu
 Flash messages con gradientes
 Footer oscuro con gradientes
+6. Toasts & Notifications [NEW]
+- Sistema de Toasts flotantes para feedback inmediato (Carrito, Favoritos).
+- Animaciones de entrada/salida fluida.
+7. Navigation Enhancements [NEW]
+- Enlaces rápidos a "Favoritos" en Navbar y Dropdown.
+- Botones de "Volver al Explorador" en Vistas de Pedidos y Favoritos.
 2. marketplace/landing.blade.php
 Hero section con grid de platos animados
 Stats (150+ cocineros, 2,500+ pedidos)
@@ -544,6 +587,7 @@ assigned_to_delivery - Asignado a delivery
 on_the_way - En camino
 delivered - Entregado
 cancelled - Cancelado
+scheduled - Programado (aceptado por cocinero para fecha futura)
 ⚠️ Advertencias del Linter (No críticas)
 Hay un warning de tipo estático en Order::calculateCommission() relacionado con la conversión de float a decimal. Esto es un falso positivo - Laravel maneja automáticamente la conversión a través del sistema de casts definido en el modelo. El código funciona correctamente en runtime.
 
@@ -568,3 +612,33 @@ Próximo hito: Crear vistas frontend con Blade templates y Leaflet.js para mapas
 BACKEND 100% FUNCIONAL ✅
 Solo faltan las vistas frontend para tener una aplicación completamente usable.
 
+
+
+# FEATURES DE SUSCRIPCIONES
+
+Plan FREE
+
+- Publicar platos
+- Recibir pedidos
+- Reviews básicas
+
+Plan PREMIUM
+
+- Panel de ventas
+- Posicionamiento destacado + badge “Cocinero Premium”
+- Notificaciones a clientes
+
+---
+# SISTEMA DE FAVORITOS [NEW]
+- **Mecanismo**: Toggle AJAX con icono de corazón.
+- **Feedback**: Toast notification ("¡Agregado!") + Cambio de color (Rojo/Lleno).
+- **Consistencia**: El estado se sincroniza en catálogo y perfil del cocinero.
+
+# SISTEMA DE PEDIDOS PROGRAMADOS [NEW]
+- **Validaciones**:
+    - Horarios de atención: Se valida que la hora este entre `opening_time` y `closing_time`.
+    - Aptitud del plato: El plato debe tener `is_schedulable = true`.
+    - Capacidad diaria: Valida que no se supere `max_scheduled_portions_per_day`.
+- **Flujo**:
+    - Una vez aceptado por el cocinero, el pedido pasa a estado `scheduled`.
+    - Notifica al cliente mediante `OrderStatusUpdated` event.
