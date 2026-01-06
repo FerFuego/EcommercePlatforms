@@ -23,12 +23,13 @@ class CookDashboardController extends Controller
         // Estadísticas
         $totalOrders = $cook->orders()->count();
         $pendingOrders = $cook->orders()->where('status', 'awaiting_cook_acceptance')->count();
+        $scheduledOrders = $cook->orders()->where('status', 'scheduled')->count();
         $todayOrders = $cook->orders()->whereDate('created_at', today())->count();
         $totalRevenue = $cook->orders()
             ->where('status', 'delivered')
             ->sum('subtotal');
 
-        return view('cook.dashboard', compact('cook', 'totalOrders', 'pendingOrders', 'todayOrders', 'totalRevenue'));
+        return view('cook.dashboard', compact('cook', 'totalOrders', 'pendingOrders', 'scheduledOrders', 'todayOrders', 'totalRevenue'));
     }
 
     /**
@@ -129,6 +130,7 @@ class CookDashboardController extends Controller
             'active' => 'boolean',
             'opening_time' => 'nullable|date_format:H:i',
             'closing_time' => 'nullable|date_format:H:i',
+            'max_scheduled_portions_per_day' => 'nullable|integer|min:1',
         ]);
 
         $data = [
@@ -139,6 +141,7 @@ class CookDashboardController extends Controller
             'active' => $request->boolean('active'),
             'opening_time' => $request->opening_time,
             'closing_time' => $request->closing_time,
+            'max_scheduled_portions_per_day' => $request->max_scheduled_portions_per_day,
         ];
 
         // Actualizar fotos de cocina si se suben nuevas

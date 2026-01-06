@@ -68,7 +68,7 @@ class ProfileTest extends TestCase
 
     public function test_profile_photo_can_be_uploaded(): void
     {
-        \Illuminate\Support\Facades\Storage::fake('public');
+        \Illuminate\Support\Facades\Storage::fake('uploads');
         $user = User::factory()->create();
         $file = \Illuminate\Http\UploadedFile::fake()->image('avatar.jpg');
 
@@ -87,7 +87,7 @@ class ProfileTest extends TestCase
         $user->refresh();
 
         $this->assertNotNull($user->profile_photo_path);
-        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($user->profile_photo_path);
+        \Illuminate\Support\Facades\Storage::disk('uploads')->assertExists($user->profile_photo_path);
     }
 
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void

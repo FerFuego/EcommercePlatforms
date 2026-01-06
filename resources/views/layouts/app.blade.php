@@ -17,6 +17,9 @@
     <!-- Leaflet CSS para mapas -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -354,6 +357,13 @@
         </div>
     </a>
 
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-24 right-8 z-[100] space-y-3 pointer-events-none"></div>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -411,14 +421,15 @@
                                 floatingBtn.classList.add('scale-125');
                                 setTimeout(() => floatingBtn.classList.remove('scale-125'), 200);
 
-                                // You could also show a toast here
-                                // showToast(data.message); // If you have a toast function
+                                // Show toast
+                                window.showToast(data.message || 'Producto agregado correctamente', 'success');
+                            } else {
+                                window.showToast(data.message || 'Error al agregar producto', 'error');
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            // Fallback to normal submit if ajax fails
-                            form.submit();
+                            window.showToast('Error de conexión', 'error');
                         })
                         .finally(() => {
                             submitBtn.disabled = false;
@@ -426,6 +437,37 @@
                         });
                 }
             });
+
+            // Toast Function
+            window.showToast = function (message, type = 'success') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+
+                const bgColor = type === 'success' ? 'bg-white' : 'bg-red-50';
+                const textColor = type === 'success' ? 'text-gray-800' : 'text-red-800';
+                const icon = type === 'success' ? '✅' : '❌';
+
+                toast.className = `transform translate-x-full transition-all duration-300 ease-out flex items-center p-4 min-w-[300px] ${bgColor} rounded-2xl shadow-xl pointer-events-auto`;
+                toast.innerHTML = `
+                    <span class="text-2xl mr-3">${icon}</span>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm ${textColor}">${message}</p>
+                    </div>
+                `;
+
+                container.appendChild(toast);
+
+                // Entrance animation
+                requestAnimationFrame(() => {
+                    toast.classList.remove('translate-x-full');
+                });
+
+                // Removal
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', '-translate-y-2');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            };
         });
     </script>
 

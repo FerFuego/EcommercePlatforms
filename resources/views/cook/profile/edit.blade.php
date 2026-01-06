@@ -58,17 +58,17 @@
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Dashboard
                         </a>
-                        <a href="{{ route('cook.dishes.create') }}"
+                        <a href="{{ route('cook.orders.index') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Nuevo Plato
+                            Ver Pedidos
                         </a>
                         <a href="{{ route('cook.dishes.index') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Mis Platos
                         </a>
-                        <a href="{{ route('cook.orders.index') }}"
+                        <a href="{{ route('cook.dishes.create') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Ver Pedidos
+                            Nuevo Plato
                         </a>
                         <a href="{{ route('cook.profile.edit') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
@@ -133,6 +133,16 @@
                                 </label>
                                 <span class="ml-3 text-gray-700 font-semibold">Perfil Activo</span>
                             </label>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Capacidad Diaria (Programados) 📦</label>
+                            <input type="number" name="max_scheduled_portions_per_day"
+                                value="{{ old('max_scheduled_portions_per_day', $cook->max_scheduled_portions_per_day) }}"
+                                min="1"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition"
+                                placeholder="Ej: 50">
+                            <p class="text-xs text-gray-500 mt-1">Límite de porciones totales para pedidos programados por día.</p>
                         </div>
                     </div>
 

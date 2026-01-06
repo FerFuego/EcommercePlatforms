@@ -29,6 +29,10 @@
                     class="px-6 py-3 rounded-xl font-semibold transition {{ request('status') == 'preparing' ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
                     En Preparación
                 </a>
+                <a href="{{ route('cook.orders.index', ['status' => 'scheduled']) }}"
+                    class="px-6 py-3 rounded-xl font-semibold transition {{ request('status') == 'scheduled' ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
+                    Programados
+                </a>
                 <a href="{{ route('cook.orders.index', ['status' => 'delivered']) }}"
                     class="px-6 py-3 rounded-xl font-semibold transition {{ request('status') == 'delivered' ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
                     Completados
@@ -56,17 +60,17 @@
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Dashboard
                         </a>
-                        <a href="{{ route('cook.dishes.create') }}"
+                        <a href="{{ route('cook.orders.index') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Nuevo Plato
+                            Ver Pedidos
                         </a>
                         <a href="{{ route('cook.dishes.index') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Mis Platos
                         </a>
-                        <a href="{{ route('cook.orders.index') }}"
+                        <a href="{{ route('cook.dishes.create') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Ver Pedidos
+                            Nuevo Plato
                         </a>
                         <a href="{{ route('cook.profile.edit') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
@@ -87,25 +91,33 @@
                                             <div>
                                                 <div class="flex items-center space-x-3 mb-2">
                                                     <h3 class="text-xl font-bold text-gray-800">#{{ $order->id }}</h3>
-                                                    <span class="px-3 py-1 rounded-full text-xs font-bold
-                                                                                                                                                                    {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
-                                ($order->status == 'rejected_by_cook' ? 'bg-red-100 text-red-800' :
-                                    ($order->status == 'awaiting_cook_acceptance' ? 'bg-yellow-100 text-yellow-800' :
-                                        'bg-blue-100 text-blue-800')) }}" data-order-status-label="{{ $order->id }}">
-                                                        {{ match ($order->status) {
-                                'pending_payment' => '⏳ Pendiente de Pago',
-                                'paid' => '✓ Pagado',
-                                'awaiting_cook_acceptance' => '⏰ Esperando Confirmación',
-                                'rejected_by_cook' => '❌ Rechazado',
-                                'preparing' => '👨‍🍳 En Preparación',
-                                'ready_for_pickup' => '✅ Listo para Retiro',
-                                'assigned_to_delivery' => '🛵 En Camino',
-                                'on_the_way' => '🚗 En Camino',
-                                'delivered' => '✓ Entregado',
-                                'cancelled' => '❌ Cancelado',
-                                default => $order->status
-                            } }}
-                                                    </span>
+                                                    @if($order->status == 'scheduled' && $order->scheduled_time)
+                                                        <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold animate-pulse">
+                                                            📅 PROGRAMADO: {{ $order->scheduled_time->format('d/m H:i') }}
+                                                        </span>
+                                                    @else
+                                                        <span class="px-3 py-1 rounded-full text-xs font-bold
+                                                            {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
+                                                                ($order->status == 'rejected_by_cook' ? 'bg-red-100 text-red-800' :
+                                                                    ($order->status == 'awaiting_cook_acceptance' ? 'bg-yellow-100 text-yellow-800' :
+                                                                        ($order->status == 'scheduled' ? 'bg-purple-100 text-purple-800' :
+                                                                            'bg-blue-100 text-blue-800'))) }}" data-order-status-label="{{ $order->id }}">
+                                                            {{ match ($order->status) {
+                                                                'pending_payment' => '⏳ Pendiente de Pago',
+                                                                'paid' => '✓ Pagado',
+                                                                'awaiting_cook_acceptance' => '⏰ Esperando Confirmación',
+                                                                'rejected_by_cook' => '❌ Rechazado',
+                                                                'preparing' => '👨‍🍳 En Preparación',
+                                                                'ready_for_pickup' => '✅ Listo para Retiro',
+                                                                'assigned_to_delivery' => '🛵 En Camino',
+                                                                'on_the_way' => '🚗 En Camino',
+                                                                'delivered' => '✓ Entregado',
+                                                                'cancelled' => '❌ Cancelado',
+                                                                'scheduled' => '📅 Programado',
+                                                                default => $order->status
+                                                            } }}
+                                                        </span>
+                                                    @endif
                                                 </div>
                                                 <div class="flex items-center space-x-2 text-gray-600 mb-1">
                                                     <div
@@ -191,7 +203,7 @@
                                                             </div>
                                                             <span
                                                                 class="text-xs px-2 py-1 rounded-full font-semibold
-                                                                                                                                                                                                                        {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                                                                                                                                                                                                                                                                        {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
                                                                 {{ match ($order->deliveryAssignment->status) {
                                                 'assigned' => 'Asignado',
                                                 'picked_up' => 'Recogido',
@@ -232,6 +244,15 @@
                                                     <button type="submit"
                                                         class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
                                                         ✓ Marcar como Listo
+                                                    </button>
+                                                </form>
+                                            @elseif($order->status == 'scheduled')
+                                                <form action="{{ route('cook.orders.update-status', $order->id) }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="status" value="preparing">
+                                                    <button type="submit"
+                                                        class="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-4 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
+                                                        👨‍🍳 Empezar Preparación
                                                     </button>
                                                 </form>
                                             @elseif($order->status == 'ready_for_pickup' && $order->delivery_type == 'pickup')

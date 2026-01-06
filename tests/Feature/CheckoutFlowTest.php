@@ -129,6 +129,7 @@ class CheckoutFlowTest extends TestCase
         $response = $this->actingAs($customer)->post(route('orders.process'), [
             'delivery_type' => 'pickup',
             'payment_method' => 'cash',
+            'schedule_type' => 'immediate',
             'notes' => 'Sin cebolla',
         ]);
 
@@ -171,6 +172,7 @@ class CheckoutFlowTest extends TestCase
             'delivery_lat' => -32.1745,
             'delivery_lng' => -63.2963,
             'payment_method' => 'mercadopago',
+            'schedule_type' => 'immediate',
         ]);
 
         $response->assertRedirect();
@@ -204,6 +206,7 @@ class CheckoutFlowTest extends TestCase
         $this->actingAs($customer)->post(route('orders.process'), [
             'delivery_type' => 'pickup',
             'payment_method' => 'cash',
+            'schedule_type' => 'immediate',
         ]);
 
         $this->assertEquals(7, $dish->fresh()->available_stock);

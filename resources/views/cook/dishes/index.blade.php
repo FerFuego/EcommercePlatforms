@@ -39,17 +39,17 @@
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Dashboard
                         </a>
-                        <a href="{{ route('cook.dishes.create') }}"
+                        <a href="{{ route('cook.orders.index') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Nuevo Plato
+                            Ver Pedidos
                         </a>
                         <a href="{{ route('cook.dishes.index') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Mis Platos
                         </a>
-                        <a href="{{ route('cook.orders.index') }}"
+                        <a href="{{ route('cook.dishes.create') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Ver Pedidos
+                            Nuevo Plato
                         </a>
                         <a href="{{ route('cook.profile.edit') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">

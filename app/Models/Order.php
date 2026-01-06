@@ -28,6 +28,7 @@ class Order extends Model
         'payment_status',
         'rejection_reason',
         'scheduled_time',
+        'notes',
         'completed_at',
     ];
 
@@ -55,6 +56,7 @@ class Order extends Model
     const STATUS_ON_THE_WAY = 'on_the_way';
     const STATUS_DELIVERED = 'delivered';
     const STATUS_CANCELLED = 'cancelled';
+    const STATUS_SCHEDULED = 'scheduled';
 
     // Aliases for tests
     const STATUS_REJECTED_BY_COOK = self::STATUS_REJECTED;
@@ -105,7 +107,7 @@ class Order extends Model
      */
     public function logs(): HasMany
     {
-        return $this->hasMany(OrderLog::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(OrderLog::class)->orderBy('created_at', 'asc')->orderBy('id', 'asc');
     }
 
     /**
@@ -159,10 +161,19 @@ class Order extends Model
             throw new \Exception('El pedido no está en estado de espera de aceptación');
         }
 
-        $this->status = self::STATUS_PREPARING;
+        if ($this->scheduled_time && $this->scheduled_time->isFuture()) {
+            $this->status = self::STATUS_SCHEDULED;
+            $description = 'El cocinero aceptó el pedido programado';
+            $event = 'cook_accepted_scheduled';
+        } else {
+            $this->status = self::STATUS_PREPARING;
+            $description = 'El cocinero aceptó el pedido y comenzó la preparación';
+            $event = 'cook_accepted';
+        }
+
         $this->save();
 
-        $this->logEvent('cook_accepted', 'El cocinero aceptó el pedido y comenzó la preparación');
+        $this->logEvent($event, $description);
 
         event(new \App\Events\OrderStatusUpdated($this));
         $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
@@ -279,7 +290,7 @@ class Order extends Model
         // Multiplicar subtotal (string) por rate (float) usando BCMath
         $result = bcmul($this->subtotal, (string) $commissionRate, 2);
 
-        $this->commission_amount = (string) $result; // decimal cast de Laravel lo convierte perfecto
+        $this->attributes['commission_amount'] = $result;
         $this->save();
     }
 
