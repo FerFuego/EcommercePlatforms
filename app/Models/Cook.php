@@ -117,7 +117,7 @@ class Cook extends Model
     {
         $totalRating = ($this->rating_avg * $this->rating_count) + $newRating;
         $this->rating_count++;
-        $this->rating_avg = round($totalRating / $this->rating_count, 1);
+        $this->attributes['rating_avg'] = round($totalRating / $this->rating_count, 1);
         $this->save();
     }
 
@@ -151,5 +151,13 @@ class Cook extends Model
     public function setKitchenPhotosAttribute($value)
     {
         $this->attributes['kitchen_photos'] = json_encode($value);
+    }
+    /**
+     * Relación con Usuarios que lo tienen de Favorito
+     */
+    public function favoritedBy(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'favorite_cooks')
+            ->withTimestamps();
     }
 }

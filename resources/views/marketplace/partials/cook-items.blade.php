@@ -3,7 +3,22 @@
         data-cook-id="{{ $cook->id }}" data-lat="{{ $cook->location_lat }}" data-lng="{{ $cook->location_lng }}">
 
         <!-- Cook Header -->
-        <div class="bg-gradient-to-r from-orange-400 to-pink-500 p-6 text-white">
+        <div class="bg-gradient-to-r from-orange-400 to-pink-500 p-6 text-white relative">
+            <!-- Favorite Heart Icon -->
+            @auth
+                @if(auth()->user()->isCustomer())
+                    <button onclick="toggleFavorite(event, {{ $cook->id }})" id="fav-btn-{{ $cook->id }}"
+                        class="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/40 transition-all backdrop-blur-sm z-10 group">
+                        <svg id="heart-icon-{{ $cook->id }}"
+                            class="w-6 h-6 transition-colors {{ auth()->user()->isFavorite($cook->id) ? 'text-red-500 fill-current' : 'text-white fill-none group-hover:text-red-200' }}"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                        </svg>
+                    </button>
+                @endif
+            @endauth
+
             <div class="flex items-center space-x-4">
                 @if($cook->user->profile_photo_path)
                     <img src="{{ asset('uploads/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}"

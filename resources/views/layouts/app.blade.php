@@ -93,6 +93,11 @@
                                 @endif
                             </a>
 
+                            <a href="{{ route('favorites.index') }}"
+                                class="text-gray-700 hover:text-red-600 font-medium transition-colors">
+                                Favoritos
+                            </a>
+
                             <a href="{{ route('cart.index') }}"
                                 class="relative text-gray-700 hover:text-orange-600 transition-colors">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,6 +146,13 @@
                                         <a href="{{ route('delivery-driver.dashboard') }}"
                                             class="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 font-semibold text-blue-600">Panel
                                             de Repartidor
+                                        </a>
+                                    @endif
+
+                                    @if(auth()->user()->isCustomer())
+                                        <a href="{{ route('favorites.index') }}"
+                                            class="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50">
+                                            Mis Favoritos
                                         </a>
                                     @endif
 
@@ -447,7 +459,7 @@
                 const textColor = type === 'success' ? 'text-gray-800' : 'text-red-800';
                 const icon = type === 'success' ? '✅' : '❌';
 
-                toast.className = `transform translate-x-full transition-all duration-300 ease-out flex items-center p-4 min-w-[300px] ${bgColor} rounded-2xl shadow-xl pointer-events-auto`;
+                toast.className = `transform translate-x-full transition-all duration-300 ease-out flex items-center p-4 min-w-[300px] ${bgColor} rounded-2xl shadow-xl pointer-events-auto z-[100] mt-2`;
                 toast.innerHTML = `
                     <span class="text-2xl mr-3">${icon}</span>
                     <div class="flex-1">
@@ -467,6 +479,42 @@
                     toast.classList.add('opacity-0', '-translate-y-2');
                     setTimeout(() => toast.remove(), 300);
                 }, 3000);
+            };
+
+            // Toggle Favorite Function
+            window.toggleFavorite = function (event, cookId) {
+                if (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                fetch(`/favorites/toggle/${cookId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const icons = document.querySelectorAll(`#heart-icon-${cookId}`);
+                        icons.forEach(icon => {
+                            if (data.status === 'added') {
+                                icon.classList.remove('text-white', 'fill-none');
+                                icon.classList.add('text-red-500', 'fill-current');
+                            } else {
+                                icon.classList.remove('text-red-500', 'fill-current');
+                                icon.classList.add('text-white', 'fill-none');
+                            }
+                        });
+
+                        window.showToast(data.message);
+                    })
+                    .catch(error => {
+                        console.error('Error toggling favorite:', error);
+                        window.showToast('Error al procesar favoritos', 'error');
+                    });
             };
         });
     </script>

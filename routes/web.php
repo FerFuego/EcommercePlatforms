@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CookDashboardController;
 use App\Http\Controllers\DishController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -75,6 +76,10 @@ Route::middleware(['auth'])->group(function () {
         // Reorder
         Route::post('/{orderId}/reorder', [OrderController::class, 'reorder'])->name('reorder');
     });
+
+    // Favoritos
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/favorites/toggle/{cook}', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
 });
 
 // Rutas de Cocinero
