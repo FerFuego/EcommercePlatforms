@@ -14,6 +14,15 @@
                         </span>
                     </h1>
                     <p class="text-gray-600">Realizado el {{ $order->created_at->format('d/m/Y H:i') }}</p>
+                    @if($order->status === 'scheduled' && $order->scheduled_time)
+                        <div class="mt-2 inline-flex items-center px-4 py-2 bg-purple-100 text-purple-800 rounded-xl font-bold animate-pulse border border-purple-200">
+                            <span class="mr-2">📅</span> PROGRAMADO PARA: {{ $order->scheduled_time->format('d/m/Y H:i') }}
+                        </div>
+                    @elseif($order->scheduled_time && !in_array($order->status, ['delivered', 'cancelled', 'rejected_by_cook']))
+                        <p class="text-xs text-purple-600 mt-1 font-bold flex items-center">
+                            <span class="mr-1">🕒</span> Programado: {{ $order->scheduled_time->format('d/m H:i') }}
+                        </p>
+                    @endif
                 </div>
                 <div class="mt-4 md:mt-0">
                     <span class="px-6 py-3 rounded-full text-lg font-bold shadow-sm
@@ -24,6 +33,7 @@
                                     @elseif($order->status === 'on_the_way') bg-indigo-100 text-indigo-700
                                     @elseif($order->status === 'cancelled') bg-red-100 text-red-700
                                     @elseif($order->status === 'rejected_by_cook') bg-orange-100 text-orange-700
+                                    @elseif($order->status === 'scheduled') bg-purple-100 text-purple-700
                                     @else bg-gray-100 text-gray-700
                                     @endif">
                     {{ match ($order->status) {
@@ -37,6 +47,7 @@
                         'on_the_way' => '🚗 En Camino',
                         'delivered' => '✓ Entregado',
                         'cancelled' => '❌ Cancelado',
+                        'scheduled' => '📅 Programado',
                         default => $order->status
                     } }}
                     </span>
@@ -202,18 +213,18 @@
                         </h2>
                         <div class="relative pl-8 space-y-6">
                             <!-- Vertical Line -->
-                            <div class="absolute left-3 top-2 bottom-2 w-0.5 bg-gray-200"></div>
+                            <div class="absolute left-4 top-2 bottom-2 w-0.5 bg-gray-200"></div>
 
                             @foreach($order->logs as $log)
                                 <div class="relative">
                                     <!-- Dot -->
                                     <div class="absolute -left-[24px] top-1.5 w-4 h-4 rounded-full border-2 border-white shadow-sm
-                                        {{ $loop->first ? 'bg-green-500 ring-4 ring-green-100' : 'bg-gray-400' }}">
+                                        {{ $loop->last ? 'bg-green-500 ring-4 ring-green-100' : 'bg-gray-400' }}">
                                     </div>
                                     
                                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
                                         <div>
-                                            <p class="font-bold text-gray-800 {{ $loop->first ? 'text-lg text-green-700' : 'text-sm' }}">
+                                            <p class="font-bold text-gray-800 {{ $loop->last ? 'text-lg text-green-700' : 'text-sm' }}">
                                                 {{ $log->description }}
                                             </p>
                                             @if($log->user)

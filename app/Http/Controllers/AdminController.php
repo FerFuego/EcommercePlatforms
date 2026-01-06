@@ -154,7 +154,7 @@ class AdminController extends Controller
             // Dishes
             'total_dishes' => Dish::count(),
             'active_dishes' => Dish::where('is_active', true)->count(),
-            'available_dishes' => Dish::where('is_active', true)->where('stock', '>', 0)->count(),
+            'available_dishes' => Dish::where('is_active', true)->where('available_stock', '>', 0)->count(),
             'inactive_dishes' => Dish::where('is_active', false)->count(),
         ];
 

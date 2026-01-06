@@ -32,13 +32,21 @@
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Dashboard
                         </a>
-                        <a href="{{ route('cook.dishes.create') }}"
+                        <a href="{{ route('cook.orders.index') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Nuevo Plato
+                            Ver Pedidos
                         </a>
                         <a href="{{ route('cook.dishes.index') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Mis Platos
+                        </a>
+                        <a href="{{ route('cook.dishes.create') }}"
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Nuevo Plato
+                        </a>
+                        <a href="{{ route('cook.profile.edit') }}"
+                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Configuración
                         </a>
                     </div>
                 </div>
@@ -119,6 +127,10 @@
                             <label class="flex items-center cursor-pointer">
                                 <input type="checkbox" name="is_active" value="1" {{ $dish->is_active ? 'checked' : '' }} class="w-5 h-5 text-purple-600 rounded">
                                 <span class="ml-2 text-gray-700 font-semibold">Plato Activo</span>
+                            </label>
+                            <label class="flex items-center ml-8 cursor-pointer">
+                                <input type="checkbox" name="is_schedulable" value="1" {{ $dish->is_schedulable ? 'checked' : '' }} class="w-5 h-5 text-purple-600 rounded">
+                                <span class="ml-2 text-gray-700 font-semibold">Permitir Programación 📅</span>
                             </label>
                         </div>
                     </div>

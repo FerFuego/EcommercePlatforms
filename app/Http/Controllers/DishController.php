@@ -43,6 +43,7 @@ class DishController extends Controller
             'preparation_time_minutes' => 'required|integer|min:10',
             'delivery_method' => 'required|in:pickup,delivery,both',
             'diet_tags' => 'nullable|array',
+            'is_schedulable' => 'boolean',
             'option_groups' => 'nullable|array',
         ]);
 
@@ -61,6 +62,7 @@ class DishController extends Controller
             'preparation_time_minutes' => $request->preparation_time_minutes,
             'delivery_method' => $request->delivery_method,
             'diet_tags' => $request->diet_tags ?? [],
+            'is_schedulable' => $request->boolean('is_schedulable', true),
             'is_active' => true,
         ]);
 
@@ -120,6 +122,7 @@ class DishController extends Controller
             'delivery_method' => 'required|in:pickup,delivery,both',
             'diet_tags' => 'nullable|array',
             'is_active' => 'boolean',
+            'is_schedulable' => 'boolean',
             'option_groups' => 'nullable|array',
         ]);
 
@@ -139,6 +142,7 @@ class DishController extends Controller
             'delivery_method' => $request->delivery_method,
             'diet_tags' => $request->diet_tags ?? [],
             'is_active' => $request->boolean('is_active', true),
+            'is_schedulable' => $request->boolean('is_schedulable', true),
         ]);
 
         // Sincronizar Opciones (Simplificado: borrar y recrear para esta fase)

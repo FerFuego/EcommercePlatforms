@@ -101,11 +101,92 @@
                         </div>
                     </div>
 
+                    <!-- Scheduling -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <h2 class="text-2xl font-bold mb-6 flex items-center">
+                            <span
+                                class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white mr-3">3</span>
+                            ¿Cuándo lo quieres?
+                        </h2>
+
+                        @php
+                            $hasNonSchedulable = collect($cart)->contains('is_schedulable', false);
+                        @endphp
+
+                        @if($hasNonSchedulable)
+                            <div class="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6 rounded-r-xl">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <span class="text-amber-400 text-xl">⚠️</span>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-amber-700">
+                                            Algunos platos en tu carrito <strong>no aceptan pedidos programados</strong>.
+                                            Para programar este pedido, deberás retirar esos platos o elegir "Lo antes posible".
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="schedule_type" value="immediate" checked class="peer sr-only"
+                                    onclick="toggleScheduleFields(false)">
+                                <div
+                                    class="bg-gray-50 peer-checked:bg-orange-50 border-2 border-gray-200 peer-checked:border-orange-500 rounded-2xl p-4 transition-all">
+                                    <h3 class="font-bold text-center">Lo antes posible 🚀</h3>
+                                </div>
+                            </label>
+
+                            <label class="relative cursor-pointer {{ $hasNonSchedulable ? 'opacity-50 cursor-not-allowed' : '' }}">
+                                <input type="radio" name="schedule_type" value="scheduled" class="peer sr-only"
+                                    {{ $hasNonSchedulable ? 'disabled' : '' }}
+                                    onclick="toggleScheduleFields(true)">
+                                <div
+                                    class="bg-gray-50 peer-checked:bg-purple-50 border-2 border-gray-200 peer-checked:border-purple-500 rounded-2xl p-4 transition-all">
+                                    <h3 class="font-bold text-center">Programar Pedido 📅</h3>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div id="scheduleFields" class="hidden animate-fade-in">
+                            <div class="space-y-4">
+                                <div class="bg-purple-50 rounded-xl p-4 border border-purple-100 flex items-center">
+                                    <span class="text-xl mr-3">💡</span>
+                                    <p class="text-sm text-purple-800">
+                                        El cocinero acepta pedidos programados entre las
+                                        <strong>{{ $cook->opening_time ? \Carbon\Carbon::parse($cook->opening_time)->format('H:i') : '08:00' }}</strong>
+                                        y las
+                                        <strong>{{ $cook->closing_time ? \Carbon\Carbon::parse($cook->closing_time)->format('H:i') : '22:00' }}</strong>.
+                                    </p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Selecciona Fecha y Hora
+                                        *</label>
+                                    <div class="relative">
+                                        <input type="text" name="scheduled_time" id="scheduled_time"
+                                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition bg-white"
+                                            placeholder="Click para elegir..." readonly>
+                                        <div
+                                            class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Payment Method -->
                     <div class="bg-white rounded-2xl shadow-lg p-8">
                         <h2 class="text-2xl font-bold mb-6 flex items-center">
                             <span
-                                class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white mr-3">3</span>
+                                class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white mr-3">4</span>
                             Método de Pago
                         </h2>
 
@@ -133,16 +214,23 @@
 
                     <!-- Notes -->
                     <div class="bg-white rounded-2xl shadow-lg p-8">
-                        <h2 class="text-2xl font-bold mb-6">Notas Adicionales (Opcional)</h2>
-                        <textarea name="notes" rows="3"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition"
-                            placeholder="Alergias, preferencias, instrucciones especiales..."></textarea>
-                    </div>
+                        <h2 class="text-2xl font-bold mb-6 flex items-center">
+                            <span
+                                class="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-600 rounded-full flex items-center justify-center text-white mr-3">5</span>
+                            Notas Adicionales (Opcional)
+                        </h2>
 
-                    <button type="submit"
-                        class="w-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-8 py-5 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all">
-                        Confirmar Pedido →
-                    </button>
+                        <div class="mb-6">
+                            <textarea name="notes" rows="3"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-500 focus:ring focus:ring-pink-200 transition resize-none"
+                                placeholder="Escribe aquí cualquier instrucción especial o preferencia para tu pedido...">{{ old('notes') }}</textarea>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-8 py-5 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all">
+                            Confirmar Pedido →
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -182,6 +270,12 @@
                                 @endif
                                 <div class="flex-1">
                                     <p class="font-semibold text-sm">{{ $item['name'] }}</p>
+
+                                    @if(isset($item['is_schedulable']) && !$item['is_schedulable'])
+                                        <span class="inline-block px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded mt-1">
+                                            🚫 No Programable
+                                        </span>
+                                    @endif
 
                                     @if(!empty($item['options']))
                                         <div class="mt-0.5 space-y-0.5">
@@ -284,6 +378,34 @@
 
             // Add event listener to pickup radio
             document.querySelector('input[value="pickup"]').addEventListener('click', () => toggleDeliveryFields(false));
+
+            // Scheduling logic
+            function toggleScheduleFields(show) {
+                const fields = document.getElementById('scheduleFields');
+                const input = document.getElementById('scheduled_time');
+                if (show) {
+                    fields.classList.remove('hidden');
+                    input.required = true;
+                } else {
+                    fields.classList.add('hidden');
+                    input.required = false;
+                    input.value = '';
+                }
+            }
+
+            // Flatpickr initialization
+            document.addEventListener('DOMContentLoaded', function () {
+                flatpickr("#scheduled_time", {
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    minDate: "today",
+                    time_24hr: true,
+                    locale: "es",
+                    disableMobile: "true",
+                    minTime: "{{ $cook->opening_time ? \Carbon\Carbon::parse($cook->opening_time)->format('H:i') : '08:00' }}",
+                    maxTime: "{{ $cook->closing_time ? \Carbon\Carbon::parse($cook->closing_time)->format('H:i') : '22:00' }}",
+                });
+            });
         </script>
     @endpush
 

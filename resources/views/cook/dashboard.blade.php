@@ -44,7 +44,38 @@
         <!-- Stats Cards -->
         <div
             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none filter grayscale' : '' }}">
-            <!-- ... Stats ... -->
+
+            <div class="bg-white rounded-2xl shadow-xl p-6 border-b-4 border-orange-500">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-gray-500 font-semibold uppercase text-xs tracking-wider">Pendientes</span>
+                    <span class="p-2 bg-orange-100 rounded-lg text-orange-600">⏰</span>
+                </div>
+                <div class="text-3xl font-bold text-gray-800">{{ $pendingOrders }}</div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-6 border-b-4 border-purple-500">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-gray-500 font-semibold uppercase text-xs tracking-wider">Programados</span>
+                    <span class="p-2 bg-purple-100 rounded-lg text-purple-600">📅</span>
+                </div>
+                <div class="text-3xl font-bold text-gray-800">{{ $scheduledOrders }}</div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-6 border-b-4 border-blue-500">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-gray-500 font-semibold uppercase text-xs tracking-wider">Hoy</span>
+                    <span class="p-2 bg-blue-100 rounded-lg text-blue-600">📈</span>
+                </div>
+                <div class="text-3xl font-bold text-gray-800">{{ $todayOrders }}</div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-6 border-b-4 border-green-500">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-gray-500 font-semibold uppercase text-xs tracking-wider">Ventas Totales</span>
+                    <span class="p-2 bg-green-100 rounded-lg text-green-600">💰</span>
+                </div>
+                <div class="text-3xl font-bold text-gray-800">${{ number_format($totalRevenue, 0) }}</div>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -66,17 +97,17 @@
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Dashboard
                         </a>
-                        <a href="{{ route('cook.dishes.create') }}"
+                        <a href="{{ route('cook.orders.index') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Nuevo Plato
+                            Ver Pedidos
                         </a>
                         <a href="{{ route('cook.dishes.index') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Mis Platos
                         </a>
-                        <a href="{{ route('cook.orders.index') }}"
+                        <a href="{{ route('cook.dishes.create') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Ver Pedidos
+                            Nuevo Plato
                         </a>
                         <a href="{{ route('cook.profile.edit') }}"
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
@@ -151,7 +182,8 @@
                                             <span class="text-xs px-2 py-1 rounded-full  {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
                             ($order->status == 'rejected_by_cook' ? 'bg-red-100 text-red-800' :
                                 ($order->status == 'awaiting_cook_acceptance' ? 'bg-yellow-100 text-yellow-800' :
-                                    'bg-blue-100 text-blue-800')) }}">
+                                    ($order->status == 'scheduled' ? 'bg-purple-100 text-purple-800' :
+                                        'bg-blue-100 text-blue-800'))) }}">
                                                 {{ match ($order->status) {
                             'pending_payment' => '⏳ Pendiente de Pago',
                             'paid' => '✓ Pagado',
@@ -163,6 +195,7 @@
                             'on_the_way' => '🚗 En Camino',
                             'delivered' => '✓ Entregado',
                             'cancelled' => '❌ Cancelado',
+                            'scheduled' => '📅 Programado',
                             default => $order->status
                         } }}
                                             </span>

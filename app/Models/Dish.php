@@ -22,11 +22,13 @@ class Dish extends Model
         'preparation_time_minutes',
         'delivery_method',
         'diet_tags',
+        'is_schedulable',
     ];
 
     protected $casts = [
         'price' => 'float',
         'is_active' => 'boolean',
+        'is_schedulable' => 'boolean',
         'available_days' => 'array',
         'diet_tags' => 'array',
     ];

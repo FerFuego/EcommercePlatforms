@@ -37,6 +37,10 @@
                     class="px-4 py-2 rounded-xl font-semibold {{ request('status') === 'delivered' ? 'bg-green-500 text-white' : 'text-gray-600 hover:bg-gray-100' }} transition">
                     Entregados
                 </a>
+                <a href="{{ route('admin.orders.index', ['status' => 'scheduled']) }}"
+                    class="px-4 py-2 rounded-xl font-semibold {{ request('status') === 'scheduled' ? 'bg-purple-500 text-white' : 'text-gray-600 hover:bg-gray-100' }} transition">
+                    Programados
+                </a>
             </div>
 
             <!-- Orders List -->
@@ -59,15 +63,17 @@
 
                                         <!-- Status Badge -->
                                         <span class="px-4 py-2 rounded-full text-sm font-semibold
-                                                                    @if($order->status === 'delivered') bg-green-100 text-green-700
-                                                                    @elseif($order->status === 'preparing') bg-blue-100 text-blue-700
-                                                                    @elseif($order->status === 'awaiting_cook_acceptance') bg-yellow-100 text-yellow-700
-                                                                    @elseif($order->status === 'ready_for_pickup') bg-purple-100 text-purple-700
-                                                                    @elseif($order->status === 'on_the_way') bg-indigo-100 text-indigo-700
-                                                                    @elseif($order->status === 'cancelled') bg-red-100 text-red-700
-                                                                    @elseif($order->status === 'rejected_by_cook') bg-orange-100 text-orange-700
-                                                                    @else bg-gray-100 text-gray-700
-                                                                    @endif">
+                                                                            @if($order->status === 'delivered') bg-green-100 text-green-700
+                                                                            @elseif($order->status === 'preparing') bg-blue-100 text-blue-700
+                                                                            @elseif($order->status === 'awaiting_cook_acceptance') bg-yellow-100 text-yellow-700
+                                                                            @elseif($order->status === 'ready_for_pickup') bg-purple-100 text-purple-700
+                                                                            @elseif($order->status === 'on_the_way') bg-indigo-100 text-indigo-700
+                                                                            @elseif($order->status === 'cancelled') bg-red-100 text-red-700
+                                                                            @elseif($order->status === 'rejected_by_cook') bg-orange-100 text-orange-700
+                                                                            @elseif($order->status === 'scheduled') bg-purple-100 text-purple-700
+                                                                            @else bg-gray-100 text-gray-700
+                                                                            @endif
+                                                                            ">
                                             {{ match ($order->status) {
                         'pending_payment' => '⏳ Pendiente de Pago',
                         'paid' => '✓ Pagado',
@@ -79,13 +85,14 @@
                         'on_the_way' => '🚗 En Camino',
                         'delivered' => '✓ Entregado',
                         'cancelled' => '❌ Cancelado',
+                        'scheduled' => '📅 Programado',
                         default => $order->status
                     } }}
                                         </span>
                                     </div>
 
                                     <!-- Order Details Grid -->
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                                    <div class=" grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                                         <!-- Customer -->
                                         <div class="bg-gray-50 rounded-xl p-4">
                                             <p class="text-xs text-gray-500 uppercase font-semibold mb-2">Cliente</p>
@@ -97,7 +104,8 @@
                                         <div class="bg-gray-50 rounded-xl p-4">
                                             <p class="text-xs text-gray-500 uppercase font-semibold mb-2">Cocinero</p>
                                             <p class="font-semibold">{{ $order->cook->user->name }}</p>
-                                            <p class="text-sm text-gray-600">Rating: {{ number_format($order->cook->rating_avg, 1) }} ⭐
+                                            <p class="text-sm text-gray-600">Rating:
+                                                {{ number_format($order->cook->rating_avg, 1) }} ⭐
                                             </p>
                                         </div>
 
@@ -135,9 +143,16 @@
                                                 {{ $order->delivery_type === 'delivery' ? '🚚 Delivery' : '🏪 Retiro' }}
                                             </span>
                                             @if($order->delivery_address)
-                                                <span class="text-sm text-gray-600 ml-2">{{ $order->delivery_address }}</span>
+                                                <span class="text-sm text-gray-600 ml-2">📍 {{ $order->delivery_address }}</span>
                                             @endif
                                         </div>
+
+                                        @if($order->notes)
+                                            <div class="w-full mt-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                                                <p class="text-[10px] font-bold text-blue-800 uppercase mb-1">📝 Notas del Cliente:</p>
+                                                <p class="text-sm text-gray-700 italic">"{{ $order->notes }}"</p>
+                                            </div>
+                                        @endif
 
                                         <div class="text-right">
                                             <p class="text-xs text-gray-500">Comisión Plataforma</p>

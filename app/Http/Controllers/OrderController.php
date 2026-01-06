@@ -125,6 +125,12 @@ class OrderController extends Controller
             return $carry + ($item['price'] * $item['quantity']);
         }, 0);
 
+        // Enriquecer el carrito con información de si son programables
+        foreach ($cart as &$item) {
+            $dish = \App\Models\Dish::find($item['dish_id']);
+            $item['is_schedulable'] = $dish ? $dish->is_schedulable : true;
+        }
+
         return view('orders.checkout', compact('cart', 'cook', 'subtotal'));
     }
 
@@ -139,13 +145,58 @@ class OrderController extends Controller
             'delivery_lat' => 'nullable|numeric',
             'delivery_lng' => 'nullable|numeric',
             'payment_method' => 'required|in:mercadopago,cash,transfer',
-            'scheduled_time' => 'nullable|date',
+            'schedule_type' => 'required|in:immediate,scheduled',
+            'scheduled_time' => 'required_if:schedule_type,scheduled|nullable|date|after:now',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
         $cart = session()->get('cart', []);
 
         if (empty($cart)) {
             return redirect()->route('marketplace.catalog')->with('error', 'Tu carrito está vacío');
+        }
+
+        $cookId = $cart[0]['cook_id'];
+        $cook = Cook::findOrFail($cookId);
+
+        // Validar horario si es programado
+        if ($request->schedule_type === 'scheduled') {
+            $scheduledDateTime = \Carbon\Carbon::parse($request->scheduled_time);
+            $timeOnly = $scheduledDateTime->format('H:i:s');
+            $dateOnly = $scheduledDateTime->toDateString();
+
+            $opening = $cook->opening_time ?: '00:00:00';
+            $closing = $cook->closing_time ?: '23:59:59';
+
+            if ($timeOnly < $opening || $timeOnly > $closing) {
+                return back()->with('error', "El cocinero no trabaja en ese horario. Por favor elige entre {$opening} y {$closing}.")->withInput();
+            }
+
+            // 1. Validar que todos los platos sean programables
+            foreach ($cart as $item) {
+                $dish = \App\Models\Dish::find($item['dish_id']);
+                if ($dish && !$dish->is_schedulable) {
+                    return back()->with('error', "El plato '{$dish->name}' no acepta pedidos programados. Por favor elija 'Entrega Inmediata' o retire este plato del carrito.")->withInput();
+                }
+            }
+
+            // 2. Validar capacidad diaria del cocinero
+            if ($cook->max_scheduled_portions_per_day) {
+                $existingPortions = \App\Models\OrderItem::whereHas('order', function ($q) use ($cookId, $dateOnly) {
+                    $q->where('cook_id', $cookId)
+                        ->whereDate('scheduled_time', $dateOnly)
+                        ->whereNotIn('status', ['cancelled', 'rejected_by_cook']);
+                })->sum('quantity');
+
+                $cartPortions = array_reduce($cart, function ($carry, $item) {
+                    return $carry + $item['quantity'];
+                }, 0);
+
+                if (($existingPortions + $cartPortions) > $cook->max_scheduled_portions_per_day) {
+                    $available = max(0, $cook->max_scheduled_portions_per_day - $existingPortions);
+                    return back()->with('error', "El cocinero ya no tiene cupo para pedidos programados ese día. Cupo restante: {$available} porciones.")->withInput();
+                }
+            }
         }
 
         DB::beginTransaction();
@@ -176,6 +227,7 @@ class OrderController extends Controller
                 'payment_method' => $request->payment_method,
                 'payment_status' => 'pending',
                 'scheduled_time' => $request->scheduled_time,
+                'notes' => $request->notes,
             ]);
 
             $order->logEvent('order_placed', 'El pedido fue realizado por el cliente');
@@ -343,6 +395,13 @@ class OrderController extends Controller
         $status = $request->input('status') ?? $request->input('action');
 
         switch ($status) {
+            case Order::STATUS_SCHEDULED:
+            case 'scheduled':
+                // If explicit action is to mark as scheduled (not common but possible for manual override)
+                $order->status = Order::STATUS_SCHEDULED;
+                $order->save();
+                break;
+
             case Order::STATUS_PREPARING:
             case 'preparing':
                 $order->markAsPreparing();

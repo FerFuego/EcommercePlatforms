@@ -27,6 +27,7 @@ class Cook extends Model
         'is_approved',
         'opening_time',
         'closing_time',
+        'max_scheduled_portions_per_day',
     ];
 
     protected $casts = [
@@ -39,6 +40,7 @@ class Cook extends Model
         'location_lat' => 'decimal:8',
         'location_lng' => 'decimal:8',
         'coverage_radius_km' => 'decimal:2',
+        'max_scheduled_portions_per_day' => 'integer',
     ];
 
     /**
