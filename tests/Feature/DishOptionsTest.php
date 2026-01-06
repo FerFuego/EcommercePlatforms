@@ -105,6 +105,7 @@ class DishOptionsTest extends TestCase
         $response = $this->actingAs($this->customer)->post(route('orders.process'), [
             'delivery_type' => 'pickup',
             'payment_method' => 'cash',
+            'schedule_type' => 'immediate',
         ]);
 
         $response->assertSessionDoesntHaveErrors();

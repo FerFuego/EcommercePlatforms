@@ -36,6 +36,7 @@ class OrderLoggingTest extends TestCase
         ])->post(route('orders.process'), [
                     'delivery_type' => 'pickup',
                     'payment_method' => 'cash',
+                    'schedule_type' => 'immediate',
                 ]);
 
         $order = Order::first();
