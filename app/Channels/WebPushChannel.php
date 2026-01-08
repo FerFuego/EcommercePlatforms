@@ -35,7 +35,7 @@ class WebPushChannel
             );
 
             \Illuminate\Support\Facades\Log::info("WebPush Notification sent to user {$notifiable->id} via Firebase");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error("WebPush Notification failed for user {$notifiable->id}: " . $e->getMessage());
         }
     }

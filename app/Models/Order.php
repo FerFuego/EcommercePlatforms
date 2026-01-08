@@ -141,7 +141,11 @@ class Order extends Model
             'payment_id' => $paymentId
         ]);
 
-        event(new \App\Events\OrderStatusUpdated($this));
+        try {
+            event(new \App\Events\OrderStatusUpdated($this));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$this->id}: " . $e->getMessage());
+        }
 
         try {
             // Notificar al cliente
@@ -151,8 +155,8 @@ class Order extends Model
             if ($this->cook && $this->cook->user) {
                 $this->cook->user->notify(new \App\Notifications\NewOrderNotification($this));
             }
-        } catch (\Exception $e) {
-            \Log::error("Error sending notifications for order #{$this->id}: " . $e->getMessage());
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error sending notifications for order #{$this->id}: " . $e->getMessage());
         }
     }
 
@@ -179,11 +183,15 @@ class Order extends Model
 
         $this->logEvent($event, $description);
 
-        event(new \App\Events\OrderStatusUpdated($this));
+        try {
+            event(new \App\Events\OrderStatusUpdated($this));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$this->id}: " . $e->getMessage());
+        }
         try {
             $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
-        } catch (\Exception $e) {
-            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
         }
     }
 
@@ -204,11 +212,15 @@ class Order extends Model
             'reason' => $reason
         ]);
 
-        event(new \App\Events\OrderStatusUpdated($this));
+        try {
+            event(new \App\Events\OrderStatusUpdated($this));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$this->id}: " . $e->getMessage());
+        }
         try {
             $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
-        } catch (\Exception $e) {
-            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
         }
     }
 
@@ -222,11 +234,15 @@ class Order extends Model
 
         $this->logEvent('status_change', 'El pedido cambió a estado: Preparando');
 
-        event(new \App\Events\OrderStatusUpdated($this));
+        try {
+            event(new \App\Events\OrderStatusUpdated($this));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$this->id}: " . $e->getMessage());
+        }
         try {
             $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
-        } catch (\Exception $e) {
-            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
         }
     }
 
@@ -246,11 +262,15 @@ class Order extends Model
         $desc = $this->delivery_type === 'delivery' ? 'Pedido listo para asignación de delivery' : 'Pedido listo para ser retirado por el cliente';
         $this->logEvent('order_ready', $desc);
 
-        event(new \App\Events\OrderStatusUpdated($this));
+        try {
+            event(new \App\Events\OrderStatusUpdated($this));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$this->id}: " . $e->getMessage());
+        }
         try {
             $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
-        } catch (\Exception $e) {
-            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
         }
     }
 
@@ -264,11 +284,15 @@ class Order extends Model
 
         $this->logEvent('on_the_way', 'El pedido está en camino a la dirección de entrega');
 
-        event(new \App\Events\OrderStatusUpdated($this));
+        try {
+            event(new \App\Events\OrderStatusUpdated($this));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$this->id}: " . $e->getMessage());
+        }
         try {
             $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
-        } catch (\Exception $e) {
-            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
         }
     }
 
@@ -283,11 +307,15 @@ class Order extends Model
 
         $this->logEvent('order_delivered', 'Pedido entregado exitosamente');
 
-        event(new \App\Events\OrderStatusUpdated($this));
+        try {
+            event(new \App\Events\OrderStatusUpdated($this));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$this->id}: " . $e->getMessage());
+        }
         try {
             $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
-        } catch (\Exception $e) {
-            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
         }
     }
 
@@ -306,11 +334,15 @@ class Order extends Model
             'reason' => $reason
         ]);
 
-        event(new \App\Events\OrderStatusUpdated($this));
+        try {
+            event(new \App\Events\OrderStatusUpdated($this));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$this->id}: " . $e->getMessage());
+        }
         try {
             $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
-        } catch (\Exception $e) {
-            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
         }
     }
 

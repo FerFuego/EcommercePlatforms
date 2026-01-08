@@ -361,9 +361,13 @@ class OrderController extends Controller
         $cook = auth()->user()->cook;
         $order = $cook->orders()->findOrFail($orderId);
 
-        $order->acceptByCook();
-
-        return back()->with('success', 'Pedido aceptado');
+        try {
+            $order->acceptByCook();
+            return back()->with('success', 'Pedido aceptado');
+        } catch (\Throwable $e) {
+            \Log::error("Error in Cook accept order #{$orderId}: " . $e->getMessage());
+            return back()->with('error', 'Error al aceptar el pedido: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -378,9 +382,13 @@ class OrderController extends Controller
             'rejection_reason' => 'required|string|max:500',
         ]);
 
-        $order->rejectByCook($request->rejection_reason);
-
-        return back()->with('success', 'Pedido rechazado');
+        try {
+            $order->rejectByCook($request->rejection_reason);
+            return back()->with('success', 'Pedido rechazado');
+        } catch (\Throwable $e) {
+            \Log::error("Error in Cook reject order #{$orderId}: " . $e->getMessage());
+            return back()->with('error', 'Error al rechazar el pedido: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -394,36 +402,41 @@ class OrderController extends Controller
         // Support both 'status' (from view) and 'action' (from tests/legacy code)
         $status = $request->input('status') ?? $request->input('action');
 
-        switch ($status) {
-            case Order::STATUS_SCHEDULED:
-            case 'scheduled':
-                // If explicit action is to mark as scheduled (not common but possible for manual override)
-                $order->status = Order::STATUS_SCHEDULED;
-                $order->save();
-                break;
+        try {
+            switch ($status) {
+                case Order::STATUS_SCHEDULED:
+                case 'scheduled':
+                    // If explicit action is to mark as scheduled (not common but possible for manual override)
+                    $order->status = Order::STATUS_SCHEDULED;
+                    $order->save();
+                    break;
 
-            case Order::STATUS_PREPARING:
-            case 'preparing':
-                $order->markAsPreparing();
-                break;
-            case Order::STATUS_READY_FOR_PICKUP:
-            case 'ready_for_pickup':
-            case 'ready':
-                $order->markAsReady();
-                break;
-            case Order::STATUS_ON_THE_WAY:
-            case 'on_the_way':
-                $order->markAsOnTheWay();
-                break;
-            case Order::STATUS_DELIVERED:
-            case 'delivered':
-                $order->markAsDelivered();
-                break;
-            default:
-                return back()->with('error', 'Acción no válida');
+                case Order::STATUS_PREPARING:
+                case 'preparing':
+                    $order->markAsPreparing();
+                    break;
+                case Order::STATUS_READY_FOR_PICKUP:
+                case 'ready_for_pickup':
+                case 'ready':
+                    $order->markAsReady();
+                    break;
+                case Order::STATUS_ON_THE_WAY:
+                case 'on_the_way':
+                    $order->markAsOnTheWay();
+                    break;
+                case Order::STATUS_DELIVERED:
+                case 'delivered':
+                    $order->markAsDelivered();
+                    break;
+                default:
+                    return back()->with('error', 'Acción no válida');
+            }
+
+            return back()->with('success', 'Estado actualizado');
+        } catch (\Throwable $e) {
+            \Log::error("Error in OrderController updateStatus for order #{$orderId}: " . $e->getMessage());
+            return back()->with('error', 'Error al actualizar estado: ' . $e->getMessage());
         }
-
-        return back()->with('success', 'Estado actualizado');
     }
 
     /**

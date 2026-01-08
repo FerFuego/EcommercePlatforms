@@ -116,7 +116,11 @@ class DeliveryOrderController extends Controller
         ]);
 
         $order->logEvent('driver_assigned', "Repartidor asignado: {$driver->user->name}");
-        event(new \App\Events\OrderStatusUpdated($order));
+        try {
+            event(new \App\Events\OrderStatusUpdated($order));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$order->id}: " . $e->getMessage());
+        }
 
         return redirect()->route('delivery-driver.orders.index')
             ->with('success', 'Pedido aceptado exitosamente. Dirígete al punto de retiro.');
@@ -165,36 +169,53 @@ class DeliveryOrderController extends Controller
         $delivery = DeliveryAssignment::where('delivery_user_id', $driver->user_id)
             ->findOrFail($id);
 
-        $delivery->status = $validated['status'];
+        try {
+            $delivery->status = $validated['status'];
 
-        // Actualizar timestamps
-        if ($validated['status'] === 'picked_up' && !$delivery->picked_up_at) {
-            $delivery->picked_up_at = now();
-            $delivery->order->status = Order::STATUS_ON_THE_WAY;
-            $delivery->order->save();
-            $delivery->order->logEvent('picked_up', 'El repartidor retiró el pedido de la cocina');
-            event(new \App\Events\OrderStatusUpdated($delivery->order));
+            // Actualizar timestamps
+            if ($validated['status'] === 'picked_up' && !$delivery->picked_up_at) {
+                $delivery->picked_up_at = now();
+                $delivery->order->status = Order::STATUS_ON_THE_WAY;
+                $delivery->order->save();
+                $delivery->order->logEvent('picked_up', 'El repartidor retiró el pedido de la cocina');
+                try {
+                    event(new \App\Events\OrderStatusUpdated($delivery->order));
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$delivery->order->id}: " . $e->getMessage());
+                }
+            }
+
+            if ($validated['status'] === 'on_the_way') {
+                $delivery->order->logEvent('on_the_way', 'El pedido está en camino a tu dirección');
+                try {
+                    event(new \App\Events\OrderStatusUpdated($delivery->order));
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$delivery->order->id}: " . $e->getMessage());
+                }
+            }
+
+            if ($validated['status'] === 'delivered') {
+                $delivery->delivered_at = now();
+                $delivery->order->status = Order::STATUS_DELIVERED;
+                $delivery->order->completed_at = now();
+                $delivery->order->save();
+                $delivery->order->logEvent('order_delivered', 'Pedido entregado por el repartidor');
+                try {
+                    event(new \App\Events\OrderStatusUpdated($delivery->order));
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$delivery->order->id}: " . $e->getMessage());
+                }
+
+                // Actualizar ganancias del repartidor
+                $driver->addEarnings((float) $delivery->delivery_fee);
+            }
+
+            $delivery->save();
+
+            return back()->with('success', 'Estado actualizado exitosamente.');
+        } catch (\Throwable $e) {
+            \Log::error("Error in Delivery updateStatus for delivery #{$id}: " . $e->getMessage());
+            return back()->with('error', 'Error al actualizar estado: ' . $e->getMessage());
         }
-
-        if ($validated['status'] === 'on_the_way') {
-            $delivery->order->logEvent('on_the_way', 'El pedido está en camino a tu dirección');
-            event(new \App\Events\OrderStatusUpdated($delivery->order));
-        }
-
-        if ($validated['status'] === 'delivered') {
-            $delivery->delivered_at = now();
-            $delivery->order->status = Order::STATUS_DELIVERED;
-            $delivery->order->completed_at = now();
-            $delivery->order->save();
-            $delivery->order->logEvent('order_delivered', 'Pedido entregado por el repartidor');
-            event(new \App\Events\OrderStatusUpdated($delivery->order));
-
-            // Actualizar ganancias del repartidor
-            $driver->addEarnings((float) $delivery->delivery_fee);
-        }
-
-        $delivery->save();
-
-        return back()->with('success', 'Estado actualizado exitosamente.');
     }
 }
