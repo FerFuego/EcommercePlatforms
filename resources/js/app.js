@@ -2,10 +2,15 @@ import './bootstrap';
 import './order-listener';
 
 import Alpine from 'alpinejs';
+import { requestPermission } from './push-notifications';
 
 window.Alpine = Alpine;
-
 Alpine.start();
+
+// Request permission if authenticated
+if (window.isUserAuthenticated) {
+    requestPermission();
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const cards = document.querySelectorAll(".hover-card");

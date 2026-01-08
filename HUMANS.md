@@ -627,6 +627,7 @@ Plan PREMIUM
 - Panel de ventas
 - Posicionamiento destacado + badge “Cocinero Premium”
 - Notificaciones a clientes
+- Posibilidad de subir ofertas como 2x1
 
 ---
 # SISTEMA DE FAVORITOS [NEW]
@@ -642,3 +643,13 @@ Plan PREMIUM
 - **Flujo**:
     - Una vez aceptado por el cocinero, el pedido pasa a estado `scheduled`.
     - Notifica al cliente mediante `OrderStatusUpdated` event.
+# SISTEMA DE NOTIFICACIONES PUSH (FCM) [NEW]
+- **Motor**: Firebase Cloud Messaging (FCM).
+- **Backend**: Integración con `kreait/laravel-firebase` y canal personalizado `WebPushChannel`.
+- **Automatización**:
+    - **Cocinero**: Alerta de "Nuevo Pedido" instantánea al pagar el comensal.
+    - **Cliente**: Actualizaciones de estado en tiempo real (Preparando, Listo, En Camino, etc.).
+- **Frontend**:
+    - **Service Worker**: Gestión en segundo plano (background) para móviles y PC.
+    - **In-App Toast**: Sistema de avisos visuales internos para 100% de visibilidad incluso con notificaciones de sistema bloqueadas.
+- **Mobile Support**: Preparado para PWA en Android e iOS (vía "Añadir a pantalla de inicio").

@@ -17,9 +17,22 @@ class WebPushChannel
 
         $data = $notification->toWebPush($notifiable);
 
-        // Aquí se integraría con Firebase Cloud Messaging (FCM) o Web Push API nativa
-        // \App\Services\PushService::send($notifiable->fcm_token, $data);
+        // Get tokens for the user
+        $tokens = \App\Models\UserPushToken::where('user_id', $notifiable->id)->pluck('token')->toArray();
 
-        \Illuminate\Support\Facades\Log::info("WebPush Notification sent to user {$notifiable->id}: " . json_encode($data));
+        if (empty($tokens)) {
+            \Illuminate\Support\Facades\Log::info("No push tokens found for user {$notifiable->id}");
+            return;
+        }
+
+        $firebaseService = new \App\Services\FirebaseService();
+        $firebaseService->sendToTokens(
+            $tokens,
+            $data['title'] ?? 'Notificación',
+            $data['body'] ?? '',
+            $data['data'] ?? []
+        );
+
+        \Illuminate\Support\Facades\Log::info("WebPush Notification sent to user {$notifiable->id} via Firebase");
     }
 }

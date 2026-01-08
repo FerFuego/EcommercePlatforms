@@ -43,7 +43,7 @@ class OrderNotificationTest extends TestCase
 
         // Check Notifications
         Notification::assertSentTo($customer, OrderStatusNotification::class);
-        Notification::assertSentTo($cook->user, OrderStatusNotification::class);
+        Notification::assertSentTo($cook->user, \App\Notifications\NewOrderNotification::class);
     }
 
     /** @test */
