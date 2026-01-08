@@ -25,14 +25,18 @@ class WebPushChannel
             return;
         }
 
-        $firebaseService = new \App\Services\FirebaseService();
-        $firebaseService->sendToTokens(
-            $tokens,
-            $data['title'] ?? 'Notificación',
-            $data['body'] ?? '',
-            $data['data'] ?? []
-        );
+        try {
+            $firebaseService = new \App\Services\FirebaseService();
+            $firebaseService->sendToTokens(
+                $tokens,
+                $data['title'] ?? 'Notificación',
+                $data['body'] ?? '',
+                $data['data'] ?? []
+            );
 
-        \Illuminate\Support\Facades\Log::info("WebPush Notification sent to user {$notifiable->id} via Firebase");
+            \Illuminate\Support\Facades\Log::info("WebPush Notification sent to user {$notifiable->id} via Firebase");
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("WebPush Notification failed for user {$notifiable->id}: " . $e->getMessage());
+        }
     }
 }

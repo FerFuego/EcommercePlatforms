@@ -6,7 +6,7 @@ use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 use App\Models\UserPushToken;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class FirebaseService
 {
@@ -83,7 +83,7 @@ class FirebaseService
             Log::info("FCM Multicast sent. successes: " . $report->successes()->count() . ", failures: " . $report->failures()->count());
 
             if ($report->hasFailures()) {
-                foreach ($report->failures()->getItems() as $failure) {
+                foreach ($report->failures() as $failure) {
                     Log::warning("FCM failure: " . $failure->error()->getMessage());
                 }
             }

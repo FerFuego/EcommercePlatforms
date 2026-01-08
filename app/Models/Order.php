@@ -143,12 +143,16 @@ class Order extends Model
 
         event(new \App\Events\OrderStatusUpdated($this));
 
-        // Notificar al cliente
-        $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        try {
+            // Notificar al cliente
+            $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
 
-        // Notificar al cocinero con la notificación de Nuevo Pedido
-        if ($this->cook && $this->cook->user) {
-            $this->cook->user->notify(new \App\Notifications\NewOrderNotification($this));
+            // Notificar al cocinero con la notificación de Nuevo Pedido
+            if ($this->cook && $this->cook->user) {
+                $this->cook->user->notify(new \App\Notifications\NewOrderNotification($this));
+            }
+        } catch (\Exception $e) {
+            \Log::error("Error sending notifications for order #{$this->id}: " . $e->getMessage());
         }
     }
 
@@ -176,7 +180,11 @@ class Order extends Model
         $this->logEvent($event, $description);
 
         event(new \App\Events\OrderStatusUpdated($this));
-        $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        try {
+            $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        } catch (\Exception $e) {
+            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        }
     }
 
     /**
@@ -197,7 +205,11 @@ class Order extends Model
         ]);
 
         event(new \App\Events\OrderStatusUpdated($this));
-        $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        try {
+            $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        } catch (\Exception $e) {
+            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        }
     }
 
     /**
@@ -211,7 +223,11 @@ class Order extends Model
         $this->logEvent('status_change', 'El pedido cambió a estado: Preparando');
 
         event(new \App\Events\OrderStatusUpdated($this));
-        $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        try {
+            $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        } catch (\Exception $e) {
+            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        }
     }
 
     /**
@@ -231,7 +247,11 @@ class Order extends Model
         $this->logEvent('order_ready', $desc);
 
         event(new \App\Events\OrderStatusUpdated($this));
-        $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        try {
+            $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        } catch (\Exception $e) {
+            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        }
     }
 
     /**
@@ -245,7 +265,11 @@ class Order extends Model
         $this->logEvent('on_the_way', 'El pedido está en camino a la dirección de entrega');
 
         event(new \App\Events\OrderStatusUpdated($this));
-        $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        try {
+            $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        } catch (\Exception $e) {
+            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        }
     }
 
     /**
@@ -260,7 +284,11 @@ class Order extends Model
         $this->logEvent('order_delivered', 'Pedido entregado exitosamente');
 
         event(new \App\Events\OrderStatusUpdated($this));
-        $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        try {
+            $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        } catch (\Exception $e) {
+            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        }
     }
 
     /**
@@ -279,7 +307,11 @@ class Order extends Model
         ]);
 
         event(new \App\Events\OrderStatusUpdated($this));
-        $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        try {
+            $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
+        } catch (\Exception $e) {
+            \Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
+        }
     }
 
     /**
