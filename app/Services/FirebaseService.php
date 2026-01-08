@@ -79,7 +79,14 @@ class FirebaseService
             ->withData($data);
 
         try {
-            $messaging->sendMulticast($message, $tokens);
+            $report = $messaging->sendMulticast($message, $tokens);
+            Log::info("FCM Multicast sent. successes: " . $report->successes()->count() . ", failures: " . $report->failures()->count());
+
+            if ($report->hasFailures()) {
+                foreach ($report->failures()->getItems() as $failure) {
+                    Log::warning("FCM failure: " . $failure->error()->getMessage());
+                }
+            }
         } catch (\Exception $e) {
             Log::error("Firebase sending to tokens failed: " . $e->getMessage());
         }

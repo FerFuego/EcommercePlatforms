@@ -42,6 +42,17 @@ This is a Laravel-based multi-tenant e-commerce platform where a Superadmin mana
    ```bash
    composer dev
    ```
+## Production Notes (Hostinger/Shared Hosting)
+
+### Broadcasting & WebSockets
+In production, we use **Pusher**. Due to limitations in shared hosting environments:
+- **Immediate Broadcasting**: Events like `OrderStatusUpdated` implement `ShouldBroadcastNow` instead of `ShouldBroadcast`. This ensures messages are sent to Pusher immediately without requiring a persistent queue worker (`php artisan queue:work`), which is often unavailable or unstable on Hostinger.
+- **Frontend Diagnostics**: `resources/js/echo.js` includes listeners for `connecting`, `connected`, and `error` states to assist in debugging connection issues in the browser console.
+
+### Push Notifications (Firebase)
+- **Authorized Domains**: Ensure the production domain is added to the "Authorized Domains" in the Firebase Console (Authentication > Settings > Authorized domains).
+- **Service Worker**: The file `public/firebase-messaging-sw.js` must be reachable at the root of the domain.
+
 ## Usage
 
 ### Superadmin
