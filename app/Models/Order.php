@@ -146,9 +146,9 @@ class Order extends Model
         // Notificar al cliente
         $this->customer->notify(new \App\Notifications\OrderStatusNotification($this));
 
-        // Notificar al cocinero (otra notificación diferente sería ideal, pero por ahora usamos esta)
+        // Notificar al cocinero con la notificación de Nuevo Pedido
         if ($this->cook && $this->cook->user) {
-            $this->cook->user->notify(new \App\Notifications\OrderStatusNotification($this));
+            $this->cook->user->notify(new \App\Notifications\NewOrderNotification($this));
         }
     }
 

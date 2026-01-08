@@ -13,6 +13,10 @@
     <!-- Tailwind CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/chatbot.css', 'resources/js/chatbot.js'])
 
+    <script>
+        window.isUserAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
+    </script>
+
 
     <!-- Leaflet CSS para mapas -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -581,6 +585,46 @@
             }, 300);
         }
     </script>
+    <!-- Toast de Notificaciones Push -->
+    <div x-data="{ 
+            notifications: [], 
+            add(detail) {
+                const id = Date.now();
+                this.notifications.push({ id, ...detail });
+                setTimeout(() => this.remove(id), 5000);
+            },
+            remove(id) {
+                this.notifications = this.notifications.filter(n => n.id !== id);
+            }
+         }" x-on:push-notification.window="add($event.detail)"
+        class="fixed bottom-4 right-4 z-[9999] flex flex-col gap-2 max-w-sm w-full pointer-events-none">
+
+        <template x-for="n in notifications" :key="n.id">
+            <div x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform translate-y-2"
+                x-transition:enter-end="opacity-100 transform translate-y-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 transform translate-y-0"
+                x-transition:leave-end="opacity-0 transform translate-y-2"
+                class="bg-white dark:bg-gray-800 border border-orange-500 rounded-lg shadow-xl p-4 pointer-events-auto flex items-start gap-4 cursor-pointer"
+                x-on:click="if(n.data?.url) window.location.href = n.data.url">
+
+                <div class="flex-shrink-0" x-show="n.icon">
+                    <img :src="n.icon" class="w-10 h-10 rounded-full border border-gray-200" alt="">
+                </div>
+
+                <div class="flex-1">
+                    <h4 class="font-bold text-gray-900 dark:text-white text-sm" x-text="n.title"></h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-xs mt-1" x-text="n.body"></p>
+                </div>
+
+                <button x-on:click.stop="remove(n.id)" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </template>
+    </div>
+
 </body>
 
 </html>

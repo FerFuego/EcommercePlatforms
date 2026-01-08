@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\PushTokenController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CookDashboardController;
 use App\Http\Controllers\DishController;
@@ -80,6 +81,10 @@ Route::middleware(['auth'])->group(function () {
     // Favoritos
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
     Route::post('/favorites/toggle/{cook}', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
+
+    // Push Notifications
+    Route::post('/push-tokens', [PushTokenController::class, 'store'])->name('push-tokens.store');
+    Route::delete('/push-tokens', [PushTokenController::class, 'destroy'])->name('push-tokens.destroy');
 });
 
 // Rutas de Cocinero
