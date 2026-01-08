@@ -14,6 +14,14 @@ window.Echo.connector.pusher.connection.bind('connected', () => {
     console.log('[Echo] Connected to Pusher successfully');
 });
 
+window.Echo.connector.pusher.connection.bind('connecting', () => {
+    console.log('[Echo] Connecting to Pusher...');
+});
+
+window.Echo.connector.pusher.connection.bind('disconnected', () => {
+    console.log('[Echo] Disconnected from Pusher');
+});
+
 window.Echo.connector.pusher.connection.bind('error', (err) => {
     console.error('[Echo] Error connecting to Pusher:', err);
 });
