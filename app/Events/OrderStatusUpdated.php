@@ -34,6 +34,7 @@ class OrderStatusUpdated implements ShouldBroadcastNow
     {
         return [
             new PrivateChannel('order.' . $this->order->id),
+            new PrivateChannel('cook.' . $this->order->cook->user_id),
         ];
     }
 

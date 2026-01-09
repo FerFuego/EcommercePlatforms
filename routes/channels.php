@@ -30,3 +30,7 @@ Broadcast::channel('order.{orderId}', function ($user, $orderId) {
 
     return false;
 });
+
+Broadcast::channel('cook.{userId}', function ($user, $userId) {
+    return (int) $user->id === (int) $userId && $user->cook !== null;
+});

@@ -167,16 +167,17 @@
                     @forelse($recentOrders as $order)
                                     <div
                                         class="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-pink-50 rounded-xl mb-3 hover:shadow-md transition-shadow">
-                                        <div class="flex items-center space-x-4">
+                                        <a href="{{ route('orders.show', $order->id) }}" class="flex items-center space-x-4 group">
                                             <div
-                                                class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white font-bold">
+                                                class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform">
                                                 {{ substr($order->customer->name, 0, 1) }}
                                             </div>
                                             <div>
-                                                <p class="font-semibold text-gray-800">{{ $order->customer->name }}</p>
+                                                <p class="font-semibold text-gray-800 group-hover:text-purple-600 transition-colors">
+                                                    {{ $order->customer->name }}</p>
                                                 <p class="text-sm text-gray-600">{{ $order->created_at->diffForHumans() }}</p>
                                             </div>
-                                        </div>
+                                        </a>
                                         <div class="text-right">
                                             <p class="font-bold text-gray-800">${{ number_format($order->total_amount, 0) }}</p>
                                             <span class="text-xs px-2 py-1 rounded-full  {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
@@ -221,6 +222,18 @@
 
     @push('scripts')
         <script>
+            window.addEventListener('DOMContentLoaded', function () {
+                if (window.Echo) {
+                    window.Echo.private('cook.{{ auth()->user()->id }}')
+                        .listen('OrderStatusUpdated', (e) => {
+                            console.log('Order status updated:', e);
+                            // Refresh page to show new orders or status changes
+                            // Optionally use a toast or just show a "New order" button
+                            window.location.reload();
+                        });
+                }
+            });
+
             function toggleActive(checkbox) {
                 fetch('{{ route("cook.profile.toggle-active") }}', {
                     method: 'POST',
