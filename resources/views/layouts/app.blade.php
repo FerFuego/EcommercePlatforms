@@ -238,6 +238,10 @@
                                     class="bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs rounded-full px-2 py-1">{{ $pendingCount }}</span>
                             @endif
                         </a>
+                        <a href="{{ route('favorites.index') }}"
+                            class="text-gray-700 hover:text-red-600 font-medium transition-colors">
+                            Favoritos
+                        </a>
                         <a href="{{ route('cart.index') }}"
                             class="block px-4 py-3 text-gray-700 hover:bg-orange-50 rounded-xl font-medium transition-colors flex items-center justify-between">
                             <span>🛒 Carrito</span>
