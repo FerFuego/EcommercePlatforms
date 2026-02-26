@@ -307,6 +307,11 @@ class Order extends Model
 
         $this->logEvent('order_delivered', 'Pedido entregado exitosamente');
 
+        // Increment Cook limits and block if exceeded
+        if ($this->cook) {
+            $this->cook->incrementMetricsAndCheckLimits((float) $this->total_amount);
+        }
+
         try {
             event(new \App\Events\OrderStatusUpdated($this));
         } catch (\Throwable $e) {

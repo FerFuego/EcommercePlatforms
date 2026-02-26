@@ -71,10 +71,27 @@ class MarketplaceController extends Controller
 
         // Sorting logic closure
         $applySort = function ($query) use ($sort, $lat, $lng) {
+            // Priority Listing feature logic (assuming we can join or compute, but since features is JSON
+            // the most robust way in Laravel is to join cook_subscriptions and subscription_plans, or sort in memory.
+            // Let's sort by distance/rating/price first, then we can apply a secondary sort or handle JSON if MySQL >= 5.7)
+
+            // To prioritize by JSON feature 'priority_listing' in the plan we'd need:
+            // LEFT JOIN cook_subscriptions cs ON cs.id = cooks.current_subscription_id AND cs.status = 'active'
+            // LEFT JOIN subscription_plans sp ON sp.id = cs.plan_id
+            // ORDER BY JSON_EXTRACT(sp.features, '$.priority_listing') DESC
+
+            $query->leftJoin('cook_subscriptions', function ($join) {
+                $join->on('cooks.current_subscription_id', '=', 'cook_subscriptions.id')
+                    ->where('cook_subscriptions.status', '=', 'active');
+            })
+                ->leftJoin('subscription_plans', 'cook_subscriptions.plan_id', '=', 'subscription_plans.id')
+                ->select('cooks.*') // prevent overriding cooks columns with joined table columns
+                ->orderByRaw("COALESCE(JSON_UNQUOTE(JSON_EXTRACT(subscription_plans.features, '$.priority_listing')), 'false') DESC");
+
             if ($sort === 'rating') {
-                $query->reorder()->orderByDesc('rating_avg');
+                $query->orderByDesc('rating_avg');
             } elseif ($sort === 'price') {
-                $query->reorder()->withMin('dishes', 'price')->orderBy('dishes_min_price');
+                $query->withMin('dishes', 'price')->orderBy('dishes_min_price');
             } elseif (!$lat && !$lng) {
                 $query->orderByDesc('rating_avg');
             }

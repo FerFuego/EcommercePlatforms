@@ -1,9 +1,13 @@
 @foreach($cooks as $cook)
-    <div class="cook-card bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300"
+    @php
+        $isPremium = $cook->hasFeature('premium_badge');
+    @endphp
+    <div class="cook-card bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 {{ $isPremium ? 'ring-2 ring-yellow-400 ring-offset-2' : '' }}"
         data-cook-id="{{ $cook->id }}" data-lat="{{ $cook->location_lat }}" data-lng="{{ $cook->location_lng }}">
 
         <!-- Cook Header -->
-        <div class="bg-gradient-to-r from-orange-400 to-pink-500 p-6 text-white relative">
+        <div
+            class="p-6 text-white relative {{ $isPremium ? 'bg-gradient-to-r from-yellow-500 to-orange-500' : 'bg-gradient-to-r from-orange-400 to-pink-500' }}">
             <!-- Favorite Heart Icon -->
             @auth
                 @if(auth()->user()->isCustomer())
@@ -18,6 +22,17 @@
                     </button>
                 @endif
             @endauth
+
+            @if($cook->hasFeature('premium_badge'))
+                <div
+                    class="absolute top-4 left-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center z-10 transform -rotate-2">
+                    <svg class="w-3 h-3 mr-1 fill-current" viewBox="0 0 20 20">
+                        <path
+                            d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                    </svg>
+                    Premium
+                </div>
+            @endif
 
             <div class="flex items-center space-x-4">
                 @if($cook->user->profile_photo_path)

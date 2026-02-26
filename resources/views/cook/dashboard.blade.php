@@ -110,16 +110,28 @@
                             Nuevo Plato
                         </a>
                         <a href="{{ route('cook.profile.edit') }}"
-                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            class="block bg-gradient-to-r from-gray-500 to-gray-700 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Configuración
+                        </a>
+                        <a href="{{ route('cook.subscription.index') }}"
+                            class="block bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center mt-3">
+                            Mi Suscripción
                         </a>
                     </div>
                 </div>
 
-                <!-- Profile Info -->
                 <div class="bg-white rounded-2xl shadow-xl p-6 mt-6">
                     <h3 class="text-xl font-bold mb-4">Mi Perfil</h3>
                     <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Suscripción:</span>
+                            @php
+                                $plan = $cook->plan();
+                            @endphp
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold {{ $plan && $plan->price > 0 ? 'bg-purple-100 text-purple-800 border-purple-200 border' : 'bg-gray-100 text-gray-800 border-gray-200 border' }}">
+                                {{ $plan ? $plan->name : 'Básico (FREE)' }}
+                            </span>
+                        </div>
                         <div class="flex items-center justify-between">
                             <span class="text-gray-600">Estado:</span>
                             @if(auth()->user()->is_suspended)

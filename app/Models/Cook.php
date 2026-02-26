@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Cashier\Billable;
 
 class Cook extends Model
 {
-    use HasFactory;
+    use HasFactory, Billable;
     protected $fillable = [
         'user_id',
         'bio',
@@ -28,6 +29,11 @@ class Cook extends Model
         'opening_time',
         'closing_time',
         'max_scheduled_portions_per_day',
+        'current_subscription_id',
+        'monthly_sales_accumulated',
+        'monthly_orders_accumulated',
+        'sales_reset_at',
+        'is_selling_blocked',
     ];
 
     protected $casts = [
@@ -41,6 +47,10 @@ class Cook extends Model
         'location_lng' => 'decimal:8',
         'coverage_radius_km' => 'decimal:2',
         'max_scheduled_portions_per_day' => 'integer',
+        'monthly_sales_accumulated' => 'decimal:2',
+        'monthly_orders_accumulated' => 'integer',
+        'sales_reset_at' => 'datetime',
+        'is_selling_blocked' => 'boolean',
     ];
 
     /**
@@ -159,5 +169,64 @@ class Cook extends Model
     {
         return $this->belongsToMany(User::class, 'favorite_cooks')
             ->withTimestamps();
+    }
+
+    /**
+     * Relación con CookSubscription (suscripción actual)
+     */
+    public function currentSubscription(): BelongsTo
+    {
+        return $this->belongsTo(CookSubscription::class, 'current_subscription_id');
+    }
+
+    /**
+     * Relación con SubscriptionPlan (plan actual a través de la suscripción)
+     */
+    public function plan()
+    {
+        // Alternativamente, se puede definir un HasOneThrough si es más limpio,
+        // pero acceder por la suscripción es más directo
+        if ($this->currentSubscription) {
+            return $this->currentSubscription->plan;
+        }
+        return null;
+    }
+
+    /**
+     * Verificar si el cocinero tiene una feature premium en su plan actual
+     */
+    public function hasFeature(string $featureKey): bool
+    {
+        $plan = $this->plan();
+        if (!$plan || !$plan->features) {
+            return false;
+        }
+
+        return isset($plan->features[$featureKey]) && $plan->features[$featureKey] === true;
+    }
+
+    /**
+     * Incrementa las métricas mensuales y verifica si supera el límite de su plan actual.
+     */
+    public function incrementMetricsAndCheckLimits(float $amount): void
+    {
+        $this->monthly_sales_accumulated = number_format((float) $this->monthly_sales_accumulated + $amount, 2, '.', '');
+        $this->monthly_orders_accumulated = (int) $this->monthly_orders_accumulated + 1;
+
+        $plan = $this->plan();
+
+        if ($plan) {
+            $exceedsSales = $plan->monthly_sales_limit !== null && $this->monthly_sales_accumulated > $plan->monthly_sales_limit;
+            $exceedsOrders = $plan->monthly_orders_limit !== null && $this->monthly_orders_accumulated > $plan->monthly_orders_limit;
+
+            if ($exceedsSales || $exceedsOrders) {
+                // Not using active subscription status logic yet, just basic blocking
+                // If they have a "fixed" premium plan, we can bypass this or adjust logic.
+                // For MVP, if limit exceeded, block.
+                $this->is_selling_blocked = true;
+            }
+        }
+
+        $this->save();
     }
 }

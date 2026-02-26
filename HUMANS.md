@@ -653,3 +653,74 @@ Plan PREMIUM
     - **Service Worker**: Gestión en segundo plano (background) para móviles y PC.
     - **In-App Toast**: Sistema de avisos visuales internos para 100% de visibilidad incluso con notificaciones de sistema bloqueadas.
 - **Mobile Support**: Preparado para PWA en Android e iOS (vía "Añadir a pantalla de inicio").
+
+# SISTEMA DE SUSCRIPCIONES
+Guía de implementación del sistema de suscripción de Cook
+El MVP del sistema de suscripción de Cook se ha implementado correctamente en el Marketplace de Cocinarte. Este documento resume la arquitectura, las nuevas funciones y los cambios realizados en la aplicación.
+
+1. Base de datos y arquitectura
+Se implementó un modelo de suscripción híbrido, compuesto por una implementación local personalizada ( SubscriptionPlan y CookSubscription) diseñada para funcionar con Laravel Cashier.
+
+Nuevas tablas:
+subscription_plans: Almacena detalles de los planes disponibles (nombre, precio, moneda, período de facturación, límites de ventas/pedidos, porcentaje de comisión y características codificadas en JSON).
+cook_subscriptions: Asocia a los cocineros con planes, estado de seguimiento y períodos de facturación.
+Actualizaciones de la tabla Cooks: Se añadieron las columnas de seguimiento: current_subscription_id, monthly_sales_accumulated, monthly_orders_accumulated, sales_reset_at y is_selling_blocked.
+
+2. Funciones de administración
+Los administradores ahora pueden gestionar completamente el ecosistema de suscripciones.
+
+Gestión de planes (AdminSubscriptionPlanController): CRUD completo para planes de suscripción mediante las rutas admin.subscription-plans.*.
+Configuración de funciones premium: Los administradores pueden definir funciones premium mediante JSON en el formulario de creación de planes (por ejemplo, "Cocinero Premium" y "Destacado en Búsquedas").
+Interfaz de usuario: Se añadió la sección "Planes de Suscripción" a la barra lateral de administración (layouts/admin.blade.php ).
+
+
+3. Experiencia de cocina y facturación: Los cocineros pueden ver su consumo actual y administrar su plan.
+
+Integración del panel: Se añadió el enlace "Mi suscripción" a la sección de acciones rápidas del panel de control de cocina.
+Gestión de suscripciones (CookSubscriptionController ): Los cocineros pueden ver su plan activo, controlar el consumo mensual actual en relación con los límites y explorar las actualizaciones disponibles.
+Flujo de pago: Se implementó un proceso de pago simulado ( checkout.blade.php ), preparando el sistema para los webhooks de Stripe/MercadoPago. 4. 
+
+Lógica de negocio y middleware
+El motor de reglas principal que aplica las restricciones de suscripción:
+
+Seguimiento de métricas: El OrderController incrementa las métricas de ventas y recuento de pedidos del cocinero al completarse el pedido mediante el método incrementMetricsAndCheckLimits del modelo Cook.
+
+Aplicación de límites (EnsureCookCanSell Middleware): Este middleware encapsula las rutas cart.add y orders.checkout. Si un cocinero excede los límites de su plan, se bloquean los pedidos posteriores a ese cocinero y el usuario recibe un mensaje de error.
+
+Reinicio mensual: Se creó un comando artesanal ResetMonthlyCookMetrics
+(cooks:reset-monthly-metrics) y se programó para ejecutarse automáticamente el 1 de cada mes para restablecer las ventas, los pedidos y desbloquear cocineros.
+
+5. Funciones premium (Frontend)
+Las funciones definidas en los planes de suscripción afectan directamente la visibilidad del marketplace.
+
+Insignia Premium: Los cocineros con la función premium_badge muestran una insignia dorada visual "Premium" en sus tarjetas de perfil en el catálogo público (marketplace/catalog.blade.php).
+Lista de Prioridad: Se actualizó la lógica de consulta MarketplaceController@catalog para usar una combinación izquierda (LEFT JOIN) en la columna de características JSON, priorizando a los cocineros con priority_listing = true en la parte superior de los resultados de búsqueda.
+
+6. Pruebas y Migración
+Semillado de Datos: Se creó un SubscriptionPlanSeeder para completar la base de datos con un plan "Básico (GRATIS)" y uno "Premium".
+Migración de Datos: La migración de assign_default_plan_to_cooks inscribió automáticamente a todos los cocineros existentes en el plan "Básico (GRATIS)" con límites iniciales (20 pedidos, 50.000 ARS).
+Pruebas automatizadas: Se realizaron pruebas exhaustivas de funciones en SubscriptionFlowTest para validar los incrementos de métricas, el bloqueo de límites, la creación de planes de administración y el comando de reinicio mensual. Todas las pruebas se superaron correctamente.
+
+7. Phase 12: Integración Real de Pagos (Stripe & MercadoPago)
+Se ha implementado el flujo completo de pago para las suscripciones de los cocineros:
+
+Selección de Pasarela: El cocinero ahora puede elegir entre Stripe (Tarjetas Internacionales) y MercadoPago (Pagos Locales) si el administrador ha configurado las llaves.
+Redirección a Checkout Real:
+Stripe: Utiliza Laravel Cashier para crear sesiones de Checkout seguras vinculadas al stripe_price_id del plan.
+MercadoPago: Utiliza el SDK v3 para crear Preferencias de pago vinculadas al mp_plan_id o el precio del plan.
+Confirmación Automática (Webhooks): Se ha creado el PaymentWebhookController para recibir notificaciones de MercadoPago y activar la suscripción automáticamente en la base de datos.
+Seguridad: Se han excluido las rutas de webhooks de la protección CSRF en bootstrap/app.php.
+
+8. Phase 13: Historial de Pagos y Acreditaciones
+Para dar transparencia al proceso de cobro recurrente, se implementó un sistema de seguimiento de transacciones:
+
+Historial del Cocinero
+Los cocineros tienen un nuevo botón "Historial de Pagos" en su panel de suscripción.
+Pueden ver la fecha, el plan adquirido, el monto pagado (en ARS/USD), el método de pago y el ID de referencia de la plataforma.
+Panel de Control Administrativo
+Nueva sección: Pagos y Recaudación.
+Dashboard de Ingresos: Visualización del total recaudado y desglose por plataforma (Stripe vs MercadoPago).
+Control Detallado: Listado global de todas las acreditaciones por usuario en tiempo real.
+NOTE
+
+Cada vez que una plataforma (Stripe o MercadoPago) confirma un pago a través de un webhook, el sistema registra automáticamente una entrada en la tabla subscription_payments, asegurando que el historial esté siempre actualizado sin intervención manual.

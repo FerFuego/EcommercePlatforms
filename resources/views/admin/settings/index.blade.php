@@ -83,9 +83,37 @@
                         </div>
                     @endif
 
+                    <div class="border-t border-gray-100"></div>
+
+                    {{-- Payment Gateways Settings --}}
+                    @if(isset($settings['pagos']))
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg mr-3">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                                </span>
+                                Pasarelas de Pago
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                @foreach($settings['pagos'] as $setting)
+                                    <div>
+                                        <label for="{{ $setting->key }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                                            {{ $setting->label }}
+                                        </label>
+                                        <div class="relative rounded-md shadow-sm">
+                                            <input type="{{ $setting->type }}" name="{{ $setting->key }}" id="{{ $setting->key }}"
+                                                value="{{ $setting->value }}"
+                                                class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition shadow-sm font-mono text-sm">
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
                     {{-- General / Other Settings --}}
                     @foreach($settings as $group => $groupSettings)
-                        @if($group !== 'seo' && $group !== 'financial')
+                        @if($group !== 'seo' && $group !== 'financial' && $group !== 'pagos')
                             <div class="border-t border-gray-100 pt-6">
                                 <h2 class="text-xl font-bold text-gray-800 mb-4 capitalize">{{ $group }}</h2>
                                 <div class="grid grid-cols-1 gap-6 bg-gray-50 p-6 rounded-xl border border-gray-100">

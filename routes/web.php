@@ -60,7 +60,7 @@ Route::middleware(['auth'])->group(function () {
     // Carrito y órdenes (clientes)
     Route::prefix('cart')->name('cart.')->group(function () {
         Route::get('/', [OrderController::class, 'cart'])->name('index');
-        Route::post('/add/{dishId}', [OrderController::class, 'addToCart'])->name('add');
+        Route::post('/add/{dishId}', [OrderController::class, 'addToCart'])->middleware('can_sell')->name('add');
         Route::delete('/remove/{index}', [OrderController::class, 'removeFromCart'])->name('remove');
     });
 
@@ -110,6 +110,12 @@ Route::middleware(['auth', 'cook'])->prefix('cook')->name('cook.')->group(functi
     Route::post('/orders/{orderId}/accept', [OrderController::class, 'accept'])->name('orders.accept');
     Route::post('/orders/{orderId}/reject', [OrderController::class, 'reject'])->name('orders.reject');
     Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+
+    // Suscripciones
+    Route::get('/subscription', [\App\Http\Controllers\CookSubscriptionController::class, 'index'])->name('subscription.index');
+    Route::get('/subscription/history', [\App\Http\Controllers\CookSubscriptionController::class, 'history'])->name('subscription.history');
+    Route::get('/subscription/{plan}/checkout', [\App\Http\Controllers\CookSubscriptionController::class, 'checkout'])->name('subscription.checkout');
+    Route::post('/subscription/{plan}/process', [\App\Http\Controllers\CookSubscriptionController::class, 'process'])->name('subscription.process');
 });
 
 // Rutas de Admin
@@ -136,6 +142,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/drivers/{driverId}', [AdminController::class, 'showDriver'])->name('drivers.show');
     Route::post('/drivers/{driverId}/approve', [AdminController::class, 'approveDriver'])->name('drivers.approve');
     Route::post('/drivers/{driverId}/reject', [AdminController::class, 'rejectDriver'])->name('drivers.reject');
+
+    // Gestión de Suscripciones (Admin)
+    Route::get('/subscription-plans', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'index'])->name('subscription-plans.index');
+    Route::get('/subscription-plans/create', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'create'])->name('subscription-plans.create');
+    Route::post('/subscription-plans', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'store'])->name('subscription-plans.store');
+    Route::get('/subscription-plans/{subscriptionPlan}/edit', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'edit'])->name('subscription-plans.edit');
+    Route::put('/subscription-plans/{subscriptionPlan}', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
+    Route::patch('/subscription-plans/{subscriptionPlan}/toggle', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'toggleStatus'])->name('subscription-plans.toggle');
+    Route::get('/subscription-payments', [\App\Http\Controllers\AdminSubscriptionPaymentController::class, 'index'])->name('subscription-payments.index');
 
     // Gestión de Usuarios
     Route::get('/users', [AdminController::class, 'allUsers'])->name('users.index');
