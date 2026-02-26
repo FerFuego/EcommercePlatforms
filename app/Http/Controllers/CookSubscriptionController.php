@@ -123,7 +123,11 @@ class CookSubscriptionController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('cook.subscription.history', compact('cook', 'payments'));
+        $totalInvested = SubscriptionPayment::where('cook_id', $cook->id)
+            ->where('status', 'approved')
+            ->sum('amount');
+
+        return view('cook.subscription.history', compact('cook', 'payments', 'totalInvested'));
     }
 
     protected function processSubscriptionSuccess($cook, SubscriptionPlan $plan)

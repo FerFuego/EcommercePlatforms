@@ -84,7 +84,7 @@
                         Price ID (Opcional)</label>
                     <input type="text" name="stripe_price_id" id="stripe_price_id"
                         value="{{ old('stripe_price_id', $subscriptionPlan->stripe_price_id) }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        class="mt-1 flex-1 block w-full rounded-md sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                         placeholder="price_1HhG2f2eZvKYlo2... ">
                     @error('stripe_price_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
@@ -94,7 +94,7 @@
                         Plan ID (Opcional)</label>
                     <input type="text" name="mp_plan_id" id="mp_plan_id"
                         value="{{ old('mp_plan_id', $subscriptionPlan->mp_plan_id) }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        class="mt-1 flex-1 block w-full rounded-md sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                         placeholder="2c9380847269f38a0172... ">
                     @error('mp_plan_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
