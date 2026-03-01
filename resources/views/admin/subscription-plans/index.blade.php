@@ -17,7 +17,21 @@
             </div>
         @endif
 
-        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700">
+        @if(session('error'))
+            <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if(session('warning'))
+            <div class="p-4 mb-4 text-sm text-orange-700 bg-orange-100 rounded-lg dark:bg-orange-200 dark:text-orange-800"
+                role="alert">
+                {{ session('warning') }}
+            </div>
+        @endif
+
+        <div
+            class="bg-white dark:bg-gray-800 shadow-lg rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
@@ -37,6 +51,9 @@
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                             Estado</th>
                         <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider max-w-xs">
+                            IDs Externos</th>
+                        <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                             Acciones</th>
                     </tr>
@@ -45,11 +62,13 @@
                     @foreach($plans as $plan)
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                                {{ $plan->name }}</td>
+                                {{ $plan->name }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                 ${{ number_format($plan->price, 2) }} {{ $plan->currency }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                {{ ucfirst($plan->billing_period) }}</td>
+                                {{ ucfirst($plan->billing_period) }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                 Ventas:
                                 {{ $plan->monthly_sales_limit ? '$' . number_format($plan->monthly_sales_limit, 2) : '∞' }}<br>
@@ -61,6 +80,17 @@
                                     {{ $plan->is_active ? 'Activo' : 'Inactivo' }}
                                 </span>
                             </td>
+                            <td class="px-6 py-4 text-[10px] text-gray-500 dark:text-gray-400 max-w-xs break-all">
+                                @if($plan->mp_plan_id)
+                                    <span class="block">MP: {{ $plan->mp_plan_id }}</span>
+                                @endif
+                                @if($plan->stripe_price_id)
+                                    <span class="block">Stripe: {{ $plan->stripe_price_id }}</span>
+                                @endif
+                                @if(!$plan->mp_plan_id && !$plan->stripe_price_id)
+                                    <span class="text-gray-400 italic">No vinculado</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <a href="{{ route('admin.subscription-plans.edit', $plan) }}"
                                     class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-3">Editar</a>
@@ -71,6 +101,16 @@
                                     <button type="submit"
                                         class="text-{{ $plan->is_active ? 'red' : 'green' }}-600 hover:text-{{ $plan->is_active ? 'red' : 'green' }}-900 dark:text-{{ $plan->is_active ? 'red' : 'green' }}-400 dark:hover:text-{{ $plan->is_active ? 'red' : 'green' }}-300">
                                         {{ $plan->is_active ? 'Desactivar' : 'Activar' }}
+                                    </button>
+                                </form>
+                                <form action="{{ route('admin.subscription-plans.destroy', $plan) }}" method="POST"
+                                    class="inline"
+                                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar este plan? Esta acción no se puede deshacer.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 ml-3">
+                                        Eliminar
                                     </button>
                                 </form>
                             </td>

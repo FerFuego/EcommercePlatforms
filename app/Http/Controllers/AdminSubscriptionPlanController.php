@@ -5,9 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Services\MercadoPagoPlanService;
 
 class AdminSubscriptionPlanController extends Controller
 {
+    protected $mpService;
+
+    public function __construct(MercadoPagoPlanService $mpService)
+    {
+        $this->mpService = $mpService;
+    }
     public function index()
     {
         $plans = SubscriptionPlan::latest()->get();
@@ -46,7 +53,15 @@ class AdminSubscriptionPlanController extends Controller
         $validated['features'] = $features;
         $validated['is_active'] = $request->has('is_active');
 
-        SubscriptionPlan::create($validated);
+        $plan = SubscriptionPlan::create($validated);
+
+        // Sync with Mercado Pago
+        $mpPlanId = $this->mpService->syncPlan($plan);
+        if ($mpPlanId) {
+            $plan->update(['mp_plan_id' => $mpPlanId]);
+        } else {
+            session()->flash('warning', 'El plan se creó localmente pero no se pudo sincronizar con Mercado Pago. Verifica el Access Token.');
+        }
 
         return redirect()->route('admin.subscription-plans.index')->with('success', 'Plan de suscripción creado.');
     }
@@ -83,6 +98,14 @@ class AdminSubscriptionPlanController extends Controller
 
         $subscriptionPlan->update($validated);
 
+        // Sync with Mercado Pago
+        $mpPlanId = $this->mpService->syncPlan($subscriptionPlan);
+        if ($mpPlanId && $mpPlanId !== $subscriptionPlan->mp_plan_id) {
+            $subscriptionPlan->update(['mp_plan_id' => $mpPlanId]);
+        } elseif (!$mpPlanId) {
+            session()->flash('warning', 'No se pudo sincronizar los cambios con Mercado Pago. Verifica la conexión.');
+        }
+
         return redirect()->route('admin.subscription-plans.index')->with('success', 'Plan actualizado.');
     }
 
@@ -92,5 +115,24 @@ class AdminSubscriptionPlanController extends Controller
         $subscriptionPlan->save();
 
         return back()->with('success', 'Estado del plan actualizado.');
+    }
+
+    public function destroy(SubscriptionPlan $subscriptionPlan)
+    {
+        // Check for active subscriptions
+        $activeSubscriptionsCount = $subscriptionPlan->subscriptions()->where('status', 'active')->count();
+
+        if ($activeSubscriptionsCount > 0) {
+            return back()->with('error', 'No se puede eliminar un plan que tiene suscripciones activas. Te recomendamos desactivarlo para evitar errores en las cuentas de los cocineros.');
+        }
+
+        // Coordination with Mercado Pago
+        if ($subscriptionPlan->mp_plan_id) {
+            $this->mpService->deactivatePlan($subscriptionPlan->mp_plan_id);
+        }
+
+        $subscriptionPlan->delete();
+
+        return redirect()->route('admin.subscription-plans.index')->with('success', 'Plan de suscripción eliminado correctamente.');
     }
 }

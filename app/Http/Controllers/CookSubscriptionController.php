@@ -85,12 +85,28 @@ class CookSubscriptionController extends Controller
             return back()->with('error', 'MercadoPago no está configurado.');
         }
 
-        // Using MP SDK v3 (as per composer show)
+        // Using MP SDK v3
         \MercadoPago\MercadoPagoConfig::setAccessToken($accessToken);
 
-        $client = new \MercadoPago\Client\Preference\PreferenceClient();
-
         try {
+            // Case A: Recurring Subscription (Pre-approval)
+            if ($plan->mp_plan_id) {
+                $client = new \MercadoPago\Client\PreApproval\PreApprovalClient();
+
+                $subscription = $client->create([
+                    "preapproval_plan_id" => $plan->mp_plan_id,
+                    "reason" => "Suscripción Cocinarte: " . $plan->name,
+                    "external_reference" => "cook_sub_" . $cook->id . "_" . $plan->id,
+                    "payer_email" => $cook->user->email,
+                    "back_url" => route('cook.subscription.index', ['success' => 1]),
+                    "auto_return" => "approved",
+                ]);
+
+                return redirect($subscription->init_point);
+            }
+
+            // Case B: One-time Payment (Preference) - Legacy/Fallback
+            $client = new \MercadoPago\Client\Preference\PreferenceClient();
             $preference = $client->create([
                 "items" => [
                     [
@@ -111,6 +127,7 @@ class CookSubscriptionController extends Controller
 
             return redirect($preference->init_point);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('MP Subscription Error: ' . $e->getMessage());
             return back()->with('error', 'Error al comunicar con MercadoPago: ' . $e->getMessage());
         }
     }

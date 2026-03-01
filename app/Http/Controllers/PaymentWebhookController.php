@@ -25,9 +25,13 @@ class PaymentWebhookController extends Controller
             return response()->json(['message' => 'No ID provided'], 400);
         }
 
-        // We only care about payments or merchant_orders for confirmation
+        // We care about payments, merchant_orders or preapprovals
         if ($topic === 'payment' || $topic === 'merchant_order') {
             return $this->processMercadoPagoPayment($id, $topic);
+        }
+
+        if ($topic === 'preapproval') {
+            return $this->processMercadoPagoPreApproval($id);
         }
 
         return response()->json(['message' => 'Topic ignored'], 200);
@@ -64,6 +68,33 @@ class PaymentWebhookController extends Controller
         return response()->json(['message' => 'Payment not approved yet'], 200);
     }
 
+    protected function processMercadoPagoPreApproval($id)
+    {
+        $accessToken = \App\Models\Setting::get('mp_access_token');
+        \MercadoPago\MercadoPagoConfig::setAccessToken($accessToken);
+
+        try {
+            $client = new \MercadoPago\Client\PreApproval\PreApprovalClient();
+            $preApproval = $client->get($id);
+
+            $externalReference = $preApproval->external_reference;
+            $status = $preApproval->status;
+
+            // status can be: pending, authorized, paused, cancelled
+            if ($status === 'authorized' && $externalReference) {
+                return $this->activateSubscriptionFromReference($externalReference, 'mercadopago', $id);
+            }
+
+            Log::info("MP PreApproval status: {$status} for reference: {$externalReference}");
+
+        } catch (\Exception $e) {
+            Log::error('MP PreApproval Webhook Error: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
+        return response()->json(['message' => 'Processed'], 200);
+    }
+
     protected function activateSubscriptionFromReference($reference, $gateway, $paymentId)
     {
         // Reference format: cook_sub_{cook_id}_{plan_id}
@@ -82,16 +113,30 @@ class PaymentWebhookController extends Controller
             return response()->json(['message' => 'Cook or Plan not found'], 404);
         }
 
-        // Create or Update Subscription
-        $subscription = CookSubscription::create([
-            'cook_id' => $cook->id,
-            'plan_id' => $plan->id,
-            'status' => 'active',
-            'provider' => $gateway,
-            'provider_subscription_id' => $paymentId,
-            'current_period_start' => now(),
-            'current_period_end' => $plan->billing_period === 'monthly' ? now()->addMonth() : now()->addYear(),
-        ]);
+        // Check if cook already has an active subscription for THIS plan
+        $subscription = CookSubscription::where('cook_id', $cook->id)
+            ->where('plan_id', $plan->id)
+            ->where('status', 'active')
+            ->first();
+
+        if ($subscription) {
+            // Update existing subscription's end date
+            $subscription->update([
+                'current_period_end' => $plan->billing_period === 'monthly' ? now()->addMonth() : now()->addYear(),
+                'provider_subscription_id' => $paymentId, // Update with latest ID
+            ]);
+        } else {
+            // Create New Subscription
+            $subscription = CookSubscription::create([
+                'cook_id' => $cook->id,
+                'plan_id' => $plan->id,
+                'status' => 'active',
+                'provider' => $gateway,
+                'provider_subscription_id' => $paymentId,
+                'current_period_start' => now(),
+                'current_period_end' => $plan->billing_period === 'monthly' ? now()->addMonth() : now()->addYear(),
+            ]);
+        }
 
         // Log Payment History
         SubscriptionPayment::create([

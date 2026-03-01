@@ -150,6 +150,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/subscription-plans/{subscriptionPlan}/edit', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'edit'])->name('subscription-plans.edit');
     Route::put('/subscription-plans/{subscriptionPlan}', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
     Route::patch('/subscription-plans/{subscriptionPlan}/toggle', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'toggleStatus'])->name('subscription-plans.toggle');
+    Route::delete('/subscription-plans/{subscriptionPlan}', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'destroy'])->name('subscription-plans.destroy');
     Route::get('/subscription-payments', [\App\Http\Controllers\AdminSubscriptionPaymentController::class, 'index'])->name('subscription-payments.index');
 
     // Gestión de Usuarios
