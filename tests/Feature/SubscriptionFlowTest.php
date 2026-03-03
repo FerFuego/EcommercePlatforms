@@ -51,25 +51,25 @@ class SubscriptionFlowTest extends TestCase
         $this->assertEquals(0, $cook->monthly_orders_accumulated);
         $this->assertFalse($cook->is_selling_blocked);
 
-        // 3. Increment metrics to the limit (20)
-        // Let's manually increment 20 times (reaching the limit, but not exceeding it)
-        for ($i = 0; $i < 20; $i++) {
+        // 3. Increment metrics to the limit (100)
+        // Let's manually increment 100 times (reaching the limit, but not exceeding it)
+        for ($i = 0; $i < 100; $i++) {
             $cook->incrementMetricsAndCheckLimits(100);
         }
 
         $cook->refresh();
-        $this->assertEquals(20, $cook->monthly_orders_accumulated);
-        $this->assertEquals(2000, $cook->monthly_sales_accumulated);
+        $this->assertEquals(100, $cook->monthly_orders_accumulated);
+        $this->assertEquals(10000, $cook->monthly_sales_accumulated);
         $this->assertFalse($cook->is_selling_blocked);
 
-        // 4. Hit the limit (21st order should block)
+        // 4. Hit the limit (101st order should block)
         $cook->incrementMetricsAndCheckLimits(100);
 
         $cook->refresh();
         $cook->load('currentSubscription.plan');
 
-        $this->assertEquals(21, $cook->monthly_orders_accumulated);
-        $this->assertEquals(2100, $cook->monthly_sales_accumulated);
+        $this->assertEquals(101, $cook->monthly_orders_accumulated);
+        $this->assertEquals(10100, $cook->monthly_sales_accumulated);
         $this->assertTrue($cook->is_selling_blocked); // Should be blocked now
     }
 

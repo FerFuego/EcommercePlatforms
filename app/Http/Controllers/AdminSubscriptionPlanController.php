@@ -5,15 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Services\MercadoPagoPlanService;
+use App\Services\MercadoPagoService;
 
 class AdminSubscriptionPlanController extends Controller
 {
-    protected $mpService;
+    protected $mercadoPagoService;
 
-    public function __construct(MercadoPagoPlanService $mpService)
+    public function __construct(MercadoPagoService $mercadoPagoService)
     {
-        $this->mpService = $mpService;
+        $this->mercadoPagoService = $mercadoPagoService;
     }
     public function index()
     {
@@ -56,7 +56,7 @@ class AdminSubscriptionPlanController extends Controller
         $plan = SubscriptionPlan::create($validated);
 
         // Sync with Mercado Pago
-        $mpPlanId = $this->mpService->syncPlan($plan);
+        $mpPlanId = $this->mercadoPagoService->syncPlan($plan);
         if ($mpPlanId) {
             $plan->update(['mp_plan_id' => $mpPlanId]);
         } else {
@@ -99,7 +99,7 @@ class AdminSubscriptionPlanController extends Controller
         $subscriptionPlan->update($validated);
 
         // Sync with Mercado Pago
-        $mpPlanId = $this->mpService->syncPlan($subscriptionPlan);
+        $mpPlanId = $this->mercadoPagoService->syncPlan($subscriptionPlan);
         if ($mpPlanId && $mpPlanId !== $subscriptionPlan->mp_plan_id) {
             $subscriptionPlan->update(['mp_plan_id' => $mpPlanId]);
         } elseif (!$mpPlanId) {
@@ -128,7 +128,7 @@ class AdminSubscriptionPlanController extends Controller
 
         // Coordination with Mercado Pago
         if ($subscriptionPlan->mp_plan_id) {
-            $this->mpService->deactivatePlan($subscriptionPlan->mp_plan_id);
+            $this->mercadoPagoService->deactivatePlan($subscriptionPlan->mp_plan_id);
         }
 
         $subscriptionPlan->delete();

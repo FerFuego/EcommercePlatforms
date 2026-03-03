@@ -134,6 +134,26 @@
                     </a>
                 </div>
 
+                {{-- Feedback --}}
+                <div class="mb-1">
+                    <a href="{{ route('admin.feedback.index') }}"
+                        class="flex items-center px-4 py-3 rounded-xl transition-colors {{ request()->routeIs('admin.feedback.*') ? 'bg-purple-50 text-purple-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <svg class="w-6 h-6 mr-3 {{ request()->routeIs('admin.feedback.*') ? 'text-purple-600' : 'text-gray-400 group-hover:text-gray-500' }}"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                        </svg>
+                        <span class="font-medium">Feedback</span>
+                        @php
+                            $newFeedbackCount = \App\Models\Feedback::where('status', 'new')->count();
+                        @endphp
+                        @if($newFeedbackCount > 0)
+                            <span
+                                class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ $newFeedbackCount }}</span>
+                        @endif
+                    </a>
+                </div>
+
                 {{-- More links can be added here --}}
             </div>
 

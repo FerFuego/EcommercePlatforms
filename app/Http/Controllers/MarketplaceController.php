@@ -85,8 +85,13 @@ class MarketplaceController extends Controller
                     ->where('cook_subscriptions.status', '=', 'active');
             })
                 ->leftJoin('subscription_plans', 'cook_subscriptions.plan_id', '=', 'subscription_plans.id')
-                ->select('cooks.*') // prevent overriding cooks columns with joined table columns
-                ->orderByRaw("COALESCE(JSON_UNQUOTE(JSON_EXTRACT(subscription_plans.features, '$.priority_listing')), 'false') DESC");
+                ->select('cooks.*');
+
+            if (config('database.default') === 'sqlite') {
+                $query->orderByRaw("COALESCE(JSON_EXTRACT(subscription_plans.features, '$.priority_listing'), 'false') DESC");
+            } else {
+                $query->orderByRaw("COALESCE(JSON_UNQUOTE(JSON_EXTRACT(subscription_plans.features, '$.priority_listing')), 'false') DESC");
+            }
 
             if ($sort === 'rating') {
                 $query->orderByDesc('rating_avg');

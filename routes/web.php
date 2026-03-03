@@ -100,28 +100,43 @@ Route::middleware(['auth', 'cook'])->prefix('cook')->name('cook.')->group(functi
     Route::delete('/profile/photo', [CookDashboardController::class, 'deleteKitchenPhoto'])->name('profile.photo.delete');
     Route::post('/profile/toggle-active', [CookDashboardController::class, 'toggleActive'])->name('profile.toggle-active');
 
-    // Gestión de platos
-    Route::resource('dishes', DishController::class);
-    Route::post('/dishes/{id}/toggle-active', [DishController::class, 'toggleActive'])->name('dishes.toggle');
-    Route::post('/dishes/{id}/update-stock', [DishController::class, 'updateStock'])->name('dishes.stock');
+    // Rutas protegidas por suscripción activa
+    Route::middleware(['subscribed'])->group(function () {
+        // Gestión de platos
+        Route::resource('dishes', DishController::class);
+        Route::post('/dishes/{id}/toggle-active', [DishController::class, 'toggleActive'])->name('dishes.toggle');
+        Route::post('/dishes/{id}/update-stock', [DishController::class, 'updateStock'])->name('dishes.stock');
 
-    // Órdenes del cocinero
-    Route::get('/orders', [OrderController::class, 'cookOrders'])->name('orders.index');
-    Route::post('/orders/{orderId}/accept', [OrderController::class, 'accept'])->name('orders.accept');
-    Route::post('/orders/{orderId}/reject', [OrderController::class, 'reject'])->name('orders.reject');
-    Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+        // Órdenes del cocinero
+        Route::get('/orders', [OrderController::class, 'cookOrders'])->name('orders.index');
+        Route::post('/orders/{orderId}/accept', [OrderController::class, 'accept'])->name('orders.accept');
+        Route::post('/orders/{orderId}/reject', [OrderController::class, 'reject'])->name('orders.reject');
+        Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+    });
 
     // Suscripciones
     Route::get('/subscription', [\App\Http\Controllers\CookSubscriptionController::class, 'index'])->name('subscription.index');
     Route::get('/subscription/history', [\App\Http\Controllers\CookSubscriptionController::class, 'history'])->name('subscription.history');
+    Route::get('/subscription/success', [\App\Http\Controllers\CookSubscriptionController::class, 'success'])->name('subscription.success');
     Route::get('/subscription/{plan}/checkout', [\App\Http\Controllers\CookSubscriptionController::class, 'checkout'])->name('subscription.checkout');
     Route::post('/subscription/{plan}/process', [\App\Http\Controllers\CookSubscriptionController::class, 'process'])->name('subscription.process');
+    Route::post('/subscription/cancel', [\App\Http\Controllers\CookSubscriptionController::class, 'cancel'])->name('subscription.cancel');
+
 });
+
+// Feedback
+Route::middleware('auth')->post('/api/feedback', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('api.feedback.store');
 
 // Rutas de Admin
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+
+    // Feedback management
+    Route::get('/feedback', [\App\Http\Controllers\FeedbackController::class, 'index'])->name('feedback.index');
+    Route::get('/feedback/{feedback}', [\App\Http\Controllers\FeedbackController::class, 'show'])->name('feedback.show');
+    Route::post('/feedback/{feedback}/read', [\App\Http\Controllers\FeedbackController::class, 'markAsRead'])->name('feedback.read');
+    Route::post('/feedback/{feedback}/archive', [\App\Http\Controllers\FeedbackController::class, 'archive'])->name('feedback.archive');
 
     // Gestión de cocineros
     Route::get('/cooks/pending', [AdminController::class, 'pendingCooks'])->name('cooks.pending');

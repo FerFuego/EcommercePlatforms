@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'cook' => \App\Http\Middleware\EnsureUserIsCook::class,
             'delivery_driver' => \App\Http\Middleware\EnsureUserIsDeliveryDriver::class,
             'can_sell' => \App\Http\Middleware\EnsureCookCanSell::class,
+            'subscribed' => \App\Http\Middleware\RequireActiveSubscription::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

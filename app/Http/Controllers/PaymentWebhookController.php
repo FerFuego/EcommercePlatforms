@@ -3,160 +3,69 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cook;
-use App\Models\CookSubscription;
-use App\Models\SubscriptionPlan;
+use App\Models\Order;
 use App\Models\SubscriptionPayment;
+use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class PaymentWebhookController extends Controller
 {
+    protected $subscriptionService;
+
+    public function __construct(SubscriptionService $subscriptionService)
+    {
+        $this->subscriptionService = $subscriptionService;
+    }
     /**
      * Handle MercadoPago Webhooks/IPN
      */
     public function handleMercadoPago(Request $request)
     {
-        Log::info('MercadoPago Webhook Received', $request->all());
+        $payload = $request->all();
+        Log::info('MercadoPago Webhook Received', $payload);
 
-        $topic = $request->input('topic') ?? $request->input('type');
-        $id = $request->input('id') ?? ($request->input('data')['id'] ?? null);
+        $type = $payload['type'] ?? $payload['topic'] ?? null;
+        $data = $payload['data'] ?? $payload;
+        $id = $data['id'] ?? null;
 
         if (!$id) {
             return response()->json(['message' => 'No ID provided'], 400);
         }
 
-        // We care about payments, merchant_orders or preapprovals
-        if ($topic === 'payment' || $topic === 'merchant_order') {
-            return $this->processMercadoPagoPayment($id, $topic);
+        // 1. Check if it's a product order payment
+        // (Assuming orders have a specific external_reference pattern like 'ORD_')
+        // We'll let the existing logic handle it or delegate to an OrderService in the future.
+        if ($type === 'payment' || $type === 'merchant_order') {
+            // Check if this payment belongs to a subscription
+            // The SubscriptionService will check if 'preapproval_id' exists in the payment details
+            $handled = $this->subscriptionService->handleWebhook($payload);
+
+            if ($handled) {
+                return response()->json(['status' => 'success', 'context' => 'subscription']);
+            }
+
+            // If not handled by subscription, it might be a product order
+            return $this->processProductOrder($id, $type);
         }
 
-        if ($topic === 'preapproval') {
-            return $this->processMercadoPagoPreApproval($id);
+        // 2. Subscription lifecycle events (preapproval)
+        if (in_array($type, ['preapproval', 'subscription_preapproval', 'subscription_authorized_payment'])) {
+            $this->subscriptionService->handleWebhook($payload);
+            return response()->json(['status' => 'success', 'context' => 'subscription_lifecycle']);
         }
 
         return response()->json(['message' => 'Topic ignored'], 200);
     }
 
-    protected function processMercadoPagoPayment($id, $topic)
+    /**
+     * Placeholder/Legacy logic for processing product orders (not subscriptions)
+     */
+    protected function processProductOrder($id, $topic)
     {
-        $accessToken = \App\Models\Setting::get('mp_access_token');
-        \MercadoPago\MercadoPagoConfig::setAccessToken($accessToken);
-
-        try {
-            if ($topic === 'payment') {
-                $client = new \MercadoPago\Client\Payment\PaymentClient();
-                $payment = $client->get($id);
-                $externalReference = $payment->external_reference;
-                $status = $payment->status;
-            } else {
-                // Topic is merchant_order
-                $client = new \MercadoPago\Client\MerchantOrder\MerchantOrderClient();
-                $order = $client->get($id);
-                $externalReference = $order->external_reference;
-                $status = $order->status === 'closed' ? 'approved' : 'pending';
-            }
-
-            if ($status === 'approved' && $externalReference) {
-                return $this->activateSubscriptionFromReference($externalReference, 'mercadopago', $id);
-            }
-
-        } catch (\Exception $e) {
-            Log::error('MP Webhook Error: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-
-        return response()->json(['message' => 'Payment not approved yet'], 200);
-    }
-
-    protected function processMercadoPagoPreApproval($id)
-    {
-        $accessToken = \App\Models\Setting::get('mp_access_token');
-        \MercadoPago\MercadoPagoConfig::setAccessToken($accessToken);
-
-        try {
-            $client = new \MercadoPago\Client\PreApproval\PreApprovalClient();
-            $preApproval = $client->get($id);
-
-            $externalReference = $preApproval->external_reference;
-            $status = $preApproval->status;
-
-            // status can be: pending, authorized, paused, cancelled
-            if ($status === 'authorized' && $externalReference) {
-                return $this->activateSubscriptionFromReference($externalReference, 'mercadopago', $id);
-            }
-
-            Log::info("MP PreApproval status: {$status} for reference: {$externalReference}");
-
-        } catch (\Exception $e) {
-            Log::error('MP PreApproval Webhook Error: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-
-        return response()->json(['message' => 'Processed'], 200);
-    }
-
-    protected function activateSubscriptionFromReference($reference, $gateway, $paymentId)
-    {
-        // Reference format: cook_sub_{cook_id}_{plan_id}
-        $parts = explode('_', $reference);
-        if (count($parts) < 4) {
-            return response()->json(['message' => 'Invalid reference'], 400);
-        }
-
-        $cookId = $parts[2];
-        $planId = $parts[3];
-
-        $cook = Cook::find($cookId);
-        $plan = SubscriptionPlan::find($planId);
-
-        if (!$cook || !$plan) {
-            return response()->json(['message' => 'Cook or Plan not found'], 404);
-        }
-
-        // Check if cook already has an active subscription for THIS plan
-        $subscription = CookSubscription::where('cook_id', $cook->id)
-            ->where('plan_id', $plan->id)
-            ->where('status', 'active')
-            ->first();
-
-        if ($subscription) {
-            // Update existing subscription's end date
-            $subscription->update([
-                'current_period_end' => $plan->billing_period === 'monthly' ? now()->addMonth() : now()->addYear(),
-                'provider_subscription_id' => $paymentId, // Update with latest ID
-            ]);
-        } else {
-            // Create New Subscription
-            $subscription = CookSubscription::create([
-                'cook_id' => $cook->id,
-                'plan_id' => $plan->id,
-                'status' => 'active',
-                'provider' => $gateway,
-                'provider_subscription_id' => $paymentId,
-                'current_period_start' => now(),
-                'current_period_end' => $plan->billing_period === 'monthly' ? now()->addMonth() : now()->addYear(),
-            ]);
-        }
-
-        // Log Payment History
-        SubscriptionPayment::create([
-            'cook_id' => $cook->id,
-            'plan_id' => $plan->id,
-            'amount' => $plan->price,
-            'currency' => 'ARS',
-            'provider' => $gateway,
-            'provider_payment_id' => $paymentId,
-            'status' => 'approved',
-            'paid_at' => now(),
-        ]);
-
-        $cook->update([
-            'current_subscription_id' => $subscription->id,
-            'monthly_sales_accumulated' => 0,
-            'monthly_orders_accumulated' => 0,
-            'is_selling_blocked' => false,
-        ]);
-
-        return response()->json(['message' => 'Subscription activated'], 200);
+        // For now, we'll just log it. If the app has product orders, 
+        // they should be handled here or in an OrderService.
+        Log::info("Processing non-subscription payment/order: $id (Topic: $topic)");
+        return response()->json(['message' => 'Payment processed (non-subscription)'], 200);
     }
 }

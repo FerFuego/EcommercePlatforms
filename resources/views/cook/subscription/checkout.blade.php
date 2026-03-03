@@ -94,9 +94,8 @@
                                         class="relative flex flex-col items-center p-6 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-blue-400 transition-all group has-[:checked]:border-blue-600 has-[:checked]:ring-4 has-[:checked]:ring-blue-500/10 has-[:checked]:shadow-xl shadow-sm hover:shadow-md">
                                         <input type="radio" name="payment_method" value="mercadopago" class="sr-only" required {{ !$stripeConfigured ? 'checked' : '' }}>
                                         <div
-                                            class="w-16 h-16 mb-4 flex items-center justify-center bg-gray-50 dark:bg-gray-700 rounded-2xl group-hover:scale-110 transition-transform">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Mercado_Pago_logo.svg"
-                                                alt="Mercado Pago" class="h-8">
+                                            class="w-32 h-16 mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <img src="{{ asset('assets/front/Mercado_Pago.svg') }}" alt="Mercago Pago" class="h-8">
                                         </div>
                                         <span
                                             class="font-black text-gray-900 dark:text-gray-100 uppercase tracking-tight">MercadoPago</span>
