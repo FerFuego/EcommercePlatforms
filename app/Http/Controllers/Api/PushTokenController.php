@@ -22,10 +22,10 @@ class PushTokenController extends Controller
 
         UserPushToken::updateOrCreate(
             [
-                'user_id' => Auth::id(),
                 'token' => $request->token,
             ],
             [
+                'user_id' => Auth::id(),
                 'device_type' => $request->device_type,
             ]
         );
