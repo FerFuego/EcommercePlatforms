@@ -10,13 +10,17 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('dishes', function (Blueprint $table) {
-            $table->boolean('is_schedulable')->default(true)->after('is_active');
-        });
+        if (!Schema::hasColumn('dishes', 'is_schedulable')) {
+            Schema::table('dishes', function (Blueprint $table) {
+                $table->boolean('is_schedulable')->default(true)->after('is_active');
+            });
+        }
 
-        Schema::table('cooks', function (Blueprint $table) {
-            $table->integer('max_scheduled_portions_per_day')->nullable()->after('bio');
-        });
+        if (!Schema::hasColumn('cooks', 'max_scheduled_portions_per_day')) {
+            Schema::table('cooks', function (Blueprint $table) {
+                $table->integer('max_scheduled_portions_per_day')->nullable()->after('bio');
+            });
+        }
     }
 
     /**
