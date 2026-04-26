@@ -130,7 +130,7 @@ class MercadoPagoSubscriptionTest extends TestCase
 
         $this->assertTrue($success);
         $this->assertDatabaseHas('subscription_payments', [
-            'provider_payment_id' => 'PAY-123',
+            'payment_id' => 'PAY-123',
             'amount' => 1000,
             'status' => 'approved'
         ]);

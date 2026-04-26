@@ -215,13 +215,13 @@ class SubscriptionService
 
         // 1. Record the payment
         SubscriptionPayment::updateOrCreate(
-            ['provider_payment_id' => $paymentId],
+            ['payment_id' => $paymentId],
             [
                 'cook_id' => $subscription->cook_id,
-                'plan_id' => $subscription->plan_id,
+                'subscription_plan_id' => $subscription->plan_id,
                 'amount' => $payment->transaction_amount,
                 'currency' => $payment->currency_id,
-                'provider' => 'mercadopago',
+                'payment_gateway' => 'mercadopago',
                 'status' => 'approved',
                 'paid_at' => now(),
             ]

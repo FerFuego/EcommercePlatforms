@@ -11,11 +11,12 @@ class SubscriptionPayment extends Model
 
     protected $fillable = [
         'cook_id',
-        'plan_id',
+        'subscription_plan_id',
         'amount',
         'currency',
-        'provider',
-        'provider_payment_id',
+        'payment_gateway',
+        'payment_id',
+        'preapproval_id',
         'status',
         'paid_at',
     ];
@@ -32,6 +33,6 @@ class SubscriptionPayment extends Model
 
     public function plan()
     {
-        return $this->belongsTo(SubscriptionPlan::class, 'plan_id');
+        return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id');
     }
 }
