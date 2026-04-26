@@ -100,6 +100,9 @@ Route::middleware(['auth', 'cook'])->prefix('cook')->name('cook.')->group(functi
     Route::delete('/profile/photo', [CookDashboardController::class, 'deleteKitchenPhoto'])->name('profile.photo.delete');
     Route::post('/profile/toggle-active', [CookDashboardController::class, 'toggleActive'])->name('profile.toggle-active');
 
+    // Ayuda y Tutoriales
+    Route::get('/tutorials', [CookDashboardController::class, 'tutorials'])->name('tutorials');
+
     // Rutas protegidas por suscripción activa
     Route::middleware(['subscribed'])->group(function () {
         // Gestión de platos

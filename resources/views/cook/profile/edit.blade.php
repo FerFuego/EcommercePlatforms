@@ -74,6 +74,10 @@
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Configuración
                         </a>
+                        <a href="{{ route('cook.tutorials') }}"
+                            class="block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Ayuda y Tutoriales
+                        </a>
                     </div>
                 </div>
             </div>

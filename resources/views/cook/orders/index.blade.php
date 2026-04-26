@@ -76,6 +76,10 @@
                             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Configuración
                         </a>
+                        <a href="{{ route('cook.tutorials') }}"
+                            class="block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Ayuda y Tutoriales
+                        </a>
                     </div>
                 </div>
             </div>
@@ -98,7 +102,7 @@
                                                 </span>
                                             @else
                                                                     <span class="px-3 py-1 rounded-full text-xs font-bold
-                                                                                                {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
+                                                                                                                                    {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
                                                     ($order->status == 'rejected_by_cook' ? 'bg-red-100 text-red-800' :
                                                         ($order->status == 'awaiting_cook_acceptance' ? 'bg-yellow-100 text-yellow-800' :
                                                             ($order->status == 'scheduled' ? 'bg-purple-100 text-purple-800' :
@@ -205,7 +209,7 @@
                                                     </div>
                                                     <span
                                                         class="text-xs px-2 py-1 rounded-full font-semibold
-                                                                                                                                                                                                                                                                                                                {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                                                                                                                                                                                                                                                                                                                        {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
                                                         {{ match ($order->deliveryAssignment->status) {
                                         'assigned' => 'Asignado',
                                         'picked_up' => 'Recogido',

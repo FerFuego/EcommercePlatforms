@@ -133,6 +133,10 @@
                             class="block bg-gradient-to-r from-gray-500 to-gray-700 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
                             Configuración
                         </a>
+                        <a href="{{ route('cook.tutorials') }}"
+                            class="block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+                            Ayuda y Tutoriales
+                        </a>
                         <a href="{{ route('cook.subscription.index') }}"
                             class="block bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center mt-3">
                             Mi Suscripción

@@ -194,4 +194,12 @@ class CookDashboardController extends Controller
 
         return response()->json(['success' => true, 'active' => $cook->active]);
     }
+
+    /**
+     * Mostrar página de tutoriales y ayudas
+     */
+    public function tutorials()
+    {
+        return view('cook.tutorials.index');
+    }
 }

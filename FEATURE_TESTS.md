@@ -107,6 +107,24 @@
 
 ---
 
+## 5. IntegrationsTest (MercadoPago) (5 tests)
+
+**Flujo de Webhooks y Suscripciones:**
+
+✅ `test_initiate_subscription_creates_pending_record_and_returns_init_point` - Creación inicial
+✅ `test_activate_subscription_updates_status_to_active` - Activación via webhook preapproval
+✅ `test_webhook_handles_authorized_payment_extension` - Renovación y extensión del periodo
+✅ `test_middleware_blocks_access_to_unsubscribed_cooks` - Bloqueo a cocineros sin suscripción
+✅ `test_cancel_subscription_updates_mp_and_local_db` - Cancelación local y en API
+
+**Valida:**
+- Fallback a `external_reference` si falta `preapproval_id`.
+- Interacción con SDK MercadoPago v3.
+- Webhooks de renovación mensual recurrente.
+- Middleware de suscripción.
+
+---
+
 ## 🎯 Cobertura de Testing
 
 ### Flujos de Usuario Validados
