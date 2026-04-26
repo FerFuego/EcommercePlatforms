@@ -20,6 +20,16 @@ use Illuminate\Support\Facades\Route;
 // Landing page pública
 Route::get('/', [MarketplaceController::class, 'index'])->name('home');
 
+// RUTAS TEMPORALES PARA HOSTINGER (Eliminar después de usar)
+Route::get('/run-migrations', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return "Migraciones ejecutadas con éxito!<br><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre>";
+    } catch (\Exception $e) {
+        return "Error al correr migraciones: " . $e->getMessage();
+    }
+});
+
 // Marketplace (público)
 Route::prefix('marketplace')->name('marketplace.')->group(function () {
     Route::get('/catalog', [MarketplaceController::class, 'catalog'])->name('catalog');
