@@ -10,18 +10,21 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('subscription_payments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('cook_id')->constrained()->onDelete('cascade');
-            $table->foreignId('plan_id')->constrained('subscription_plans')->onDelete('cascade');
-            $table->decimal('amount', 10, 2);
-            $table->string('currency', 3)->default('ARS');
-            $table->string('provider'); // stripe, mercadopago
-            $table->string('provider_payment_id')->nullable();
-            $table->string('status')->default('approved'); // approved, pending, rejected
-            $table->timestamp('paid_at')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('subscription_payments')) {
+            Schema::create('subscription_payments', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('cook_id')->constrained()->cascadeOnDelete();
+                $table->foreignId('subscription_plan_id')->constrained('subscription_plans')->cascadeOnDelete();
+                $table->string('payment_gateway')->default('mercadopago');
+                $table->string('payment_id')->nullable(); // MP payment ID
+                $table->string('preapproval_id')->nullable(); // MP preapproval ID
+                $table->decimal('amount', 10, 2);
+                $table->string('currency', 3)->default('ARS');
+                $table->string('status')->default('pending'); // pending, authorized, collected, failed
+                $table->timestamp('paid_at')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
