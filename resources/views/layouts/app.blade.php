@@ -10,6 +10,13 @@
     </title>
     <meta name="description" content="{{ $globalSettings['meta_description'] ?? 'La mejor comida casera.' }}">
 
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#f97316">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <!-- Tailwind CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/chatbot.css', 'resources/js/chatbot.js'])
 
@@ -629,6 +636,20 @@ class="bg-white border border-orange-500 rounded-lg shadow-xl p-4 pointer-events
         </template>
     </div>
 
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registrado con éxito:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Error al registrar Service Worker:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 
 </html>
