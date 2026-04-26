@@ -10,14 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('favorite_cooks', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('cook_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
+        if (!Schema::hasTable('favorite_cooks')) {
+            Schema::create('favorite_cooks', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained()->onDelete('cascade');
+                $table->foreignId('cook_id')->constrained()->onDelete('cascade');
+                $table->timestamps();
 
-            $table->unique(['user_id', 'cook_id']);
-        });
+                $table->unique(['user_id', 'cook_id']);
+            });
+        }
     }
 
     /**
