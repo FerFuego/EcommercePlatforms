@@ -10,13 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('user_push_tokens', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->text('token');
-            $table->string('device_type')->nullable(); // android, ios, web
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('user_push_tokens')) {
+            Schema::create('user_push_tokens', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained()->onDelete('cascade');
+                $table->text('token');
+                $table->string('device_type')->nullable(); // android, ios, web
+                $table->timestamps();
+            });
+        }
     }
 
     /**
