@@ -80,8 +80,19 @@ class MarketplaceController extends Controller
             // LEFT JOIN subscription_plans sp ON sp.id = cs.plan_id
             // ORDER BY JSON_EXTRACT(sp.features, '$.priority_listing') DESC
 
-            // Legacy code trying to sort by plan features removed because cook_subscriptions table does not exist.
-            // Sorting will fallback to standard criteria.
+            // Left join with active subscriptions to sort by priority_listing
+            $query->leftJoin('cook_subscriptions', function ($join) {
+                $join->on('cooks.current_subscription_id', '=', 'cook_subscriptions.id')
+                    ->where('cook_subscriptions.status', '=', 'active');
+            })
+                ->leftJoin('subscription_plans', 'cook_subscriptions.plan_id', '=', 'subscription_plans.id')
+                ->select('cooks.*');
+
+            if (config('database.default') === 'sqlite') {
+                $query->orderByRaw("COALESCE(JSON_EXTRACT(subscription_plans.features, '$.priority_listing'), 'false') DESC");
+            } else {
+                $query->orderByRaw("COALESCE(JSON_UNQUOTE(JSON_EXTRACT(subscription_plans.features, '$.priority_listing')), 'false') DESC");
+            }
 
             if ($sort === 'rating') {
                 $query->orderByDesc('rating_avg');

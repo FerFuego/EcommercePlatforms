@@ -101,6 +101,13 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'cook'])->prefix('cook')->name('cook.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [CookDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/analytics', [\App\Http\Controllers\Cook\AnalyticsController::class, 'index'])->name('analytics');
+    
+    // CRM WhatsApp Broadcasts
+    Route::get('/broadcasts', [\App\Http\Controllers\Cook\BroadcastController::class, 'index'])->name('broadcasts.index');
+    Route::post('/broadcasts', [\App\Http\Controllers\Cook\BroadcastController::class, 'store'])->name('broadcasts.store');
+    Route::get('/broadcasts/{id}', [\App\Http\Controllers\Cook\BroadcastController::class, 'show'])->name('broadcasts.show');
+    Route::post('/broadcasts/{id}/mark-sent/{recipient_id}', [\App\Http\Controllers\Cook\BroadcastController::class, 'markSent'])->name('broadcasts.mark_sent');
 
     // Perfil de cocinero
     Route::get('/profile/create', [CookDashboardController::class, 'createProfile'])->name('profile.create');

@@ -19,44 +19,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Quick Actions (Sidebar) -->
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-2xl shadow-xl p-6 relative overflow-hidden sticky top-28">
-                    @if(auth()->user()->is_suspended)
-                        <div
-                            class="absolute inset-0 bg-gray-100 bg-opacity-50 z-10 flex items-center justify-center backdrop-blur-sm">
-                            <span
-                                class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">Suspendido</span>
-                        </div>
-                    @endif
-                    <h3 class="text-xl font-bold mb-4">
-                        Acciones Rápidas
-                    </h3>
-                    <div class="space-y-3 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none' : '' }}">
-                        <a href="{{ route('cook.dashboard') }}"
-                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Dashboard
-                        </a>
-                        <a href="{{ route('cook.orders.index') }}"
-                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Ver Pedidos
-                        </a>
-                        <a href="{{ route('cook.dishes.index') }}"
-                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Mis Platos
-                        </a>
-                        <a href="{{ route('cook.dishes.create') }}"
-                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Nuevo Plato
-                        </a>
-                        <a href="{{ route('cook.profile.edit') }}"
-                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Configuración
-                        </a>
-                        <a href="{{ route('cook.tutorials') }}"
-                            class="block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Ayuda y Tutoriales
-                        </a>
-                    </div>
-                </div>
+                @include('cook.partials.quick-actions')
             </div>
 
             <!-- Content Area -->
@@ -170,6 +133,227 @@
                     </div>
                 </div>
 
+                <!-- Guía 1: Primeros pasos -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 overflow-hidden relative border-t-8 border-green-500">
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <span class="text-9xl">🚀</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4 relative z-10">1. Primeros pasos para vender comida
+                        desde casa</h2>
+                    <p class="text-gray-600 mb-6 text-lg relative z-10">Empezar a vender comida puede asustar un poco, ¡pero
+                        todos los grandes chefs empezaron en cocinas pequeñas! Lo más importante es empezar de forma
+                        inteligente.</p>
+
+                    <ul class="space-y-4 mb-6 relative z-10">
+                        <li class="flex items-start">
+                            <span class="text-green-500 text-xl mr-3 mt-1">✓</span>
+                            <p class="text-gray-700"><strong>¿Qué cocinar al empezar?</strong> Empieza con lo que te sale
+                                mejor y más rico. Si todos aman tus empanadas, ¡vende empanadas! No intentes hacer 10 platos
+                                distintos el primer día.</p>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 text-xl mr-3 mt-1">✓</span>
+                            <p class="text-gray-700"><strong>Menú pequeño = Menos estrés:</strong> Es preferible ofrecer 2 o
+                                3 platos excelentes que 15 mediocres. Además, comprarás menos ingredientes distintos y
+                                desperdiciarás menos.</p>
+                        </li>
+                    </ul>
+                    <div class="bg-blue-50 text-blue-800 p-4 rounded-xl border border-blue-200">
+                        <strong>💡 Tip rápido:</strong> Prueba tus platos con amigos primero y pídeles críticas honestas, no
+                        solo cumplidos.
+                    </div>
+                </div>
+
+                <!-- Guía 2: Cuánto cobrar -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 overflow-hidden relative border-t-8 border-blue-500">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">2. Cómo saber cuánto cobrar (sin volverte loco)</h2>
+                    <p class="text-gray-600 mb-6 text-lg">Poner precio es difícil. La regla de oro al empezar es simple: "No
+                        pagues por trabajar". Tienes que cubrir tus gastos y ganar algo.</p>
+
+                    <ul class="space-y-4 mb-6">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 text-xl mr-3 mt-1">💰</span>
+                            <p class="text-gray-700"><strong>La regla del "x3":</strong> Una forma sencilla de empezar es
+                                sumar el costo de TODOS tus ingredientes y el envase, y multiplicar ese número por 3.
+                                <br><em>Ejemplo: Si hacer una pizza te costó $1000 en ingredientes y la caja cuesta $200
+                                    (Total $1200), tu precio de venta debería rondar los $3600.</em></p>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 text-xl mr-3 mt-1">👀</span>
+                            <p class="text-gray-700"><strong>Mira a la competencia:</strong> Fíjate a cuánto venden platos
+                                similares en tu barrio. Si tu "precio x3" es mucho más caro que el resto, pregúntate: ¿Mi
+                                plato es más grande o de mejor calidad? Si es igual, quizás debas comprar ingredientes más
+                                baratos.</p>
+                        </li>
+                    </ul>
+                    <div class="bg-red-50 text-red-800 p-4 rounded-xl border border-red-200">
+                        <strong>❌ Error común:</strong> Olvidarse de cobrar el envase, la bolsa, las servilletas y el tiempo
+                        que estuviste cocinando. ¡Todo cuesta dinero!
+                    </div>
+                </div>
+
+                <!-- Guía 3: Calcular porciones -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 overflow-hidden relative border-t-8 border-yellow-500">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">3. Cómo calcular porciones (Si no tienes balanza)</h2>
+                    <p class="text-gray-600 mb-6 text-lg">Si bien una balanza es ideal, mientras ahorras para una puedes
+                        usar referencias visuales para que todas tus porciones sean iguales.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-gray-50 p-4 rounded-xl text-center">
+                            <div class="text-4xl mb-2">✊</div>
+                            <h4 class="font-bold text-gray-800">Un Puño</h4>
+                            <p class="text-sm text-gray-600">Equivale a una porción de arroz, pasta o puré (aprox. 1 taza).
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-xl text-center">
+                            <div class="text-4xl mb-2">✋</div>
+                            <h4 class="font-bold text-gray-800">Palma de la Mano</h4>
+                            <p class="text-sm text-gray-600">Es el tamaño ideal para una porción de carne, pollo o pescado.
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-xl text-center">
+                            <div class="text-4xl mb-2">🥄</div>
+                            <h4 class="font-bold text-gray-800">Cucharón</h4>
+                            <p class="text-sm text-gray-600">Usa el mismo cucharón (de sopa) para servir todos los guisos o
+                                salsas. Ejemplo: "Cada plato lleva 2 cucharones".</p>
+                        </div>
+                    </div>
+                    <div class="bg-yellow-50 text-yellow-800 p-4 rounded-xl border border-yellow-200">
+                        <strong>👑 Consejo de oro:</strong> Si sirves porciones de distinto tamaño, el cliente que reciba la
+                        más pequeña se enojará, y con el de la más grande perderás dinero. ¡Estandariza!
+                    </div>
+                </div>
+
+                <!-- Guía 4: Organización -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 overflow-hidden relative border-t-8 border-purple-500">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">4. Cómo organizarte en la cocina</h2>
+                    <p class="text-gray-600 mb-6 text-lg">En la cocina profesional, la organización se llama <em>Mise en
+                            place</em> (todo en su lugar). Es el secreto para no colapsar cuando entran muchos pedidos.</p>
+
+                    <ul class="space-y-4 mb-6">
+                        <li class="bg-gray-50 p-4 rounded-xl">
+                            <strong class="text-purple-600">ANTES de cocinar:</strong> Pica toda la cebolla, lava todas las
+                            verduras, saca toda la carne de la heladera. No cocines y piques al mismo tiempo.
+                        </li>
+                        <li class="bg-gray-50 p-4 rounded-xl">
+                            <strong class="text-purple-600">DURANTE:</strong> "Limpia mientras cocinas". Si terminaste de
+                            usar la tabla, lávala. No dejes una montaña de platos para el final.
+                        </li>
+                        <li class="bg-gray-50 p-4 rounded-xl">
+                            <strong class="text-purple-600">DESPUÉS:</strong> Deja la cocina impecable para el día
+                            siguiente. Una cocina limpia atrae ganas de trabajar; una sucia, desmotiva.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Guía 5: Compras y Ahorro -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 overflow-hidden relative border-t-8 border-teal-500">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">5. Compras: Cómo no desperdiciar dinero</h2>
+
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="flex-1">
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <span class="text-teal-500 text-xl mr-3 mt-1">🛒</span>
+                                    <p class="text-gray-700"><strong>No compres de más al principio:</strong> Es preferible
+                                        quedarte sin comida y decirle a un cliente "Se agotó por hoy" a tirar kilos de
+                                        mercadería que se echó a perder.</p>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-teal-500 text-xl mr-3 mt-1">🍅</span>
+                                    <p class="text-gray-700"><strong>Ingredientes de temporada:</strong> En invierno el
+                                        tomate es carísimo. Adapta tu menú. Haz sopas, guisos. En verano, haz ensaladas
+                                        frescas.</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="flex-1 bg-teal-50 p-6 rounded-2xl">
+                            <h4 class="font-bold text-teal-800 mb-2">Errores Comunes de Principiantes:</h4>
+                            <ul class="list-disc list-inside text-teal-700 text-sm space-y-2">
+                                <li>Comprar al por mayor sin tener espacio en la heladera.</li>
+                                <li>Creer que "más barato" es mejor (el queso barato no se derrite, la carne barata es
+                                    dura).</li>
+                                <li>Hacer las compras sin una lista escrita.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guía 6: Presentación -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 overflow-hidden relative border-t-8 border-pink-500">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">6. Cómo presentar para vender más</h2>
+                    <p class="text-gray-600 mb-6 text-lg">La gente come primero con los ojos. Si tu comida se ve como un
+                        revuelto gris en una caja blanca, nadie le sacará fotos para Instagram.</p>
+
+                    <ul class="space-y-4 mb-6">
+                        <li class="flex items-start">
+                            <span class="text-pink-500 text-xl mr-3 mt-1">🎨</span>
+                            <p class="text-gray-700"><strong>Usa contrastes de colores:</strong> Un poco de perejil picado
+                                encima de las pastas, unas tiritas de morrón rojo sobre el arroz. El color da sensación de
+                                frescura.</p>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-pink-500 text-xl mr-3 mt-1">📦</span>
+                            <p class="text-gray-700"><strong>El envase importa mucho:</strong> Asegúrate de que no se
+                                derrame. Un sticker con tu logo o un "¡Gracias por tu compra!" escrito a mano con marcador
+                                cambia toda la experiencia del cliente.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Guía 7: Mejorar -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 overflow-hidden relative border-t-8 border-indigo-500">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">7. Cómo mejorar mes a mes</h2>
+                    <p class="text-gray-600 mb-6 text-lg">Nunca dejes de escuchar a tus clientes, ellos te dirán qué camino
+                        tomar.</p>
+
+                    <ul class="space-y-4 mb-6">
+                        <li class="flex items-start">
+                            <span class="text-indigo-500 text-xl mr-3 mt-1">💬</span>
+                            <p class="text-gray-700"><strong>Pide feedback:</strong> Al día siguiente, envíales un WhatsApp
+                                preguntando: "¿Qué tal estuvo la comida ayer?". Si hay quejas, no te enojes, agradéceles. Es
+                                una oportunidad para mejorar.</p>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-indigo-500 text-xl mr-3 mt-1">📈</span>
+                            <p class="text-gray-700"><strong>Revisa tus Estadísticas:</strong> Usa tu panel de Cocinarte. Si
+                                un plato no se vende en un mes, ¡quítalo del menú! Reemplázalo por algo nuevo.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Guía 8: Checklist Final -->
+                <div class="bg-gray-900 rounded-3xl shadow-xl p-8 overflow-hidden relative text-white">
+                    <h2 class="text-3xl font-bold mb-6 text-orange-400">✅ Checklist Final: Antes de entregar el pedido</h2>
+                    <p class="text-gray-300 mb-6">Repasa mentalmente esta lista rápida cada vez que embolses un pedido:</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex items-center space-x-3 bg-gray-800 p-4 rounded-xl border border-gray-700">
+                            <input type="checkbox" checked disabled
+                                class="w-6 h-6 text-orange-500 rounded focus:ring-orange-500 bg-gray-700 border-gray-600">
+                            <span class="font-medium">¿Está a la temperatura correcta?</span>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-gray-800 p-4 rounded-xl border border-gray-700">
+                            <input type="checkbox" checked disabled
+                                class="w-6 h-6 text-orange-500 rounded focus:ring-orange-500 bg-gray-700 border-gray-600">
+                            <span class="font-medium">¿Agregué las servilletas y cubiertos?</span>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-gray-800 p-4 rounded-xl border border-gray-700">
+                            <input type="checkbox" checked disabled
+                                class="w-6 h-6 text-orange-500 rounded focus:ring-orange-500 bg-gray-700 border-gray-600">
+                            <span class="font-medium">¿El envase está bien cerrado y sin manchas por fuera?</span>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-gray-800 p-4 rounded-xl border border-gray-700">
+                            <input type="checkbox" checked disabled
+                                class="w-6 h-6 text-orange-500 rounded focus:ring-orange-500 bg-gray-700 border-gray-600">
+                            <span class="font-medium">¿Puse el aderezo o pan que prometí?</span>
+                        </div>
+                    </div>
+
+                    <p class="mt-8 text-center text-xl font-bold italic text-gray-400">"¡Si todo tiene un tick, ese pedido
+                        está listo para enamorar a un cliente!"</p>
+                </div>
+
                 <!-- Calculadora de Ingredientes -->
                 <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
                     <div class="h-48 overflow-hidden relative">
@@ -209,11 +393,14 @@
                                     Receta Original (Rinde 4)</div>
                                 <ul class="space-y-2 text-sm text-gray-700">
                                     <li class="flex justify-between border-b border-gray-100 pb-1"><span>Tomates:</span>
-                                        <strong>500g</strong></li>
+                                        <strong>500g</strong>
+                                    </li>
                                     <li class="flex justify-between border-b border-gray-100 pb-1"><span>Cebolla:</span>
-                                        <strong>100g</strong></li>
+                                        <strong>100g</strong>
+                                    </li>
                                     <li class="flex justify-between border-b border-gray-100 pb-1"><span>Ajo:</span>
-                                        <strong>10g</strong></li>
+                                        <strong>10g</strong>
+                                    </li>
                                     <li class="flex justify-between"><span>Aceite:</span> <strong>30ml</strong></li>
                                 </ul>
                             </div>
