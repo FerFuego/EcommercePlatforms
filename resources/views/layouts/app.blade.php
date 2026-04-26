@@ -610,7 +610,7 @@
                 x-transition:leave="transition ease-in duration-200"
                 x-transition:leave-start="opacity-100 transform translate-y-0"
                 x-transition:leave-end="opacity-0 transform translate-y-2"
-                class="bg-white dark:bg-gray-800 border border-orange-500 rounded-lg shadow-xl p-4 pointer-events-auto flex items-start gap-4 cursor-pointer"
+class="bg-white border border-orange-500 rounded-lg shadow-xl p-4 pointer-events-auto flex items-start gap-4 cursor-pointer"
                 x-on:click="if(n.data?.url) window.location.href = n.data.url">
 
                 <div class="flex-shrink-0" x-show="n.icon">
@@ -618,8 +618,8 @@
                 </div>
 
                 <div class="flex-1">
-                    <h4 class="font-bold text-gray-900 dark:text-white text-sm" x-text="n.title"></h4>
-                    <p class="text-gray-600 dark:text-gray-400 text-xs mt-1" x-text="n.body"></p>
+                    <h4 class="font-bold text-gray-900 text-sm" x-text="n.title"></h4>
+                    <p class="text-gray-600 text-xs mt-1" x-text="n.body"></p>
                 </div>
 
                 <button x-on:click.stop="remove(n.id)" class="text-gray-400 hover:text-gray-600">

@@ -125,21 +125,12 @@ class Order extends Model
     }
 
     /**
-     * Marcar como pagado
+     * Notificar nuevo pedido al cocinero y al cliente.
+     * La plataforma no gestiona pagos de pedidos — estos se coordinan entre las partes vía WhatsApp.
      */
-    public function markAsPaid(string $paymentId = null): void
+    public function notifyNewOrder(): void
     {
-        $this->status = self::STATUS_PAID;
-        $this->payment_status = 'approved';
-        if ($paymentId) {
-            $this->payment_id = $paymentId;
-        }
-        $this->status = self::STATUS_AWAITING_COOK;
-        $this->save();
-
-        $this->logEvent('payment_approved', 'El pago fue aprobado por MercadoPago', [
-            'payment_id' => $paymentId
-        ]);
+        $this->logEvent('order_placed', 'Pedido registrado. El cliente contactará al cocinero por WhatsApp.');
 
         try {
             event(new \App\Events\OrderStatusUpdated($this));
@@ -158,6 +149,18 @@ class Order extends Model
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error("Error sending notifications for order #{$this->id}: " . $e->getMessage());
         }
+    }
+
+    /**
+     * Marcar como pagado (legacy/interno — para uso del cocinero si confirma pago externo)
+     */
+    public function markAsPaid(string $paymentId = null): void
+    {
+        $this->payment_status = 'approved';
+        if ($paymentId) {
+            $this->payment_id = $paymentId;
+        }
+        $this->save();
     }
 
     /**

@@ -31,13 +31,15 @@ class OrderTest extends TestCase
     public function it_can_mark_as_paid()
     {
         $order = Order::factory()->create([
-            'status' => Order::STATUS_PENDING_PAYMENT,
+            'status' => Order::STATUS_AWAITING_COOK,
         ]);
 
         $order->markAsPaid('PAY_123456');
 
         $freshOrder = $order->fresh();
+        // markAsPaid is now legacy: only updates payment_status and payment_id, not status
         $this->assertEquals(Order::STATUS_AWAITING_COOK, $freshOrder->status);
+        $this->assertEquals('approved', $freshOrder->payment_status);
         $this->assertEquals('PAY_123456', $freshOrder->payment_id);
     }
 

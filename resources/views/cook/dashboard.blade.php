@@ -41,6 +41,26 @@
             </div>
         @endif
 
+        @if(auth()->user()->is_suspended == false && $cook->is_approved && (!$cook->currentSubscription || $cook->currentSubscription->status !== 'active'))
+            <div class="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-5 rounded-2xl shadow-lg mb-8">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-center">
+                        <svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <div>
+                            <span class="font-bold text-lg block">Suscripción Inactiva</span>
+                            <span class="text-white text-opacity-90">Atención: No puedes aceptar pedidos nuevos ni gestionar los pendientes hasta regularizar tu suscripción.</span>
+                        </div>
+                    </div>
+                    <a href="{{ route('cook.subscription.index') }}" class="bg-white text-purple-700 px-6 py-3 rounded-xl font-bold shadow-md hover:shadow-xl hover:scale-105 transition-all text-center flex-shrink-0 whitespace-nowrap">
+                        Activar Suscripción
+                    </a>
+                </div>
+            </div>
+        @endif
+
         <!-- Stats Cards -->
         <div
             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none filter grayscale' : '' }}">

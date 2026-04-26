@@ -179,7 +179,11 @@ class MarketplaceController extends Controller
      */
     public function dishDetail($dishId)
     {
-        $dish = Dish::with('cook.user')->findOrFail($dishId);
+        $dish = Dish::with([
+            'cook.user',
+            'cook.reviews.customer',
+            'optionGroups.options'
+        ])->findOrFail($dishId);
 
         if (!$dish->isAvailableToday()) {
             return redirect()->back()->with('error', 'Este plato no está disponible hoy');

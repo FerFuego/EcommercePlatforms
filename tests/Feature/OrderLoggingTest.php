@@ -61,17 +61,15 @@ class OrderLoggingTest extends TestCase
             ]
         ])->post(route('orders.process'), [
                     'delivery_type' => 'pickup',
-                    'payment_method' => 'cash',
                     'schedule_type' => 'immediate',
                 ]);
 
         $order = Order::first();
         $this->assertNotNull($order);
 
-        // Should have 2 logs: order_placed and awaiting_cook
-        $this->assertEquals(2, $order->logs()->count());
-        $this->assertEquals('order_placed', $order->logs()->where('event', 'order_placed')->first()->event);
-        $this->assertEquals('awaiting_cook', $order->logs()->where('event', 'awaiting_cook')->first()->event);
+        // Should have 1 log: order_placed (via notifyNewOrder)
+        $this->assertEquals(1, $order->logs()->count());
+        $this->assertEquals('order_placed', $order->logs()->first()->event);
     }
 
     public function test_order_status_transitions_log_events()

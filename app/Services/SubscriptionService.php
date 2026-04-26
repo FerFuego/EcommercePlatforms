@@ -189,16 +189,27 @@ class SubscriptionService
 
         // The preapproval_id is usually in the payment details or external_reference
         $preapprovalId = $payment->preapproval_id ?? null;
+        $subscription = null;
 
-        if (!$preapprovalId) {
-            Log::warning("SubscriptionService: Payment $paymentId has no preapproval_id");
-            return false;
+        if ($preapprovalId) {
+            $subscription = CookSubscription::where('provider_subscription_id', $preapprovalId)->first();
         }
 
-        $subscription = CookSubscription::where('provider_subscription_id', $preapprovalId)->first();
+        // Fallback: If no preapproval_id but we have external_reference (cook_id)
+        if (!$subscription && isset($payment->external_reference) && is_numeric($payment->external_reference)) {
+            $subscription = CookSubscription::where('cook_id', $payment->external_reference)
+                ->where('provider', 'mercadopago')
+                ->whereIn('status', ['active', 'pending'])
+                ->latest()
+                ->first();
+                
+            if ($subscription) {
+                Log::info("SubscriptionService: Found subscription via external_reference (cook_id: {$payment->external_reference})");
+            }
+        }
 
         if (!$subscription) {
-            Log::error("SubscriptionService: Local subscription not found for MP Preapproval: $preapprovalId");
+            Log::error("SubscriptionService: Local subscription not found for MP Payment: $paymentId");
             return false;
         }
 
@@ -240,8 +251,13 @@ class SubscriptionService
     {
         $payment = $this->mpService->getPayment($paymentId);
 
-        if ($payment && $payment->status === 'approved' && isset($payment->preapproval_id)) {
-            return $this->handleAuthorizedPayment($paymentId);
+        if ($payment && $payment->status === 'approved') {
+            $hasPreapproval = isset($payment->preapproval_id);
+            $hasCookRef = isset($payment->external_reference) && is_numeric($payment->external_reference);
+
+            if ($hasPreapproval || $hasCookRef) {
+                return $this->handleAuthorizedPayment($paymentId);
+            }
         }
 
         return false;

@@ -160,7 +160,6 @@ class CheckoutFlowTest extends TestCase
 
         $response = $this->actingAs($customer)->post(route('orders.process'), [
             'delivery_type' => 'pickup',
-            'payment_method' => 'cash',
             'schedule_type' => 'immediate',
             'notes' => 'Sin cebolla',
         ]);
@@ -170,7 +169,6 @@ class CheckoutFlowTest extends TestCase
             'customer_id' => $customer->id,
             'cook_id' => $cook->id,
             'delivery_type' => 'pickup',
-            'payment_method' => 'cash',
             'subtotal' => 3000,
         ]);
 
@@ -204,7 +202,6 @@ class CheckoutFlowTest extends TestCase
             'delivery_address' => 'Calle Falsa 123',
             'delivery_lat' => -32.1745,
             'delivery_lng' => -63.2963,
-            'payment_method' => 'mercadopago',
             'schedule_type' => 'immediate',
         ]);
 
@@ -239,7 +236,6 @@ class CheckoutFlowTest extends TestCase
 
         $this->actingAs($customer)->post(route('orders.process'), [
             'delivery_type' => 'pickup',
-            'payment_method' => 'cash',
             'schedule_type' => 'immediate',
         ]);
 

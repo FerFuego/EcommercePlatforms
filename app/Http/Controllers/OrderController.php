@@ -6,6 +6,7 @@ use App\Models\Cook;
 use App\Models\Dish;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -144,7 +145,6 @@ class OrderController extends Controller
             'delivery_address' => 'required_if:delivery_type,delivery',
             'delivery_lat' => 'nullable|numeric',
             'delivery_lng' => 'nullable|numeric',
-            'payment_method' => 'required|in:mercadopago,cash,transfer',
             'schedule_type' => 'required|in:immediate,scheduled',
             'scheduled_time' => 'required_if:schedule_type,scheduled|nullable|date|after:now',
             'notes' => 'nullable|string|max:1000',
@@ -209,14 +209,25 @@ class OrderController extends Controller
                 return $carry + ($item['price'] * $item['quantity']);
             }, 0);
 
-            // Calcular delivery fee (simple, puedes mejorarlo)
-            $deliveryFee = $request->delivery_type === 'delivery' ? 500 : 0;
+            // Calcular delivery fee basado en distancia si hay coordenadas
+            $deliveryFee = 0;
+            if ($request->delivery_type === 'delivery') {
+                if ($request->delivery_lat && $request->delivery_lng && $cook->location_lat && $cook->location_lng) {
+                    $distance = $this->calculateDistance(
+                        $request->delivery_lat, $request->delivery_lng,
+                        $cook->location_lat, $cook->location_lng
+                    );
+                    $deliveryFee = $this->calculateDeliveryFee($distance);
+                } else {
+                    $deliveryFee = 500; // Fallback si no hay coordenadas
+                }
+            }
 
-            // Crear orden
+            // Crear orden — la plataforma NO gestiona pagos, solo registra el pedido
             $order = Order::create([
                 'customer_id' => auth()->id(),
                 'cook_id' => $cookId,
-                'status' => Order::STATUS_PENDING_PAYMENT,
+                'status' => Order::STATUS_AWAITING_COOK,
                 'delivery_type' => $request->delivery_type,
                 'delivery_address' => $request->delivery_address,
                 'delivery_lat' => $request->delivery_lat,
@@ -224,17 +235,9 @@ class OrderController extends Controller
                 'delivery_fee' => $deliveryFee,
                 'subtotal' => $subtotal,
                 'total_amount' => $subtotal + $deliveryFee,
-                'payment_method' => $request->payment_method,
-                'payment_status' => 'pending',
                 'scheduled_time' => $request->scheduled_time,
                 'notes' => $request->notes,
             ]);
-
-            $order->logEvent('order_placed', 'El pedido fue realizado por el cliente');
-
-            // Calcular comisión
-            $commissionPercentage = \App\Models\Setting::get('commission_rate', 15);
-            $order->calculateCommission($commissionPercentage / 100);
 
             // Crear order items
             foreach ($cart as $item) {
@@ -259,26 +262,15 @@ class OrderController extends Controller
                         \App\Models\OrderItemOption::create([
                             'order_item_id' => $orderItem->id,
                             'dish_option_id' => $optionData['id'],
-                            'quantity' => 1, // Por ahora 1, podrías permitir cantidades en el futuro
+                            'quantity' => 1,
                             'price' => $optionData['price'],
                         ]);
                     }
                 }
             }
 
-            // Si es MercadoPago, redirigir a la pasarela
-            if ($request->payment_method === 'mercadopago') {
-                // TODO: Integrar MercadoPago
-                // Por ahora simulamos pago exitoso
-                $order->markAsPaid('SIMULATED_PAYMENT_ID');
-            } else {
-                // Para cash/transfer, marcar como pendiente de aceptación del cocinero
-                $order->status = Order::STATUS_AWAITING_COOK;
-                $order->save();
-
-                $method = $request->payment_method === 'cash' ? 'Efectivo' : 'Transferencia';
-                $order->logEvent('awaiting_cook', "Pedido pendiente de pago/aceptación via {$method}");
-            }
+            // Notificar al cocinero (push + in-app)
+            $order->notifyNewOrder();
 
             DB::commit();
 
@@ -304,7 +296,11 @@ class OrderController extends Controller
             abort(403);
         }
 
-        return view('orders.success', compact('order'));
+        // Generar link de WhatsApp
+        $whatsappService = app(WhatsAppService::class);
+        $whatsappUrl = $whatsappService->generateOrderLink($order);
+
+        return view('orders.success', compact('order', 'whatsappUrl'));
     }
 
     /**
@@ -350,7 +346,19 @@ class OrderController extends Controller
             abort(403);
         }
 
-        return view('orders.show', compact('order'));
+        // Generar links de WhatsApp
+        $whatsappService = app(WhatsAppService::class);
+        $whatsappUrl = null;
+
+        if ($order->customer_id === auth()->id()) {
+            // Cliente ve botón para contactar al cocinero
+            $whatsappUrl = $whatsappService->generateOrderLink($order);
+        } elseif (auth()->user()->cook && $order->cook_id === auth()->user()->cook->id) {
+            // Cocinero ve botón para contactar al cliente
+            $whatsappUrl = $whatsappService->generateCustomerLink($order);
+        }
+
+        return view('orders.show', compact('order', 'whatsappUrl'));
     }
 
     /**
@@ -510,5 +518,42 @@ class OrderController extends Controller
         }
 
         return redirect()->route('cart.index')->with('success', $message);
+    }
+
+    /**
+     * Calculate distance between two points using Haversine formula
+     */
+    private function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371; // km
+
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+            cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+            sin($dLon / 2) * sin($dLon / 2);
+
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $distance = $earthRadius * $c;
+
+        return round($distance, 2);
+    }
+
+    /**
+     * Calculate delivery fee based on distance
+     * Tiered pricing: 0-2km free, 2-5km $200, 5-10km $400, >10km $600
+     */
+    private function calculateDeliveryFee($distance)
+    {
+        if ($distance <= 2) {
+            return 0;
+        } elseif ($distance <= 5) {
+            return 200;
+        } elseif ($distance <= 10) {
+            return 400;
+        } else {
+            return 600;
+        }
     }
 }

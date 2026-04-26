@@ -19,16 +19,16 @@ class OrderFactory extends Factory
         return [
             'customer_id' => User::factory()->create(['role' => 'customer']),
             'cook_id' => Cook::factory(),
-            'status' => Order::STATUS_PAID,
+            'status' => Order::STATUS_AWAITING_COOK,
             'subtotal' => $subtotal,
             'delivery_fee' => $deliveryFee,
             'total_amount' => $subtotal + $deliveryFee,
             'commission_amount' => round($subtotal * 0.12, 2),
             'delivery_type' => $deliveryFee > 0 ? 'delivery' : 'pickup',
             'delivery_address' => $deliveryFee > 0 ? fake()->address() : null,
-            'payment_method' => fake()->randomElement(['mercadopago', 'cash', 'transfer']),
-            'payment_id' => 'PAY_' . strtoupper(fake()->bothify('????????')),
-            'payment_status' => 'approved',
+            'payment_method' => null,
+            'payment_id' => null,
+            'payment_status' => null,
             'notes' => fake()->boolean(30) ? fake()->sentence() : null,
         ];
     }
@@ -36,8 +36,7 @@ class OrderFactory extends Factory
     public function pending(): static
     {
         return $this->state(fn(array $attributes) => [
-            'status' => Order::STATUS_PENDING_PAYMENT,
-            'payment_id' => null,
+            'status' => Order::STATUS_AWAITING_COOK,
         ]);
     }
 
