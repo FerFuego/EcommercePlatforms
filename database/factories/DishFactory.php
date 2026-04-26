@@ -34,7 +34,7 @@ class DishFactory extends Factory
                 ['gluten-free'],
                 ['low-carb'],
             ]),
-            'available_days' => [1, 2, 3, 4, 5, 6],
+            'available_days' => [1, 2, 3, 4, 5, 6, 7],
             'preparation_time_minutes' => fake()->numberBetween(20, 60),
             'delivery_method' => 'both',
         ];

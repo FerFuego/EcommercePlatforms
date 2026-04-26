@@ -7,6 +7,7 @@ use App\Models\Dish;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -65,7 +66,12 @@ class AdminController extends Controller
         $cook->active = true;
         $cook->save();
 
-        // TODO: Enviar email de confirmación al cocinero
+        // Enviar email de confirmación al cocinero
+        try {
+            Mail::to($cook->user->email)->send(new \App\Mail\CookApprovedMail($cook));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error sending cook approval email: " . $e->getMessage());
+        }
 
         return back()->with('success', 'Cocinero aprobado exitosamente');
     }
@@ -81,7 +87,12 @@ class AdminController extends Controller
             'rejection_reason' => 'required|string|max:500',
         ]);
 
-        // TODO: Enviar email con razón del rechazo
+        // Enviar email con razón del rechazo
+        try {
+            Mail::to($cook->user->email)->send(new \App\Mail\CookRejectedMail($cook, $request->rejection_reason));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error sending cook rejection email: " . $e->getMessage());
+        }
 
         $cook->delete();
 
@@ -236,7 +247,12 @@ class AdminController extends Controller
         $driver->is_approved = true;
         $driver->save();
 
-        // TODO: Enviar email de confirmación al repartidor
+        // Enviar email de confirmación al repartidor
+        try {
+            Mail::to($driver->user->email)->send(new \App\Mail\DriverApprovedMail($driver));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error sending driver approval email: " . $e->getMessage());
+        }
 
         return back()->with('success', 'Repartidor aprobado exitosamente');
     }
@@ -252,7 +268,12 @@ class AdminController extends Controller
             'rejection_reason' => 'required|string|max:500',
         ]);
 
-        // TODO: Enviar email con razón del rechazo
+        // Enviar email con razón del rechazo
+        try {
+            Mail::to($driver->user->email)->send(new \App\Mail\DriverRejectedMail($driver, $request->rejection_reason));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error sending driver rejection email: " . $e->getMessage());
+        }
 
         $driver->delete();
 

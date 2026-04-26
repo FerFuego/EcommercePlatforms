@@ -24,17 +24,17 @@ class OrderNotificationTest extends TestCase
     }
 
     /** @test */
-    public function event_and_notifications_are_dispatched_when_order_is_marked_as_paid()
+    public function event_and_notifications_are_dispatched_when_new_order_is_placed()
     {
         $cook = Cook::factory()->create();
         $customer = User::factory()->create(['role' => 'customer']);
         $order = Order::factory()->create([
             'customer_id' => $customer->id,
             'cook_id' => $cook->id,
-            'status' => Order::STATUS_PENDING_PAYMENT,
+            'status' => Order::STATUS_AWAITING_COOK,
         ]);
 
-        $order->markAsPaid('TEST_PAYMENT_ID');
+        $order->notifyNewOrder();
 
         // Check Event
         Event::assertDispatched(OrderStatusUpdated::class, function ($event) use ($order) {

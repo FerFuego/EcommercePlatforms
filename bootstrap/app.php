@@ -12,12 +12,19 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->trustProxies(at: '*');
+    ->withMiddleware(function (Middleware $middleware) {
+        // App Middleware Aliases
         $middleware->alias([
-            'cook' => \App\Http\Middleware\EnsureUserIsCook::class,
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+            'cook' => \App\Http\Middleware\EnsureUserIsCook::class,
             'delivery_driver' => \App\Http\Middleware\EnsureUserIsDeliveryDriver::class,
+            'can_sell' => \App\Http\Middleware\EnsureCookCanSell::class,
+            'subscribed' => \App\Http\Middleware\RequireActiveSubscription::class,
+        ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'stripe/*',
+            'api/mercadopago/webhook',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

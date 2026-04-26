@@ -26,8 +26,9 @@ return new class extends Migration {
                 'assigned_to_delivery',
                 'on_the_way',
                 'delivered',
-                'cancelled'
-            ])->default('pending_payment');
+                'cancelled',
+                'scheduled'
+            ])->default('awaiting_cook_acceptance');
 
             // Delivery
             $table->enum('delivery_type', ['pickup', 'delivery']);
@@ -41,10 +42,10 @@ return new class extends Migration {
             $table->decimal('commission_amount', 10, 2)->default(0); // 10-15% para la plataforma
             $table->decimal('total_amount', 10, 2); // subtotal + delivery_fee
 
-            // Pago
-            $table->enum('payment_method', ['mercadopago', 'cash', 'transfer'])->default('mercadopago');
-            $table->string('payment_id')->nullable(); // ID de transacción en MercadoPago
-            $table->enum('payment_status', ['pending', 'approved', 'rejected'])->default('pending');
+            // Pago (nullable — la plataforma no gestiona pagos de pedidos)
+            $table->enum('payment_method', ['mercadopago', 'cash', 'transfer'])->nullable();
+            $table->string('payment_id')->nullable(); // ID de transacción externo
+            $table->enum('payment_status', ['pending', 'approved', 'rejected'])->nullable();
 
             // Extras
             $table->text('notes')->nullable(); // Notas del cliente

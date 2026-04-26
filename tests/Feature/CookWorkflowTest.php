@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Cook;
 use App\Models\Dish;
 use App\Models\Order;
+use App\Models\SubscriptionPlan;
+use App\Models\CookSubscription;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -15,10 +17,34 @@ class CookWorkflowTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Seed default plans
+        $this->artisan('db:seed', ['--class' => 'SubscriptionPlanSeeder']);
+    }
+
+    protected function createActiveSubscription(Cook $cook)
+    {
+        $plan = SubscriptionPlan::where('slug', 'basico-free')->first();
+        $sub = CookSubscription::create([
+            'cook_id' => $cook->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'current_period_start' => now(),
+            'current_period_end' => now()->addMonth(),
+        ]);
+        $cook->update(['current_subscription_id' => $sub->id]);
+        $cook->user->refresh();
+        $cook->refresh();
+        return $sub;
+    }
+
     /** @test */
     public function cook_can_access_dashboard()
     {
         $cook = Cook::factory()->create(['is_approved' => true]);
+        $this->createActiveSubscription($cook);
 
         $response = $this->actingAs($cook->user)->get(route('cook.dashboard'));
 
@@ -30,6 +56,7 @@ class CookWorkflowTest extends TestCase
     public function cook_can_view_their_dishes()
     {
         $cook = Cook::factory()->create();
+        $this->createActiveSubscription($cook);
         Dish::factory()->count(3)->create(['cook_id' => $cook->id]);
 
         $response = $this->actingAs($cook->user)->get(route('cook.dishes.index'));
@@ -42,6 +69,7 @@ class CookWorkflowTest extends TestCase
     {
         Storage::fake('public');
         $cook = Cook::factory()->create();
+        $this->createActiveSubscription($cook);
 
         $response = $this->actingAs($cook->user)->post(route('cook.dishes.store'), [
             'name' => 'Milanesa Napolitana',
@@ -68,6 +96,7 @@ class CookWorkflowTest extends TestCase
     public function cook_can_update_dish()
     {
         $cook = Cook::factory()->create();
+        $this->createActiveSubscription($cook);
         $dish = Dish::factory()->create(['cook_id' => $cook->id, 'name' => 'Old Name']);
 
         $response = $this->actingAs($cook->user)->put(route('cook.dishes.update', $dish), [
@@ -90,6 +119,7 @@ class CookWorkflowTest extends TestCase
     public function cook_can_delete_dish()
     {
         $cook = Cook::factory()->create();
+        $this->createActiveSubscription($cook);
         $dish = Dish::factory()->create(['cook_id' => $cook->id]);
 
         $response = $this->actingAs($cook->user)->delete(route('cook.dishes.destroy', $dish));
@@ -102,6 +132,7 @@ class CookWorkflowTest extends TestCase
     public function cook_can_toggle_dish_active_status()
     {
         $cook = Cook::factory()->create();
+        $this->createActiveSubscription($cook);
         $dish = Dish::factory()->create(['cook_id' => $cook->id, 'is_active' => true]);
 
         $response = $this->actingAs($cook->user)->post(route('cook.dishes.toggle', $dish));
@@ -114,6 +145,7 @@ class CookWorkflowTest extends TestCase
     public function cook_can_update_stock()
     {
         $cook = Cook::factory()->create();
+        $this->createActiveSubscription($cook);
         $dish = Dish::factory()->create(['cook_id' => $cook->id, 'available_stock' => 10]);
 
         $response = $this->actingAs($cook->user)->post(route('cook.dishes.stock', $dish), [
@@ -128,6 +160,7 @@ class CookWorkflowTest extends TestCase
     public function cook_can_view_their_orders()
     {
         $cook = Cook::factory()->create();
+        $this->createActiveSubscription($cook);
         $customer = User::factory()->create(['role' => 'customer']);
         Order::factory()->count(3)->create(['cook_id' => $cook->id, 'customer_id' => $customer->id]);
 
@@ -140,6 +173,7 @@ class CookWorkflowTest extends TestCase
     public function cook_can_accept_order()
     {
         $cook = Cook::factory()->create();
+        $this->createActiveSubscription($cook);
         $order = Order::factory()->create([
             'cook_id' => $cook->id,
             'status' => Order::STATUS_AWAITING_COOK,
@@ -155,6 +189,7 @@ class CookWorkflowTest extends TestCase
     public function cook_can_reject_order()
     {
         $cook = Cook::factory()->create();
+        $this->createActiveSubscription($cook);
         $order = Order::factory()->create([
             'cook_id' => $cook->id,
             'status' => Order::STATUS_AWAITING_COOK,
@@ -172,6 +207,7 @@ class CookWorkflowTest extends TestCase
     public function cook_can_mark_order_as_ready()
     {
         $cook = Cook::factory()->create();
+        $this->createActiveSubscription($cook);
         $order = Order::factory()->create([
             'cook_id' => $cook->id,
             'status' => Order::STATUS_PREPARING,
@@ -190,7 +226,9 @@ class CookWorkflowTest extends TestCase
     public function cook_cannot_access_another_cooks_dishes()
     {
         $cook1 = Cook::factory()->create();
+        $this->createActiveSubscription($cook1);
         $cook2 = Cook::factory()->create();
+        $this->createActiveSubscription($cook2);
         $dish = Dish::factory()->create(['cook_id' => $cook2->id]);
 
         $response = $this->actingAs($cook1->user)->get(route('cook.dishes.edit', $dish));

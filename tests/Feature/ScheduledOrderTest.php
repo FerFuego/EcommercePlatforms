@@ -7,6 +7,8 @@ use App\Models\Dish;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
+use App\Models\SubscriptionPlan;
+use App\Models\CookSubscription;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -35,10 +37,24 @@ class ScheduledOrderTest extends TestCase
         $this->dish = Dish::factory()->create([
             'cook_id' => $this->cook->id,
             'price' => 1000,
-            'available_stock' => 100,
+            'available_stock' => 10,
             'is_active' => true,
             'is_schedulable' => true,
         ]);
+
+        // Seed plans and create subscription
+        $this->artisan('db:seed', ['--class' => 'SubscriptionPlanSeeder']);
+        $plan = SubscriptionPlan::where('slug', 'basico-free')->first();
+        $sub = CookSubscription::create([
+            'cook_id' => $this->cook->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'current_period_start' => now(),
+            'current_period_end' => now()->addMonth(),
+        ]);
+        $this->cook->update(['current_subscription_id' => $sub->id]);
+        $this->cook->user->refresh();
+        $this->cook->refresh();
     }
 
     /** @test */
