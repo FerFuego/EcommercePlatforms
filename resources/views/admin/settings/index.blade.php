@@ -108,6 +108,14 @@
                                     </div>
                                 @endforeach
                             </div>
+                            <div class="mt-4 flex flex-col sm:flex-row sm:items-center gap-4 px-6 pb-4">
+                                <button type="button" id="btn-test-mp" 
+                                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-sm text-sm">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Verificar Credenciales MP
+                                </button>
+                                <div id="mp-test-result" class="text-sm font-medium hidden p-2 rounded-lg"></div>
+                            </div>
                         </div>
                     @endif
 
@@ -142,4 +150,54 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.getElementById('btn-test-mp').addEventListener('click', function() {
+            const tokenInput = document.getElementById('mp_access_token');
+            const resultDiv = document.getElementById('mp-test-result');
+            const btn = this;
+            
+            if (!tokenInput || !tokenInput.value) {
+                alert('Por favor, ingresa un Access Token antes de verificar.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="animate-spin h-4 w-4 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Verificando...';
+            
+            resultDiv.classList.add('hidden');
+            resultDiv.innerHTML = '';
+
+            fetch('{{ route('admin.settings.test-mp') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ token: tokenInput.value })
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.classList.remove('hidden');
+                if (data.status === 'success') {
+                    resultDiv.className = 'text-sm font-medium p-2 rounded-lg bg-green-100 text-green-800 border border-green-200';
+                    resultDiv.innerHTML = data.message;
+                } else {
+                    resultDiv.className = 'text-sm font-medium p-2 rounded-lg bg-red-100 text-red-800 border border-red-200';
+                    resultDiv.innerHTML = data.message;
+                }
+            })
+            .catch(error => {
+                resultDiv.classList.remove('hidden');
+                resultDiv.className = 'text-sm font-medium p-2 rounded-lg bg-red-100 text-red-800 border border-red-200';
+                resultDiv.innerText = 'Error al conectar con el servidor.';
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Verificar Credenciales MP';
+            });
+        });
+    </script>
+    @endpush
 @endsection

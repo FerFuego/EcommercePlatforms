@@ -196,6 +196,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Configuración
     Route::get('/settings', [App\Http\Controllers\AdminSettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [App\Http\Controllers\AdminSettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/test-mercadopago', [App\Http\Controllers\Admin\MercadoPagoTestController::class, 'testConnection'])->name('settings.test-mp');
 });
 
 // Rutas de Delivery Driver

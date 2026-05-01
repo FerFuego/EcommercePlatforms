@@ -149,6 +149,46 @@ class MercadoPagoService
         }
     }
 
+    public function testToken(string $token)
+    {
+        try {
+            MercadoPagoConfig::setAccessToken($token);
+            
+            $parts = explode('-', $token);
+            $userId = count($parts) > 1 ? $parts[1] : null;
+
+            if (!$userId || !is_numeric($userId)) {
+                 return [
+                    'status' => 'error',
+                    'message' => 'Formato de token inválido. No se pudo extraer el User ID.'
+                ];
+            }
+
+            $user = (new \MercadoPago\Client\User\UserClient())->get($userId);
+
+            $isSandbox = str_starts_with($token, 'TEST-');
+            
+            return [
+                'status' => 'success',
+                'environment' => $isSandbox ? 'sandbox' : 'production',
+                'user' => [
+                    'nickname' => $user->nickname,
+                    'site_id' => $user->site_id
+                ]
+            ];
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            if (method_exists($e, 'getApiResponse')) {
+                $content = $e->getApiResponse()->getContent();
+                $message = $content['message'] ?? $message;
+            }
+            return [
+                'status' => 'error',
+                'message' => $message
+            ];
+        }
+    }
+
     protected function logError($action, \Exception $e)
     {
         $message = "MercadoPagoService $action Error: " . $e->getMessage();
