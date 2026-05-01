@@ -198,4 +198,19 @@ class MercadoPagoService
         }
         Log::error($message);
     }
+
+    /**
+     * Search for recent payments
+     */
+    public function searchPayments(array $filters = [])
+    {
+        try {
+            $client = $this->getPaymentClient();
+            $searchRequest = new \MercadoPago\Net\MPSearchRequest(50, 0, $filters);
+            return $client->search($searchRequest);
+        } catch (\Exception $e) {
+            $this->logError('SearchPayments', $e);
+            return null;
+        }
+    }
 }

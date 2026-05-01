@@ -188,7 +188,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/subscription-plans/{subscriptionPlan}', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
     Route::patch('/subscription-plans/{subscriptionPlan}/toggle', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'toggleStatus'])->name('subscription-plans.toggle');
     Route::delete('/subscription-plans/{subscriptionPlan}', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'destroy'])->name('subscription-plans.destroy');
+    
+    // Gestión de Recaudación (Admin)
     Route::get('/subscription-payments', [\App\Http\Controllers\AdminSubscriptionPaymentController::class, 'index'])->name('subscription-payments.index');
+    Route::post('/subscription-payments/sync', [\App\Http\Controllers\AdminSubscriptionPaymentController::class, 'syncFromMercadoPago'])->name('subscription-payments.sync');
 
     // Gestión de Usuarios
     Route::get('/users', [AdminController::class, 'allUsers'])->name('users.index');

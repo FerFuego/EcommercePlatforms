@@ -4,14 +4,28 @@
 
 @section('content')
     <div class="container mx-auto px-4 py-8">
-        <div class="mb-8">
-            <h1 class="text-4xl font-bold mb-2">
-                <span class="bg-gradient-to-r from-orange-600 via-orange-600 to-purple-600 bg-clip-text text-transparent">
-                    Recaudación por Suscripciones
-                </span>
-            </h1>
-            <p class="text-gray-600">Control de ingresos y pagos recurrentes de cocineros.</p>
-        </div>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h1 class="text-4xl font-bold mb-2">
+                        <span class="bg-gradient-to-r from-orange-600 via-orange-600 to-purple-600 bg-clip-text text-transparent">
+                            Recaudación por Suscripciones
+                        </span>
+                    </h1>
+                    <p class="text-gray-600">Control de ingresos y pagos recurrentes de cocineros.</p>
+                </div>
+                <div>
+                    <form action="{{ route('admin.subscription-payments.sync') }}" method="POST">
+                        @csrf
+                        <button type="submit" 
+                                class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-indigo-700 transition transform hover:-translate-y-0.5 active:translate-y-0">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Sincronizar con Mercado Pago
+                        </button>
+                    </form>
+                </div>
+            </div>
 
         <!-- Stats Row -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

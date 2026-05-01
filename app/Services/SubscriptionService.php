@@ -178,7 +178,7 @@ class SubscriptionService
     /**
      * Handle the 'subscription_authorized_payment' event (recurring charge).
      */
-    protected function handleAuthorizedPayment(string $paymentId)
+    public function handleAuthorizedPayment(string $paymentId)
     {
         // Fetch detailed payment info from MP
         $payment = $this->mpService->getPayment($paymentId);
