@@ -4,10 +4,23 @@
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-200">Planes de Suscripción</h1>
-            <a href="{{ route('admin.subscription-plans.create') }}"
-                class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-2 rounded-xl font-bold hover:shadow-lg hover:scale-105 transform transition duration-300">
-                Crear Nuevo Plan
-            </a>
+            <div class="flex items-center space-x-3">
+                <form action="{{ route('admin.subscription-plans.sync') }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                        class="bg-blue-500 text-white px-3 py-2 rounded-xl font-bold hover:shadow-lg hover:bg-blue-600 transform transition duration-300 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Sincronizar con Mercado Pago
+                    </button>
+                </form>
+                <a href="{{ route('admin.subscription-plans.create') }}"
+                    class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-2 rounded-xl font-bold hover:shadow-lg hover:scale-105 transform transition duration-300">
+                    Crear Nuevo Plan
+                </a>
+            </div>
         </div>
 
         @if(session('success'))

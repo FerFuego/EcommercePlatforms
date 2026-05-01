@@ -135,4 +135,66 @@ class AdminSubscriptionPlanController extends Controller
 
         return redirect()->route('admin.subscription-plans.index')->with('success', 'Plan de suscripción eliminado correctamente.');
     }
+
+    public function syncFromMercadoPago()
+    {
+        try {
+            $token = \App\Models\Setting::get('mp_access_token');
+            if (!$token) {
+                return back()->with('error', 'No hay un Access Token configurado.');
+            }
+
+            $result = $this->mercadoPagoService->testToken($token);
+
+            if ($result['status'] !== 'success') {
+                return back()->with('error', 'Error de conexión con Mercado Pago: ' . ($result['message'] ?? 'Desconocido'));
+            }
+
+            // Usamos el cliente de búsqueda para obtener los planes activos
+            $client = new \MercadoPago\Client\PreApprovalPlan\PreApprovalPlanClient();
+            \MercadoPago\MercadoPagoConfig::setAccessToken($token);
+            
+            $search = new \MercadoPago\Net\MPSearchRequest(50, 0, ['status' => 'active']);
+            $mpResults = $client->search($search);
+
+            $syncedCount = 0;
+            foreach ($mpResults->results as $mpPlan) {
+                // Buscamos coincidencia local por nombre o slug
+                $localPlan = SubscriptionPlan::where('name', 'LIKE', '%' . $mpPlan->reason . '%')
+                    ->orWhere('slug', \Illuminate\Support\Str::slug($mpPlan->reason))
+                    ->first();
+
+                if ($localPlan) {
+                    $localPlan->update([
+                        'mp_plan_id' => $mpPlan->id,
+                        'price' => $mpPlan->auto_recurring->transaction_amount
+                    ]);
+                    $syncedCount++;
+                } else {
+                    // Si no existe, lo creamos
+                    SubscriptionPlan::create([
+                        'name' => $mpPlan->reason,
+                        'slug' => \Illuminate\Support\Str::slug($mpPlan->reason),
+                        'price' => $mpPlan->auto_recurring->transaction_amount,
+                        'mp_plan_id' => $mpPlan->id,
+                        'currency' => $mpPlan->auto_recurring->currency_id ?? 'ARS',
+                        'billing_period' => 'monthly',
+                        'commission_percentage' => 0, // Default
+                        'is_active' => true,
+                        'features' => [
+                            'premium_badge' => false,
+                            'can_create_offers' => false,
+                            'advanced_stats' => false,
+                            'priority_listing' => false,
+                        ]
+                    ]);
+                    $syncedCount++;
+                }
+            }
+
+            return back()->with('success', "Sincronización completada. Se actualizaron/crearon {$syncedCount} planes desde Mercado Pago.");
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al sincronizar: ' . $e->getMessage());
+        }
+    }
 }

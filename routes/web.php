@@ -179,6 +179,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/drivers/{driverId}/reject', [AdminController::class, 'rejectDriver'])->name('drivers.reject');
 
     // Gestión de Suscripciones (Admin)
+    Route::post('/subscription-plans/sync-mp', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'syncFromMercadoPago'])->name('subscription-plans.sync');
     Route::get('/subscription-plans', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'index'])->name('subscription-plans.index');
     Route::get('/subscription-plans/create', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'create'])->name('subscription-plans.create');
     Route::post('/subscription-plans', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'store'])->name('subscription-plans.store');
