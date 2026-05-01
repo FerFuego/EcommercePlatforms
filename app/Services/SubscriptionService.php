@@ -59,13 +59,19 @@ class SubscriptionService
                 "back_url" => $siteUrl . "/cook/subscription/success",
                 "reason" => "Suscripción Cocinarte: " . $plan->name,
                 "external_reference" => (string) $cook->id,
-                "auto_recurring" => [
+            ];
+
+            if ($plan->mp_plan_id) {
+                $mpData["preapproval_plan_id"] = $plan->mp_plan_id;
+            } else {
+                $frequency = $plan->billing_period === 'monthly' ? 1 : 12;
+                $mpData["auto_recurring"] = [
                     "frequency" => $frequency,
                     "frequency_type" => "months",
                     "transaction_amount" => (float) $plan->price,
                     "currency_id" => "ARS"
-                ]
-            ];
+                ];
+            }
 
             $mpSubscription = $this->mpService->createSubscription($mpData);
 
