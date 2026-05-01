@@ -164,7 +164,7 @@ class MercadoPagoService
                 ];
             }
 
-            $user = (new \MercadoPago\Client\User\UserClient())->get($userId);
+            $user = (new \MercadoPago\Client\User\UserClient())->get();
 
             $isSandbox = str_starts_with($token, 'TEST-');
             
