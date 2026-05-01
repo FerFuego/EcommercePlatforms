@@ -222,6 +222,7 @@ class SubscriptionService
                 'amount' => $payment->transaction_amount,
                 'currency' => $payment->currency_id,
                 'payment_gateway' => 'mercadopago',
+                'preapproval_id' => $payment->preapproval_id ?? $subscription->provider_subscription_id,
                 'status' => 'approved',
                 'paid_at' => now(),
             ]

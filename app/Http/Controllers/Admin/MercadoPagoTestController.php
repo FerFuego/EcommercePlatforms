@@ -42,4 +42,24 @@ class MercadoPagoTestController extends Controller
             'message' => 'Error de conexión: ' . ($result['message'] ?? 'Desconocido')
         ]);
     }
+
+    public function showLogs()
+    {
+        $logPath = storage_path('logs/laravel.log');
+        if (!file_exists($logPath)) {
+            return "No se encontró el archivo de logs.";
+        }
+
+        $lines = file($logPath);
+        $relevantLines = array_filter($lines, function($line) {
+            return str_contains($line, 'MercadoPago') || str_contains($line, 'ERROR');
+        });
+
+        $lastErrors = array_slice($relevantLines, -50);
+        
+        echo "<h1>Últimos errores de Mercado Pago</h1>";
+        echo "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; font-family: monospace;'>";
+        echo implode("", array_reverse($lastErrors));
+        echo "</pre>";
+    }
 }

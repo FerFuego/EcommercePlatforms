@@ -33,26 +33,32 @@ class PaymentWebhookController extends Controller
             return response()->json(['message' => 'No ID provided'], 400);
         }
 
-        // 1. Check if it's a product order payment
-        // (Assuming orders have a specific external_reference pattern like 'ORD_')
-        // We'll let the existing logic handle it or delegate to an OrderService in the future.
-        if ($type === 'payment' || $type === 'merchant_order') {
-            // Check if this payment belongs to a subscription
-            // The SubscriptionService will check if 'preapproval_id' exists in the payment details
-            $handled = $this->subscriptionService->handleWebhook($payload);
+        try {
+            // 1. Check if it's a product order payment
+            if ($type === 'payment' || $type === 'merchant_order') {
+                $handled = $this->subscriptionService->handleWebhook($payload);
 
-            if ($handled) {
-                return response()->json(['status' => 'success', 'context' => 'subscription']);
+                if ($handled) {
+                    return response()->json(['status' => 'success', 'context' => 'subscription']);
+                }
+
+                // If not handled by subscription, it might be a product order
+                return $this->processProductOrder($id, $type);
             }
 
-            // If not handled by subscription, it might be a product order
-            return $this->processProductOrder($id, $type);
-        }
-
-        // 2. Subscription lifecycle events (preapproval)
-        if (in_array($type, ['preapproval', 'subscription_preapproval', 'subscription_authorized_payment'])) {
-            $this->subscriptionService->handleWebhook($payload);
-            return response()->json(['status' => 'success', 'context' => 'subscription_lifecycle']);
+            // 2. Subscription lifecycle events (preapproval)
+            if (in_array($type, ['preapproval', 'subscription_preapproval', 'subscription_authorized_payment'])) {
+                $this->subscriptionService->handleWebhook($payload);
+                return response()->json(['status' => 'success', 'context' => 'subscription_lifecycle']);
+            }
+        } catch (\Throwable $e) {
+            Log::error('MercadoPago Webhook Processing Error: ' . $e->getMessage(), [
+                'type' => $type,
+                'id' => $id,
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            return response()->json(['error' => 'Internal Server Error'], 500);
         }
 
         return response()->json(['message' => 'Topic ignored'], 200);
