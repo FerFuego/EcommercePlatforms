@@ -121,8 +121,8 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span
-                                        class="px-3 py-1 rounded-full text-xs font-semibold {{ $payment->provider === 'stripe' ? 'bg-indigo-100 text-indigo-700' : 'bg-blue-100 text-blue-700' }}">
-                                        {{ ucfirst($payment->provider) }}
+                                        class="px-3 py-1 rounded-full text-xs font-semibold {{ $payment->payment_gateway === 'stripe' ? 'bg-indigo-100 text-indigo-700' : 'bg-blue-100 text-blue-700' }}">
+                                        {{ ucfirst($payment->payment_gateway) }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -132,7 +132,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <code
-                                        class="text-xs font-mono text-gray-500 bg-gray-100 px-2 py-1 rounded">{{ $payment->provider_payment_id }}</code>
+                                        class="text-xs font-mono text-gray-500 bg-gray-100 px-2 py-1 rounded">{{ $payment->payment_id }}</code>
                                 </td>
                             </tr>
                         @empty
