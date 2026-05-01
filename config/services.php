@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'mercadopago' => [
+        'webhook_secret' => env('MP_WEBHOOK_SECRET'),
+    ],
+
 ];

@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'delivery_driver' => \App\Http\Middleware\EnsureUserIsDeliveryDriver::class,
             'can_sell' => \App\Http\Middleware\EnsureCookCanSell::class,
             'subscribed' => \App\Http\Middleware\RequireActiveSubscription::class,
+            'mp_signature' => \App\Http\Middleware\VerifyMercadoPagoSignature::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [
