@@ -44,6 +44,12 @@ class MercadoPagoSubscriptionTest extends TestCase
 
         $this->mpServiceMock->shouldReceive('createSubscription')
             ->once()
+            ->with(Mockery::on(function ($data) use ($plan) {
+                return isset($data['auto_recurring']) &&
+                    $data['auto_recurring']['transaction_amount'] == $plan->price &&
+                    $data['auto_recurring']['currency_id'] == 'ARS' &&
+                    $data['reason'] == "Suscripción Cocinarte: " . $plan->name;
+            }))
             ->andReturn((object) [
                 'id' => 'MP-SUB-456',
                 'init_point' => 'https://mercadopago.com/init/456'
