@@ -21,14 +21,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [MarketplaceController::class, 'index'])->name('home');
 
 // RUTAS TEMPORALES PARA HOSTINGER (Eliminar después de usar)
-Route::get('/run-migrations', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        return "Migraciones ejecutadas con éxito!<br><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre>";
-    } catch (\Exception $e) {
-        return "Error al correr migraciones: " . $e->getMessage();
-    }
-});
+// Route::get('/run-migrations', function () {
+//     try {
+//         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+//         return "Migraciones ejecutadas con éxito!<br><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre>";
+//     } catch (\Exception $e) {
+//         return "Error al correr migraciones: " . $e->getMessage();
+//     }
+// });
 
 // Marketplace (público)
 Route::prefix('marketplace')->name('marketplace.')->group(function () {
@@ -102,7 +102,7 @@ Route::middleware(['auth', 'cook'])->prefix('cook')->name('cook.')->group(functi
     // Dashboard
     Route::get('/dashboard', [CookDashboardController::class, 'index'])->name('dashboard');
     Route::get('/analytics', [\App\Http\Controllers\Cook\AnalyticsController::class, 'index'])->name('analytics');
-    
+
     // CRM WhatsApp Broadcasts
     Route::get('/broadcasts', [\App\Http\Controllers\Cook\BroadcastController::class, 'index'])->name('broadcasts.index');
     Route::post('/broadcasts', [\App\Http\Controllers\Cook\BroadcastController::class, 'store'])->name('broadcasts.store');
@@ -188,7 +188,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/subscription-plans/{subscriptionPlan}', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
     Route::patch('/subscription-plans/{subscriptionPlan}/toggle', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'toggleStatus'])->name('subscription-plans.toggle');
     Route::delete('/subscription-plans/{subscriptionPlan}', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'destroy'])->name('subscription-plans.destroy');
-    
+
     // Gestión de Recaudación (Admin)
     Route::get('/subscription-payments', [\App\Http\Controllers\AdminSubscriptionPaymentController::class, 'index'])->name('subscription-payments.index');
     Route::post('/subscription-payments/sync', [\App\Http\Controllers\AdminSubscriptionPaymentController::class, 'syncFromMercadoPago'])->name('subscription-payments.sync');
