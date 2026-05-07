@@ -28,6 +28,27 @@
     </style>
 
     @stack('styles')
+
+    <!-- Google reCAPTCHA v3 -->
+    @if(config('services.recaptcha.site_key'))
+        <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+        <script>
+            window.getRecaptchaToken = function(action = 'admin_action') {
+                return new Promise((resolve, reject) => {
+                    if (typeof grecaptcha === 'undefined') {
+                        reject('reCAPTCHA no está cargado');
+                        return;
+                    }
+                    grecaptcha.ready(function() {
+                        grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: action})
+                            .then(function(token) {
+                                resolve(token);
+                            });
+                    });
+                });
+            };
+        </script>
+    @endif
 </head>
 
 <body class="bg-gray-50 min-h-screen font-sans antialiased">

@@ -27,6 +27,7 @@ class PasswordResetLinkController extends Controller
     {
         $request->validate([
             'email' => ['required', 'email'],
+            'g-recaptcha-response' => [app()->runningUnitTests() ? 'nullable' : 'required', new \App\Rules\Recaptcha],
         ]);
 
         // We will send the password reset link to this user. Once we have attempted

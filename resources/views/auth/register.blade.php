@@ -43,8 +43,9 @@
 
             <!-- Register Form Card -->
             <div class="bg-white rounded-2xl shadow-2xl p-8 relative overflow-hidden">
-                <form method="POST" action="{{ route('register') }}">
+                <form id="registerForm" method="POST" action="{{ route('register') }}">
                     @csrf
+                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                     <!-- Step 1: Role Selection -->
                     <div x-show="step === 1" x-transition:enter="transition ease-out duration-300"
@@ -196,6 +197,22 @@
                         </div>
                     </div>
                 </form>
+
+                @push('scripts')
+                <script>
+                    document.getElementById('registerForm').addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const form = this;
+                        window.getRecaptchaToken('register').then(token => {
+                            document.getElementById('g-recaptcha-response').value = token;
+                            form.submit();
+                        }).catch(err => {
+                            console.error(err);
+                            form.submit();
+                        });
+                    });
+                </script>
+                @endpush
             </div>
 
             <!-- Login Link -->

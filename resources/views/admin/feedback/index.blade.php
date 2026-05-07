@@ -9,7 +9,7 @@
             <div class="mb-8 flex justify-between items-center">
                 <div>
                     <h1 class="text-4xl font-bold mb-2">
-                        <span class="bg-gradient-to-r from-purple-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+                        <span class="text-3xl font-bold text-gray-800 dark:text-gray-200">
                             Sugerencias y Reportes
                         </span>
                     </h1>

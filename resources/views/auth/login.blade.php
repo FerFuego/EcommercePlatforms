@@ -29,56 +29,73 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login') }}">
-                    @csrf
+                    <form id="loginForm" method="POST" action="{{ route('login') }}">
+                        @csrf
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
-                    <!-- Email -->
-                    <div class="mb-6">
-                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Email
-                        </label>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
-                            autocomplete="username"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition @error('email') border-red-500 @enderror">
-                        @error('email')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <!-- Email -->
+                        <div class="mb-6">
+                            <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Email
+                            </label>
+                            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
+                                autocomplete="username"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition @error('email') border-red-500 @enderror">
+                            @error('email')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <!-- Password -->
-                    <div class="mb-6">
-                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Contraseña
-                        </label>
-                        <input id="password" type="password" name="password" required autocomplete="current-password"
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition @error('password') border-red-500 @enderror">
-                        @error('password')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <!-- Password -->
+                        <div class="mb-6">
+                            <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Contraseña
+                            </label>
+                            <input id="password" type="password" name="password" required autocomplete="current-password"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition @error('password') border-red-500 @enderror">
+                            @error('password')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <!-- Remember Me -->
-                    <div class="flex items-center justify-between mb-6">
-                        <label class="flex items-center">
-                            <input type="checkbox" name="remember"
-                                class="rounded border-gray-300 text-purple-600 focus:ring-purple-500 w-4 h-4">
-                            <span class="ml-2 text-sm text-gray-600">Recordarme</span>
-                        </label>
+                        <!-- Remember Me -->
+                        <div class="flex items-center justify-between mb-6">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="remember"
+                                    class="rounded border-gray-300 text-purple-600 focus:ring-purple-500 w-4 h-4">
+                                <span class="ml-2 text-sm text-gray-600">Recordarme</span>
+                            </label>
 
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}"
-                                class="text-sm text-purple-600 hover:text-purple-800 font-medium">
-                                ¿Olvidaste tu contraseña?
-                            </a>
-                        @endif
-                    </div>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}"
+                                    class="text-sm text-purple-600 hover:text-purple-800 font-medium">
+                                    ¿Olvidaste tu contraseña?
+                                </a>
+                            @endif
+                        </div>
 
-                    <!-- Submit Button -->
-                    <button type="submit"
-                        class="w-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-6 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
-                        Iniciar Sesión
-                    </button>
-                </form>
+                        <!-- Submit Button -->
+                        <button type="submit"
+                            class="w-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-6 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
+                            Iniciar Sesión
+                        </button>
+                    </form>
+
+                    @push('scripts')
+                    <script>
+                        document.getElementById('loginForm').addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            const form = this;
+                            window.getRecaptchaToken('login').then(token => {
+                                document.getElementById('g-recaptcha-response').value = token;
+                                form.submit();
+                            }).catch(err => {
+                                console.error(err);
+                                form.submit(); // Fallback
+                            });
+                        });
+                    </script>
+                    @endpush
             </div>
 
             <!-- Register Link -->

@@ -23,6 +23,7 @@ class FeedbackController extends Controller
         $request->validate([
             'type' => 'required|in:suggestion,error',
             'message' => 'required|string|max:2000',
+            'g-recaptcha-response' => [app()->runningUnitTests() ? 'nullable' : 'required', new \App\Rules\Recaptcha],
         ]);
 
         try {

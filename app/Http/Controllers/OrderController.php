@@ -148,6 +148,7 @@ class OrderController extends Controller
             'schedule_type' => 'required|in:immediate,scheduled',
             'scheduled_time' => 'required_if:schedule_type,scheduled|nullable|date|after:now',
             'notes' => 'nullable|string|max:1000',
+            'g-recaptcha-response' => [app()->runningUnitTests() ? 'nullable' : 'required', new \App\Rules\Recaptcha],
         ]);
 
         $cart = session()->get('cart', []);
