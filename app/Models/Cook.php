@@ -14,8 +14,6 @@ class Cook extends Model
         'user_id',
         'bio',
         'kitchen_photos',
-        'rating_avg',
-        'rating_count',
         'active',
         'location_lat',
         'location_lng',
@@ -24,15 +22,11 @@ class Cook extends Model
         'payout_details',
         'dni_photo',
         'food_handler_declaration',
-        'is_approved',
         'opening_time',
         'closing_time',
         'max_scheduled_portions_per_day',
         'current_subscription_id',
-        'monthly_sales_accumulated',
-        'monthly_orders_accumulated',
         'sales_reset_at',
-        'is_selling_blocked',
     ];
 
     protected $casts = [

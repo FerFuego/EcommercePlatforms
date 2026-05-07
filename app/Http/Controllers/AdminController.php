@@ -335,12 +335,12 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($userId);
 
-        // No permitir suspender al propio admin
-        if ($user->id === auth()->id()) {
-            return back()->with('error', 'No puedes suspender tu propia cuenta');
+        // No permitir suspender a otros administradores
+        if ($user->isAdmin()) {
+            return back()->with('error', 'No puedes suspender la cuenta de otro administrador');
         }
 
-        // Toggle suspended status (necesitaremos agregar este campo)
+        // Toggle suspended status
         $user->is_suspended = !($user->is_suspended ?? false);
         $user->save();
 
@@ -355,9 +355,9 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($userId);
 
-        // No permitir eliminar al propio admin
-        if ($user->id === auth()->id()) {
-            return back()->with('error', 'No puedes eliminar tu propia cuenta');
+        // No permitir eliminar a otros administradores
+        if ($user->isAdmin()) {
+            return back()->with('error', 'No puedes eliminar la cuenta de otro administrador');
         }
 
         // Eliminar relaciones asociadas

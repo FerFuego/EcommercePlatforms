@@ -26,12 +26,7 @@ class DeliveryDriver extends Model
         'account_number',
         'account_type',
         'cbu_cvu',
-        'is_approved',
         'is_available',
-        'rating_avg',
-        'rating_count',
-        'total_deliveries',
-        'total_earnings',
     ];
 
     protected $casts = [
