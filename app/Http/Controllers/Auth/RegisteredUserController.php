@@ -29,7 +29,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -39,14 +39,10 @@ class RegisteredUserController extends Controller
             'g-recaptcha-response' => [app()->runningUnitTests() ? 'nullable' : 'required', new \App\Rules\Recaptcha],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'phone' => $request->phone,
-            'address' => $request->address,
-        ]);
+        $user = new User($validated);
+        $user->password = Hash::make($request->password);
+        $user->role = $validated['role'];
+        $user->save();
 
         event(new Registered($user));
 

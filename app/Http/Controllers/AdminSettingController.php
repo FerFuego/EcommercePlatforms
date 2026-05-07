@@ -23,7 +23,19 @@ class AdminSettingController extends Controller
      */
     public function update(Request $request)
     {
-        $data = $request->except('_token', '_method');
+        // Whitelist of allowed setting keys for security
+        $allowedKeys = [
+            'site_name',
+            'meta_title',
+            'meta_description',
+            'commission_rate',
+            'stripe_publishable_key',
+            'stripe_secret_key',
+            'mp_access_token',
+            'mp_public_key',
+        ];
+
+        $data = $request->only($allowedKeys);
 
         foreach ($data as $key => $value) {
             Setting::set($key, $value);
