@@ -47,6 +47,10 @@ class CookSubscriptionController extends Controller
 
     public function process(Request $request, SubscriptionPlan $plan)
     {
+        $request->validate([
+            'g-recaptcha-response' => [app()->runningUnitTests() ? 'nullable' : 'required', new \App\Rules\Recaptcha],
+        ]);
+
         $cook = auth()->user()->cook;
 
         try {

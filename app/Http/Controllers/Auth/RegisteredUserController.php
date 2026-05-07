@@ -36,6 +36,7 @@ class RegisteredUserController extends Controller
             'role' => ['required', 'string', 'in:customer,cook,delivery_driver'],
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:255'],
+            'g-recaptcha-response' => [app()->runningUnitTests() ? 'nullable' : 'required', new \App\Rules\Recaptcha],
         ]);
 
         $user = User::create([

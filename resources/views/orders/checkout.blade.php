@@ -13,8 +13,9 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Form -->
             <div class="lg:col-span-2">
-                <form action="{{ route('orders.process') }}" method="POST" class="space-y-6">
+                <form id="orderForm" action="{{ route('orders.process') }}" method="POST" class="space-y-6">
                     @csrf
+                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                     <!-- Delivery Type -->
                     <div class="bg-white rounded-2xl shadow-lg p-8">
@@ -389,6 +390,19 @@
                     disableMobile: "true",
                     minTime: "{{ $cook->opening_time ? \Carbon\Carbon::parse($cook->opening_time)->format('H:i') : '08:00' }}",
                     maxTime: "{{ $cook->closing_time ? \Carbon\Carbon::parse($cook->closing_time)->format('H:i') : '22:00' }}",
+                });
+            });
+
+            // reCAPTCHA handler
+            document.getElementById('orderForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const form = this;
+                window.getRecaptchaToken('order_process').then(token => {
+                    document.getElementById('g-recaptcha-response').value = token;
+                    form.submit();
+                }).catch(err => {
+                    console.error(err);
+                    form.submit();
                 });
             });
         </script>

@@ -246,6 +246,7 @@
 
                 <form id="feedbackForm" onsubmit="submitFeedback(event)" class="p-6">
                     @csrf
+                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
                     <div class="mb-5">
                         <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">Tipo de mensaje *</label>
                         <select name="type" required class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-purple-500 transition-all outline-none">
@@ -336,20 +337,23 @@
                 submitBtn.classList.add('opacity-75');
                 spinner.classList.remove('hidden');
 
-                const formData = new FormData(form);
-                const data = {
-                    type: formData.get('type'),
-                    message: formData.get('message')
-                };
+                window.getRecaptchaToken('feedback_submit').then(token => {
+                    const formData = new FormData(form);
+                    const data = {
+                        type: formData.get('type'),
+                        message: formData.get('message'),
+                        'g-recaptcha-response': token
+                    };
 
-                fetch('{{ route("api.feedback.store") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify(data)
+                    return fetch('{{ route("api.feedback.store") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify(data)
+                    });
                 })
                 .then(response => response.json())
                 .then(data => {

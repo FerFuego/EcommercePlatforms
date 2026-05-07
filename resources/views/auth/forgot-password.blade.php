@@ -28,8 +28,9 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('password.email') }}">
+                <form id="forgotPasswordForm" method="POST" action="{{ route('password.email') }}">
                     @csrf
+                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                     <!-- Email -->
                     <div class="mb-6">
@@ -50,6 +51,20 @@
                     </button>
                 </form>
             </div>
+
+            <script>
+                document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const form = this;
+                    window.getRecaptchaToken('forgot_password').then(token => {
+                        document.getElementById('g-recaptcha-response').value = token;
+                        form.submit();
+                    }).catch(err => {
+                        console.error(err);
+                        form.submit();
+                    });
+                });
+            </script>
 
             <!-- Back to Login -->
             <p class="text-center mt-6 text-gray-600">

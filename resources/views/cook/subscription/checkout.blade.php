@@ -64,69 +64,87 @@
                         </div>
                     </div>
 
-                    <!-- Payment Methods -->
-                    @if($stripeConfigured || $mpConfigured)
-                        <div class="mb-10">
-                            <h3 class="text-lg font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight">
-                                Selecciona tu método de pago</h3>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                @if($stripeConfigured)
-                                    <label
-                                        class="relative flex flex-col items-center p-6 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-purple-400 transition-all group has-[:checked]:border-purple-600 has-[:checked]:ring-4 has-[:checked]:ring-purple-500/10 has-[:checked]:shadow-xl shadow-sm hover:shadow-md">
-                                        <input type="radio" name="payment_method" value="stripe" class="sr-only" required {{ !$mpConfigured ? 'checked' : '' }}>
-                                        <div
-                                            class="w-16 h-16 mb-4 flex items-center justify-center bg-gray-50 dark:bg-gray-700 rounded-2xl group-hover:scale-110 transition-transform">
-                                            <svg viewBox="0 0 40 40" class="w-10 h-10">
-                                                <path fill="#635bff"
-                                                    d="M34.7 20.3c0-4.6-2.3-7.2-6.5-7.2-4.1 0-6.9 2.7-6.9 7.2 0 5.4 3.7 7.2 8.3 7.2 1.5 0 3-.2 4.1-.7l-.4-2.8c-1 .4-2 .5-3.1.5-2.6 0-5.1-.7-5.1-4.2h10.4c-.1-1.3-.8-4.5-.8-4.5zm-5.6-2.6c0-.1 0-.1.1-.1.9 0 1.5.7 1.7 1.7h-3.4c.1-1.1.7-1.6 1.6-1.6zm-17 1.3c0-2 1.3-3.1 3.5-3.1 1.2 0 2 .1 2.9.5l-.3-2.7c-.7-.3-1.6-.5-3-.5-4.2 0-6.8 2.3-6.8 6.5 0 5.8 3.7 7.2 8.3 7.2 1 0 2-.1 2.8-.4l-.4-2.8c-.8.3-1.4.4-2.3.4-2.7 0-4.7-.9-4.7-4.1v-.8c-.1-.2-.1-.2-.1-.2z" />
-                                            </svg>
-                                        </div>
-                                        <span
-                                            class="font-black text-gray-900 dark:text-gray-100 uppercase tracking-tight">Stripe</span>
-                                        <span
-                                            class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest text-center">Tarjetas
-                                            Internacionales</span>
-                                    </label>
-                                @endif
-
-                                @if($mpConfigured)
-                                    <label
-                                        class="relative flex flex-col items-center p-6 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-blue-400 transition-all group has-[:checked]:border-blue-600 has-[:checked]:ring-4 has-[:checked]:ring-blue-500/10 has-[:checked]:shadow-xl shadow-sm hover:shadow-md">
-                                        <input type="radio" name="payment_method" value="mercadopago" class="sr-only" required {{ !$stripeConfigured ? 'checked' : '' }}>
-                                        <div
-                                            class="w-32 h-16 mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <img src="{{ asset('assets/front/Mercado_Pago.svg') }}" alt="Mercago Pago" class="h-8">
-                                        </div>
-                                        <span
-                                            class="font-black text-gray-900 dark:text-gray-100 uppercase tracking-tight">MercadoPago</span>
-                                        <span
-                                            class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest text-center">Pagos
-                                            Locales AR/CL/BR</span>
-                                    </label>
-                                @endif
-                            </div>
-                        </div>
-                    @else
-                        <div
-                            class="bg-red-50 dark:bg-red-900/10 border-l-4 border-red-500 p-6 rounded-2xl mb-10 flex items-center">
-                            <svg class="h-8 w-8 text-red-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
-                                </path>
-                            </svg>
-                            <p class="text-sm font-bold text-red-800 dark:text-red-300">
-                                Los métodos de pago no están disponibles actualmente. Contacta al soporte técnico.
-                            </p>
-                        </div>
-                    @endif
-
-                    <form action="{{ route('cook.subscription.process', $plan) }}" method="POST">
+                    <form id="subscriptionForm" action="{{ route('cook.subscription.process', $plan) }}" method="POST">
                         @csrf
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+
+                        <!-- Payment Methods -->
+                        @if($stripeConfigured || $mpConfigured)
+                            <div class="mb-10">
+                                <h3 class="text-lg font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight">
+                                    Selecciona tu método de pago</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    @if($stripeConfigured)
+                                        <label
+                                            class="relative flex flex-col items-center p-6 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-purple-400 transition-all group has-[:checked]:border-purple-600 has-[:checked]:ring-4 has-[:checked]:ring-purple-500/10 has-[:checked]:shadow-xl shadow-sm hover:shadow-md">
+                                            <input type="radio" name="payment_method" value="stripe" class="sr-only" required {{ !$mpConfigured ? 'checked' : '' }}>
+                                            <div
+                                                class="w-16 h-16 mb-4 flex items-center justify-center bg-gray-50 dark:bg-gray-700 rounded-2xl group-hover:scale-110 transition-transform">
+                                                <svg viewBox="0 0 40 40" class="w-10 h-10">
+                                                    <path fill="#635bff"
+                                                        d="M34.7 20.3c0-4.6-2.3-7.2-6.5-7.2-4.1 0-6.9 2.7-6.9 7.2 0 5.4 3.7 7.2 8.3 7.2 1.5 0 3-.2 4.1-.7l-.4-2.8c-1 .4-2 .5-3.1.5-2.6 0-5.1-.7-5.1-4.2h10.4c-.1-1.3-.8-4.5-.8-4.5zm-5.6-2.6c0-.1 0-.1.1-.1.9 0 1.5.7 1.7 1.7h-3.4c.1-1.1.7-1.6 1.6-1.6zm-17 1.3c0-2 1.3-3.1 3.5-3.1 1.2 0 2 .1 2.9.5l-.3-2.7c-.7-.3-1.6-.5-3-.5-4.2 0-6.8 2.3-6.8 6.5 0 5.8 3.7 7.2 8.3 7.2 1 0 2-.1 2.8-.4l-.4-2.8c-.8.3-1.4.4-2.3.4-2.7 0-4.7-.9-4.7-4.1v-.8c-.1-.2-.1-.2-.1-.2z" />
+                                                </svg>
+                                            </div>
+                                            <span
+                                                class="font-black text-gray-900 dark:text-gray-100 uppercase tracking-tight">Stripe</span>
+                                            <span
+                                                class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest text-center">Tarjetas
+                                                Internacionales</span>
+                                        </label>
+                                    @endif
+
+                                    @if($mpConfigured)
+                                        <label
+                                            class="relative flex flex-col items-center p-6 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-blue-400 transition-all group has-[:checked]:border-blue-600 has-[:checked]:ring-4 has-[:checked]:ring-blue-500/10 has-[:checked]:shadow-xl shadow-sm hover:shadow-md">
+                                            <input type="radio" name="payment_method" value="mercadopago" class="sr-only" required {{ !$stripeConfigured ? 'checked' : '' }}>
+                                            <div
+                                                class="w-32 h-16 mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                                <img src="{{ asset('assets/front/Mercado_Pago.svg') }}" alt="Mercago Pago" class="h-8">
+                                            </div>
+                                            <span
+                                                class="font-black text-gray-900 dark:text-gray-100 uppercase tracking-tight">MercadoPago</span>
+                                            <span
+                                                class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest text-center">Pagos
+                                                Locales AR/CL/BR</span>
+                                        </label>
+                                    @endif
+                                </div>
+                            </div>
+                        @else
+                            <div
+                                class="bg-red-50 dark:bg-red-900/10 border-l-4 border-red-500 p-6 rounded-2xl mb-10 flex items-center">
+                                <svg class="h-8 w-8 text-red-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                    </path>
+                                </svg>
+                                <p class="text-sm font-bold text-red-800 dark:text-red-300">
+                                    Los métodos de pago no están disponibles actualmente. Contacta al soporte técnico.
+                                </p>
+                            </div>
+                        @endif
+
                         <button type="submit"
                             class="w-full text-center bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white px-8 py-5 rounded-2xl font-black text-lg uppercase tracking-widest shadow-2xl hover:shadow-purple-500/30 hover:-translate-y-1 transform transition-all duration-300">
                             Pagar Ahora - ${{ number_format($plan->price, 2) }}
                         </button>
                     </form>
+
+                    @push('scripts')
+                    <script>
+                        document.getElementById('subscriptionForm').addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            const form = this;
+                            window.getRecaptchaToken('subscription_payment').then(token => {
+                                document.getElementById('g-recaptcha-response').value = token;
+                                form.submit();
+                            }).catch(err => {
+                                console.error(err);
+                                form.submit();
+                            });
+                        });
+                    </script>
+                    @endpush
 
                     <div class="mt-8 flex flex-col items-center space-y-3">
                         <div class="flex items-center space-x-2 text-gray-400">
