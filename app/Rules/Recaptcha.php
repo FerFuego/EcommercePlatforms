@@ -9,6 +9,20 @@ use Illuminate\Support\Facades\Http;
 class Recaptcha implements ValidationRule
 {
     /**
+     * Get the validation rules for reCAPTCHA based on settings.
+     */
+    public static function rules()
+    {
+        $isEnabled = \App\Models\Setting::get('recaptcha_enabled', '0') === '1';
+        
+        if (app()->runningUnitTests() || !$isEnabled) {
+            return ['nullable'];
+        }
+
+        return ['required', new self];
+    }
+
+    /**
      * Run the validation rule.
      *
      * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
@@ -16,6 +30,12 @@ class Recaptcha implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (app()->runningUnitTests()) {
+            return;
+        }
+
+        // Permitir bypass si está desactivado en la configuración o si el valor es "bypass" (cuando está desactivado)
+        $isEnabled = \App\Models\Setting::get('recaptcha_enabled', '0') === '1';
+        if (!$isEnabled) {
             return;
         }
 

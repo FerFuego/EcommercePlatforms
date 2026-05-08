@@ -33,6 +33,7 @@ class AdminSettingController extends Controller
             'stripe_secret_key',
             'mp_access_token',
             'mp_public_key',
+            'recaptcha_enabled',
         ];
 
         $data = $request->only($allowedKeys);

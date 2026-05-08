@@ -247,13 +247,23 @@
                                     <div class="flex items-center justify-between mb-4">
                                         <span
                                             class="text-2xl font-bold text-pink-600">${{ number_format($dish->price, 0) }}</span>
-                                        <span class="text-sm text-gray-500">
+                                        <div class="text-right">
                                             @if($dish->available_stock > 0)
-                                                ✅ {{ $dish->available_stock }} disponibles
+                                                @if($dish->isLowStock())
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 animate-pulse">
+                                                        🔥 ¡Solo quedan {{ $dish->available_stock }}!
+                                                    </span>
+                                                @else
+                                                    <span class="text-sm text-gray-500">
+                                                        ✅ {{ $dish->available_stock }} disponibles
+                                                    </span>
+                                                @endif
                                             @else
-                                                ❌ Agotado
+                                                <span class="text-sm text-red-500 font-bold">
+                                                    ❌ Agotado
+                                                </span>
                                             @endif
-                                        </span>
+                                        </div>
                                     </div>
 
                                     @if($dish->diet_tags && count($dish->diet_tags) > 0)

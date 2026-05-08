@@ -16,6 +16,10 @@
             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
             Ver Pedidos
         </a>
+        <a href="{{ route('cook.prep.index') }}"
+            class="block bg-gradient-to-r from-purple-600 to-indigo-700 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
+            👨‍🍳 Hoja de Producción
+        </a>
         <a href="{{ route('cook.dishes.index') }}"
             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
             Mis Platos
