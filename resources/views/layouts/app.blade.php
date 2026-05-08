@@ -48,7 +48,7 @@
     @stack('styles')
 
     <!-- Google reCAPTCHA v3 -->
-    @if(config('services.recaptcha.site_key'))
+    @if(config('services.recaptcha.site_key') && \App\Models\Setting::get('recaptcha_enabled', '0') == '1')
         <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
         <script>
             window.getRecaptchaToken = function(action = 'homepage') {
@@ -64,6 +64,12 @@
                             });
                     });
                 });
+            };
+        </script>
+    @else
+        <script>
+            window.getRecaptchaToken = function(action = 'homepage') {
+                return Promise.resolve('bypass');
             };
         </script>
     @endif

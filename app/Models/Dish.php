@@ -162,4 +162,12 @@ class Dish extends Model
         $this->available_stock += $quantity;
         $this->save();
     }
+
+    /**
+     * Verificar si tiene poco stock (Umbral de escasez)
+     */
+    public function isLowStock(): bool
+    {
+        return $this->available_stock > 0 && $this->available_stock <= 5;
+    }
 }

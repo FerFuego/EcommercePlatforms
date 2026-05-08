@@ -129,6 +129,7 @@ Route::middleware(['auth', 'cook'])->prefix('cook')->name('cook.')->group(functi
 
         // Órdenes del cocinero
         Route::get('/orders', [OrderController::class, 'cookOrders'])->name('orders.index');
+        Route::get('/prep-list', [\App\Http\Controllers\Cook\CookPrepController::class, 'index'])->name('prep.index');
         Route::post('/orders/{orderId}/accept', [OrderController::class, 'accept'])->name('orders.accept');
         Route::post('/orders/{orderId}/reject', [OrderController::class, 'reject'])->name('orders.reject');
         Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');

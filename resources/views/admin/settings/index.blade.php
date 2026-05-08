@@ -119,9 +119,44 @@
                         </div>
                     @endif
 
+                    <div class="border-t border-gray-100"></div>
+
+                    {{-- Security Settings --}}
+                    @if(isset($settings['security']))
+                        <div class="pt-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                                <span class="bg-red-100 text-red-600 p-2 rounded-lg mr-3">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                </span>
+                                Seguridad y Validación
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                @foreach($settings['security'] as $setting)
+                                    <div>
+                                        <label for="{{ $setting->key }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                                            {{ $setting->label }}
+                                        </label>
+                                        @if($setting->key === 'recaptcha_enabled')
+                                            <select name="{{ $setting->key }}" id="{{ $setting->key }}" 
+                                                class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition shadow-sm">
+                                                <option value="1" {{ $setting->value == '1' ? 'selected' : '' }}>✅ Habilitado (Recomendado)</option>
+                                                <option value="0" {{ $setting->value == '0' ? 'selected' : '' }}>❌ Deshabilitado (Pruebas / Debug)</option>
+                                            </select>
+                                            <p class="mt-2 text-xs text-red-500 font-medium">⚠️ ¡Atención! Deshabilitar reCAPTCHA permite realizar pruebas automatizadas pero expone el sitio a spam.</p>
+                                        @else
+                                            <input type="{{ $setting->type }}" name="{{ $setting->key }}" id="{{ $setting->key }}"
+                                                value="{{ $setting->value }}"
+                                                class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition shadow-sm">
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
                     {{-- General / Other Settings --}}
                     @foreach($settings as $group => $groupSettings)
-                        @if($group !== 'seo' && $group !== 'financial' && $group !== 'pagos')
+                        @if(!in_array($group, ['seo', 'financial', 'pagos', 'security']))
                             <div class="border-t border-gray-100 pt-6">
                                 <h2 class="text-xl font-bold text-gray-800 mb-4 capitalize">{{ $group }}</h2>
                                 <div class="grid grid-cols-1 gap-6 bg-gray-50 p-6 rounded-xl border border-gray-100">

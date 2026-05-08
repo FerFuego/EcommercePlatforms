@@ -96,9 +96,16 @@
                     <p class="text-sm font-semibold text-gray-700 mb-2">Platos Destacados:</p>
                     <div class="space-y-2">
                         @foreach($cook->dishes->take(2) as $dish)
-                            <div class="flex justify-between items-center text-sm bg-gray-50 rounded-lg p-2">
-                                <span class="text-gray-700">{{ $dish->name }}</span>
-                                <span class="font-bold text-orange-600">${{ number_format($dish->price, 0, ',', '.') }}</span>
+                            <div class="flex flex-col text-right">
+                                <div class="flex justify-between items-center text-sm bg-gray-50 rounded-lg p-2">
+                                    <span class="text-gray-700">{{ $dish->name }}</span>
+                                    <span class="font-bold text-orange-600">${{ number_format($dish->price, 0, ',', '.') }}</span>
+                                </div>
+                                @if($dish->isLowStock())
+                                    <span class="text-[9px] font-bold text-red-600 animate-pulse mt-1 pr-1">
+                                        🔥 ¡Solo quedan {{ $dish->available_stock }}!
+                                    </span>
+                                @endif
                             </div>
                         @endforeach
                         @if($cook->dishes->count() > 2)
