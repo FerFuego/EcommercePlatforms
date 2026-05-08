@@ -45,4 +45,11 @@ return [
         'score_threshold' => env('RECAPTCHA_SCORE_THRESHOLD', 0.5),
     ],
 
+    'whatsapp' => [
+        'token' => env('WHATSAPP_API_TOKEN'),
+        'phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'),
+        'api_version' => env('WHATSAPP_API_VERSION', 'v22.0'),
+        'verify_token' => env('WHATSAPP_VERIFY_TOKEN', 'cocinarte_wh_verify'),
+    ],
+
 ];

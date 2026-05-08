@@ -4,9 +4,57 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\User;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class WhatsAppService
 {
+    /**
+     * Envía un mensaje de WhatsApp a través de Meta Cloud API.
+     */
+    public function sendMessage(string $to, string $message): bool
+    {
+        $token = config('services.whatsapp.token');
+        $phoneNumberId = config('services.whatsapp.phone_number_id');
+        $apiVersion = config('services.whatsapp.api_version', 'v22.0');
+
+        if (!$token || !$phoneNumberId) {
+            Log::warning('WhatsApp not configured: missing token or phone_number_id');
+            return false;
+        }
+
+        $phoneNumberId = config('services.whatsapp.phone_number_id');
+        $url = "https://graph.facebook.com/{$apiVersion}/{$phoneNumberId}/messages";
+
+        $payload = [
+            'messaging_product' => 'whatsapp',
+            'recipient_type' => 'individual',
+            'to' => $this->formatPhoneApi($to),
+            'type' => 'text',
+            'text' => [
+                'preview_url' => false,
+                'body' => $message,
+            ],
+        ];
+
+        $response = Http::withToken($token)
+            ->post($url, $payload);
+
+        if ($response->successful()) {
+            Log::info("WhatsApp message sent to {$to}", [
+                'message_id' => $response->json('messages.0.id'),
+            ]);
+            return true;
+        }
+
+        Log::error('WhatsApp API error', [
+            'status' => $response->status(),
+            'body' => $response->body(),
+            'to' => $to,
+        ]);
+        return false;
+    }
+
     /**
      * Genera URL de WhatsApp para que el CLIENTE contacte al COCINERO sobre un pedido.
      * Usa wa.me deep links (gratis, sin API de WhatsApp Business).
@@ -123,6 +171,41 @@ class WhatsAppService
         }
 
         return implode("\n", $lines);
+    }
+
+    /**
+     * Formatea un número a E.164 para Meta Cloud API.
+     * Meta requiere formato internacional SIN el 9 adicional argentino: 541112345678
+     */
+    private function formatPhoneApi(string $phone): string
+    {
+        $digits = preg_replace('/\D/', '', $phone);
+
+        // Si ya empieza con 549, quitar el 9
+        if (str_starts_with($digits, '549')) {
+            return '54' . substr($digits, 3);
+        }
+
+        // Si empieza con 54 pero sin 9
+        if (str_starts_with($digits, '54')) {
+            return $digits;
+        }
+
+        // Si empieza con 0 (formato nacional)
+        if (str_starts_with($digits, '0')) {
+            $rest = substr($digits, 1);
+            if (preg_match('/^(\d{2,4})15(\d{6,8})$/', $rest, $matches)) {
+                return '54' . $matches[1] . $matches[2];
+            }
+            return '54' . $rest;
+        }
+
+        // Número local de 10 dígitos
+        if (strlen($digits) === 10) {
+            return '54' . $digits;
+        }
+
+        return $digits;
     }
 
     /**

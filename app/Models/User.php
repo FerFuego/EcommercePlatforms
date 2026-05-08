@@ -140,4 +140,9 @@ class User extends Authenticatable
     {
         return $this->favoriteCooks()->where('cook_id', $cookId)->exists();
     }
+
+    public function routeNotificationForWhatsApp($notification = null): ?string
+    {
+        return $this->phone;
+    }
 }
