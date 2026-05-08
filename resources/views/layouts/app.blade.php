@@ -51,15 +51,15 @@
     @if(config('services.recaptcha.site_key') && \App\Models\Setting::get('recaptcha_enabled', '0') == '1')
         <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
         <script>
-            window.getRecaptchaToken = function(action = 'homepage') {
+            window.getRecaptchaToken = function (action = 'homepage') {
                 return new Promise((resolve, reject) => {
                     if (typeof grecaptcha === 'undefined') {
                         reject('reCAPTCHA no está cargado');
                         return;
                     }
-                    grecaptcha.ready(function() {
-                        grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: action})
-                            .then(function(token) {
+                    grecaptcha.ready(function () {
+                        grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', { action: action })
+                            .then(function (token) {
                                 resolve(token);
                             });
                     });
@@ -68,7 +68,7 @@
         </script>
     @else
         <script>
-            window.getRecaptchaToken = function(action = 'homepage') {
+            window.getRecaptchaToken = function (action = 'homepage') {
                 return Promise.resolve('bypass');
             };
         </script>
@@ -79,7 +79,7 @@
 
     <!-- Navbar -->
     <nav class="bg-white/90 backdrop-blur-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto px-4 sm:px-4 lg:px-2">
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
                 <div class="flex-shrink-0">
@@ -644,7 +644,7 @@
                 x-transition:leave="transition ease-in duration-200"
                 x-transition:leave-start="opacity-100 transform translate-y-0"
                 x-transition:leave-end="opacity-0 transform translate-y-2"
-class="bg-white border border-orange-500 rounded-lg shadow-xl p-4 pointer-events-auto flex items-start gap-4 cursor-pointer"
+                class="bg-white border border-orange-500 rounded-lg shadow-xl p-4 pointer-events-auto flex items-start gap-4 cursor-pointer"
                 x-on:click="if(n.data?.url) window.location.href = n.data.url">
 
                 <div class="flex-shrink-0" x-show="n.icon">
