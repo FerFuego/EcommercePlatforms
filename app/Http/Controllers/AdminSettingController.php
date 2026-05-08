@@ -12,6 +12,17 @@ class AdminSettingController extends Controller
      */
     public function index()
     {
+        // Asegurar que existan las configuraciones base de seguridad
+        if (!Setting::where('key', 'recaptcha_enabled')->exists()) {
+            Setting::create([
+                'key' => 'recaptcha_enabled',
+                'value' => '0',
+                'group' => 'security',
+                'label' => 'Habilitar Google reCAPTCHA v3',
+                'type' => 'text',
+            ]);
+        }
+
         // Group settings by their 'group' column for organized display
         $settings = Setting::all()->groupBy('group');
 
