@@ -44,7 +44,10 @@ class AdminController extends Controller
             ->latest()
             ->paginate(20);
 
-        return view('admin.cooks.pending', compact('cooks'));
+        $pending_count = Cook::where('is_approved', false)->count();
+        $approved_count = Cook::where('is_approved', true)->count();
+
+        return view('admin.cooks.index', compact('cooks', 'pending_count', 'approved_count'));
     }
 
     /**
@@ -103,10 +106,12 @@ class AdminController extends Controller
     /**
      * Lista de todos los cocineros
      */
-    public function allCooks()
+    public function allCooks(Request $request)
     {
+        $isApproved = $request->get('filter') === 'approved';
+
         $cooks = Cook::with('user')
-            ->where('is_approved', true)
+            ->where('is_approved', $isApproved)
             ->latest()
             ->paginate(20);
 

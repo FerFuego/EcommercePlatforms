@@ -163,8 +163,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/cooks/pending', [AdminController::class, 'pendingCooks'])->name('cooks.pending');
     Route::get('/cooks', [AdminController::class, 'allCooks'])->name('cooks.index');
     Route::get('/cooks/{cookId}', [AdminController::class, 'showCook'])->name('cooks.show');
-    Route::post('/cooks/{cookId}/approve', [AdminController::class, 'approveCook'])->name('cooks.approve');
-    Route::post('/cooks/{cookId}/reject', [AdminController::class, 'rejectCook'])->name('cooks.reject');
+    Route::match(['post', 'patch'], '/cooks/{cookId}/approve', [AdminController::class, 'approveCook'])->name('cooks.approve');
+    Route::match(['post', 'patch'], '/cooks/{cookId}/reject', [AdminController::class, 'rejectCook'])->name('cooks.reject');
 
     // Órdenes
     Route::get('/orders', [AdminController::class, 'allOrders'])->name('orders.index');
