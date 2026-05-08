@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cook;
+use App\Models\CookSubscription;
+use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -93,6 +95,18 @@ class CookDashboardController extends Controller
             'is_approved' => false, // Requiere aprobación de admin
             'active' => false,
         ]);
+
+        // Auto-asignar plan gratuito
+        $freePlan = SubscriptionPlan::where('slug', 'basico-free')->first();
+        if ($freePlan) {
+            $subscription = CookSubscription::create([
+                'cook_id' => $cook->id,
+                'plan_id' => $freePlan->id,
+                'provider' => 'none',
+                'status' => 'active',
+            ]);
+            $cook->update(['current_subscription_id' => $subscription->id]);
+        }
 
         return redirect()->route('cook.dashboard')
             ->with('success', '¡Perfil creado! Tu solicitud será revisada por un administrador.');

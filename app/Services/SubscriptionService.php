@@ -49,7 +49,22 @@ class SubscriptionService
                 'status' => 'pending',
             ]);
 
-            // 3. Coordinate with Mercado Pago (Pre-approval)
+            // 3. Handle free plans directly without Mercado Pago
+            if ((float) $plan->price == 0) {
+                $subscription->update([
+                    'status' => 'active',
+                    'provider' => 'none',
+                ]);
+                $cook->update(['current_subscription_id' => $subscription->id]);
+
+                return [
+                    'status' => 'success',
+                    'message' => 'Plan gratuito activado exitosamente.',
+                    'subscription_id' => $subscription->id
+                ];
+            }
+
+            // 4. Coordinate with Mercado Pago (Pre-approval) for paid plans
             $siteUrl = rtrim(Setting::get('site_url') ?: config('app.url'), '/');
 
             $frequency = $plan->billing_period === 'monthly' ? 1 : 12;
@@ -73,7 +88,7 @@ class SubscriptionService
                 throw new \Exception('No se pudo crear la suscripción en Mercado Pago.');
             }
 
-            // 4. Update local record with provider ID
+            // 5. Update local record with provider ID
             $subscription->update([
                 'provider_subscription_id' => $mpSubscription->id,
             ]);
