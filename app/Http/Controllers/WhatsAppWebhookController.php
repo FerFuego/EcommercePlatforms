@@ -11,19 +11,19 @@ class WhatsAppWebhookController extends Controller
     {
         $verifyToken = config('services.whatsapp.verify_token');
 
-        $all = $request->query->all();
-        $mode = $all['hub.mode'] ?? $all['hub_mode'] ?? null;
-        $token = $all['hub.verify_token'] ?? $all['hub_verify_token'] ?? null;
-        $challenge = $all['hub.challenge'] ?? $all['hub_challenge'] ?? null;
+        $mode = $_GET['hub_mode'] ?? $_GET['hub.mode'] ?? null;
+        $token = $_GET['hub_verify_token'] ?? $_GET['hub.verify_token'] ?? null;
+        $challenge = $_GET['hub_challenge'] ?? $_GET['hub.challenge'] ?? null;
 
-        Log::info('WhatsApp webhook verify', [
+        Log::info('WhatsApp verify', [
             'mode' => $mode,
             'token' => $token,
+            'token_expected' => $verifyToken,
             'challenge' => $challenge,
         ]);
 
         if ($mode === 'subscribe' && $token === $verifyToken && $challenge) {
-            return response($challenge, 200)->header('Content-Type', 'text/plain');
+            return response($challenge, 200);
         }
 
         return response('Forbidden', 403);
@@ -56,7 +56,6 @@ class WhatsAppWebhookController extends Controller
             ]);
         }
 
-        // Handle incoming messages if needed
         foreach ($messages as $message) {
             $from = $message['from'] ?? 'unknown';
             $text = $message['text']['body'] ?? '';
