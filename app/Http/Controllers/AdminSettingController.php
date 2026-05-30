@@ -15,11 +15,21 @@ class AdminSettingController extends Controller
         // Asegurar que existan las configuraciones base de seguridad
         if (!Setting::where('key', 'recaptcha_enabled')->exists()) {
             Setting::create([
-                'key' => 'recaptcha_enabled',
+                'key'   => 'recaptcha_enabled',
                 'value' => '0',
                 'group' => 'security',
                 'label' => 'Habilitar Google reCAPTCHA v3',
-                'type' => 'text',
+                'type'  => 'text',
+            ]);
+        }
+
+        if (!Setting::where('key', 'chatbot_enabled')->exists()) {
+            Setting::create([
+                'key'   => 'chatbot_enabled',
+                'value' => '1',
+                'group' => 'security',
+                'label' => 'Habilitar Chatbot (Asistente Virtual)',
+                'type'  => 'text',
             ]);
         }
 
@@ -45,6 +55,7 @@ class AdminSettingController extends Controller
             'mp_access_token',
             'mp_public_key',
             'recaptcha_enabled',
+            'chatbot_enabled',
         ];
 
         $data = $request->only($allowedKeys);
