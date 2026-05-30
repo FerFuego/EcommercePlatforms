@@ -143,6 +143,13 @@
                                                 <option value="0" {{ $setting->value == '0' ? 'selected' : '' }}>❌ Deshabilitado (Pruebas / Debug)</option>
                                             </select>
                                             <p class="mt-2 text-xs text-red-500 font-medium">⚠️ ¡Atención! Deshabilitar reCAPTCHA permite realizar pruebas automatizadas pero expone el sitio a spam.</p>
+                                        @elseif($setting->key === 'chatbot_enabled')
+                                            <select name="{{ $setting->key }}" id="{{ $setting->key }}"
+                                                class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition shadow-sm">
+                                                <option value="1" {{ $setting->value == '1' ? 'selected' : '' }}>✅ Habilitado</option>
+                                                <option value="0" {{ $setting->value == '0' ? 'selected' : '' }}>❌ Deshabilitado</option>
+                                            </select>
+                                            <p class="mt-2 text-xs text-gray-500 font-medium">💬 Al deshabilitar el chatbot, el botón del asistente virtual desaparece del sitio para todos los usuarios.</p>
                                         @else
                                             <input type="{{ $setting->type }}" name="{{ $setting->key }}" id="{{ $setting->key }}"
                                                 value="{{ $setting->value }}"

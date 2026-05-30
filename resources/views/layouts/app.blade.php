@@ -18,7 +18,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- Tailwind CSS -->
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/chatbot.css', 'resources/js/chatbot.js'])
+    @if(\App\Models\Setting::get('chatbot_enabled', '1') == '1')
+        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/chatbot.css', 'resources/js/chatbot.js'])
+    @else
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif
 
     <script>
         window.isUserAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
@@ -563,7 +567,9 @@
 
     @stack('scripts')
 
-    @include('partials.chatbot')
+    @if(\App\Models\Setting::get('chatbot_enabled', '1') == '1')
+        @include('partials.chatbot')
+    @endif
 
     <!-- Login Required Modal -->
     <div id="login-required-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
