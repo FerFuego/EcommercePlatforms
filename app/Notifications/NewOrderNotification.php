@@ -3,14 +3,17 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Order;
 use App\Channels\WebPushChannel;
 use App\Channels\WhatsAppChannel;
 
-class NewOrderNotification extends Notification
+class NewOrderNotification extends Notification implements ShouldQueue
 {
+    use Queueable;
+
     public Order $order;
 
     public function __construct(Order $order)
