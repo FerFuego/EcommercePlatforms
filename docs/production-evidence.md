@@ -2,11 +2,11 @@
 
 ## Screenshots
 
-![Home](screenshots/home.png)
+![Home](../screenshots/home.png)
 
-![Cook Dashboard](screenshots/cook-dashboard.png)
+![Cook Dashboard](../screenshots/cook-dashboard.png)
 
-![Orders](screenshots/orders.png)
+![Orders](../screenshots/orders.png)
 
 ## Features Demonstrated
 
