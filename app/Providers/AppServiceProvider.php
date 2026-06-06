@@ -26,5 +26,10 @@ class AppServiceProvider extends ServiceProvider
             $settings = \App\Models\Setting::all()->pluck('value', 'key');
             \Illuminate\Support\Facades\View::share('globalSettings', $settings);
         }
+
+        \Illuminate\Support\Facades\Event::listen(
+            \Illuminate\Auth\Events\Registered::class,
+            \App\Listeners\SendWelcomeEmails::class
+        );
     }
 }
