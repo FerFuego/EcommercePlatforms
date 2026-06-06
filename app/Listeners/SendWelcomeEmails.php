@@ -33,12 +33,12 @@ class SendWelcomeEmails
             Mail::to($user->email)->send(new WelcomeEmail($user));
 
             // 2. Send Notification to Admins and info@cocinarte.com
-            $admins = User::where('role', 'admin')->get();
-            $adminEmails = $admins->pluck('email')->toArray();
+            //$admins = User::where('role', 'admin')->get();
+            //$adminEmails = $admins->pluck('email')->toArray();
 
             // We use 'info@cocinarte.app' as the primary TO, and BCC the admins
             Mail::to('info@cocinarte.app')
-                ->bcc($adminEmails)
+                //->bcc($adminEmails)
                 ->send(new NewUserAdminNotification($user));
 
         } catch (\Exception $e) {
