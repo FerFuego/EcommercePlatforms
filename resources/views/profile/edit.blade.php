@@ -216,18 +216,59 @@
 
                         <div class="flex justify-end">
                             <button
-                                onclick="if(confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) document.getElementById('delete-account-form').submit();"
+                                type="button"
+                                onclick="document.getElementById('delete-account-modal').classList.remove('hidden')"
                                 class="bg-red-600 text-white px-6 py-3 rounded-xl font-bold shadow hover:bg-red-700 transition-colors">
                                 Eliminar Cuenta
                             </button>
                         </div>
 
-                        <form id="delete-account-form" method="post" action="{{ route('profile.destroy') }}" class="hidden">
-                            @csrf
-                            @method('delete')
-                            <input type="password" name="password" value="password" required>
-                            <!-- Simplificado para demo, idealmente pedir password en modal -->
-                        </form>
+                        <!-- Modal de Confirmación -->
+                        <div id="delete-account-modal" class="{{ $errors->userDeletion->isNotEmpty() ? '' : 'hidden' }} fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                <!-- Background overlay -->
+                                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="document.getElementById('delete-account-modal').classList.add('hidden')"></div>
+
+                                <!-- Center alignment trick -->
+                                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                                <!-- Modal panel -->
+                                <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                                    <form method="post" action="{{ route('profile.destroy') }}" class="p-8">
+                                        @csrf
+                                        @method('delete')
+
+                                        <h2 class="text-xl font-bold text-gray-900 mb-4" id="modal-title">
+                                            ¿Estás seguro de que quieres eliminar tu cuenta?
+                                        </h2>
+
+                                        <p class="text-sm text-gray-500 mb-6">
+                                            Una vez que se elimine tu cuenta, todos sus recursos y datos se eliminarán permanentemente. Por favor, introduce tu contraseña para confirmar que deseas realizar esta acción irreversible.
+                                        </p>
+
+                                        <div class="mb-6">
+                                            <label for="password" class="sr-only">Contraseña</label>
+                                            <input type="password" name="password" id="password" placeholder="Tu Contraseña" required
+                                                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 transition @error('password', 'userDeletion') border-red-500 @enderror">
+                                            @error('password', 'userDeletion')
+                                                <p class="mt-2 text-sm text-red-600 font-semibold">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="flex justify-end space-x-4">
+                                            <button type="button" onclick="document.getElementById('delete-account-modal').classList.add('hidden')"
+                                                class="bg-gray-100 text-gray-800 px-6 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors">
+                                                Cancelar
+                                            </button>
+                                            <button type="submit"
+                                                class="bg-red-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-red-700 shadow-md transition-colors">
+                                                Confirmar Eliminación
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 @endif
             </div>

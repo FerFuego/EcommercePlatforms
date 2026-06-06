@@ -54,6 +54,13 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        // Send goodbye email before deleting the user
+        try {
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\GoodbyeEmail($user));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Error sending goodbye email: " . $e->getMessage());
+        }
+
         Auth::logout();
 
         $user->delete();
