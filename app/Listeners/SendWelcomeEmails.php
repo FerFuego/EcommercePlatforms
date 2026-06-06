@@ -6,14 +6,12 @@ use App\Mail\NewUserAdminNotification;
 use App\Mail\WelcomeEmail;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
-class SendWelcomeEmails implements ShouldQueue
+class SendWelcomeEmails
 {
-    use InteractsWithQueue;
+
 
     /**
      * Create the event listener.
