@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Panel - Cocinarte')</title>
+    <meta name="facebook-domain-verification" content="g272z4he3on44wlxw6z3kgt5b51w4u" />
 
     <!-- Tailwind CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -33,15 +34,15 @@
     @if(config('services.recaptcha.site_key') && \App\Models\Setting::get('recaptcha_enabled', '0') == '1')
         <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
         <script>
-            window.getRecaptchaToken = function(action = 'admin_action') {
+            window.getRecaptchaToken = function (action = 'admin_action') {
                 return new Promise((resolve, reject) => {
                     if (typeof grecaptcha === 'undefined') {
                         reject('reCAPTCHA no está cargado');
                         return;
                     }
-                    grecaptcha.ready(function() {
-                        grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: action})
-                            .then(function(token) {
+                    grecaptcha.ready(function () {
+                        grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', { action: action })
+                            .then(function (token) {
                                 resolve(token);
                             });
                     });
@@ -50,7 +51,7 @@
         </script>
     @else
         <script>
-            window.getRecaptchaToken = function(action = 'admin_action') {
+            window.getRecaptchaToken = function (action = 'admin_action') {
                 return Promise.resolve('bypass');
             };
         </script>

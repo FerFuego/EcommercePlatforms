@@ -9,6 +9,7 @@
         {{ $globalSettings['meta_title'] ?? 'Comida Casera' }}
     </title>
     <meta name="description" content="{{ $globalSettings['meta_description'] ?? 'La mejor comida casera.' }}">
+    <meta name="facebook-domain-verification" content="g272z4he3on44wlxw6z3kgt5b51w4u" />
 
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="/manifest.json">
