@@ -393,6 +393,8 @@
                     <a href="{{ route('privacy') }}" class="hover:text-white transition">Políticas de Privacidad</a>
                     <span class="text-gray-600">|</span>
                     <a href="{{ route('cookies') }}" class="hover:text-white transition">Política de Cookies</a>
+                    <span class="text-gray-600">|</span>
+                    <a href="{{ route('terms') }}" class="hover:text-white transition">Condiciones del Servicio</a>
                 </div>
             </div>
         </div>

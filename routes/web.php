@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [MarketplaceController::class, 'index'])->name('home');
 Route::view('/privacidad', 'privacy')->name('privacy');
 Route::view('/cookies', 'cookies')->name('cookies');
+Route::view('/terminos', 'terms')->name('terms');
 
 // RUTAS TEMPORALES PARA HOSTINGER (Eliminar después de usar)
 // Route::get('/run-migrations', function () {
