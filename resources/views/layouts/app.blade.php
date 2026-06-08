@@ -387,8 +387,13 @@
                     <p class="text-gray-300">info@cocinarte.app</p>
                 </div>
             </div>
-            <div class="border-t border-white mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2025 Cocinarte. Todos los derechos reservados.</p>
+            <div class="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between text-gray-400">
+                <p>&copy; {{ date('Y') }} Cocinarte. Todos los derechos reservados.</p>
+                <div class="mt-4 md:mt-0 space-x-4">
+                    <a href="{{ route('privacy') }}" class="hover:text-white transition">Políticas de Privacidad</a>
+                    <span class="text-gray-600">|</span>
+                    <a href="{{ route('cookies') }}" class="hover:text-white transition">Política de Cookies</a>
+                </div>
             </div>
         </div>
     </footer>
