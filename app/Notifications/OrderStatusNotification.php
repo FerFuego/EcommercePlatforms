@@ -52,13 +52,21 @@ class OrderStatusNotification extends Notification implements ShouldQueue
     /**
      * Get the WhatsApp representation of the notification.
      */
-    public function toWhatsApp(object $notifiable): string
+    public function toWhatsApp(object $notifiable): array
     {
         $label = $this->getStatusLabel();
-        return "🍱 *Actualización de Pedido #{$this->order->id}*\n\n" .
-            "Hola {$notifiable->name},\n" .
-            "Tu pedido ha cambiado al estado: *{$label}*.\n\n" .
-            "Puedes ver el detalle aquí: " . route('orders.show', $this->order->id);
+        
+        return [
+            'type' => 'template',
+            'name' => 'actualizacion_pedido_cliente',
+            'language' => 'es_AR',
+            'components' => [
+                $this->order->id,
+                $notifiable->name ?? 'Cliente',
+                $label,
+                route('orders.show', $this->order->id)
+            ]
+        ];
     }
 
     /**

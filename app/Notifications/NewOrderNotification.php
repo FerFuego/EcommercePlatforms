@@ -55,44 +55,35 @@ class NewOrderNotification extends Notification implements ShouldQueue
         ];
     }
 
-    public function toWhatsApp(object $notifiable): ?string
+    public function toWhatsApp(object $notifiable): array
     {
         $order = $this->order;
         $order->loadMissing(['customer', 'items.dish']);
 
         $customerName = $order->customer->name ?? 'Cliente';
-        $lines = [];
-        $lines[] = "🍲 *Nuevo Pedido Cocinarte* #{$order->id}";
-        $lines[] = "";
-        $lines[] = "¡Hola! Recibiste un pedido de *{$customerName}*:";
-        $lines[] = "";
-
+        
+        $details = [];
         foreach ($order->items as $item) {
             $dishName = $item->dish->name ?? 'Plato';
-            $lines[] = "• {$item->quantity}x {$dishName}";
+            $details[] = "- {$item->quantity}x {$dishName}";
         }
+        $detailString = empty($details) ? 'Sin detalle' : implode("\n", $details);
 
-        $lines[] = "";
-        $lines[] = "💰 *Total: \$" . number_format($order->total_amount, 0, ',', '.') . "*";
-
-        if ($order->delivery_type === 'delivery') {
-            $lines[] = "🛵 *Delivery* a: {$order->delivery_address}";
-        } else {
-            $lines[] = "🏃 *Retiro en cocina*";
-        }
-
-        if ($order->scheduled_time) {
-            $lines[] = "📅 " . $order->scheduled_time->format('d/m/Y H:i');
-        }
-
-        if ($order->notes) {
-            $lines[] = "📝 {$order->notes}";
-        }
-
-        $lines[] = "";
-        $lines[] = "👉 " . route('cook.orders.index');
-
-        return implode("\n", $lines);
+        $deliveryType = $order->delivery_type === 'delivery' ? 'Delivery' : 'Retiro en cocina';
+        
+        return [
+            'type' => 'template',
+            'name' => 'nuevo_pedido_cocinero',
+            'language' => 'es_ES',
+            'components' => [
+                $order->id,
+                $customerName,
+                $detailString,
+                number_format($order->total_amount, 0, ',', '.'),
+                $deliveryType,
+                route('cook.orders.index')
+            ]
+        ];
     }
 
     public function toArray(object $notifiable): array

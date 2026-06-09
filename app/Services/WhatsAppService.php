@@ -56,6 +56,71 @@ class WhatsAppService
     }
 
     /**
+     * Envía una plantilla de WhatsApp a través de Meta Cloud API.
+     * 
+     * @param string $to Número de teléfono de destino
+     * @param string $templateName Nombre de la plantilla (ej: 'nuevo_pedido_cocinero')
+     * @param array $components Variables de la plantilla en orden
+     * @param string $languageCode Código de idioma de la plantilla (ej: 'es')
+     */
+    public function sendTemplateMessage(string $to, string $templateName, array $components = [], string $languageCode = 'es'): bool
+    {
+        $token = config('services.whatsapp.token');
+        $phoneNumberId = config('services.whatsapp.phone_number_id');
+        $apiVersion = config('services.whatsapp.api_version', 'v25.0');
+
+        if (!$token || !$phoneNumberId) {
+            Log::warning('WhatsApp not configured: missing token or phone_number_id');
+            return false;
+        }
+
+        $url = "https://graph.facebook.com/{$apiVersion}/{$phoneNumberId}/messages";
+
+        // Mapear los componentes simples al formato esperado por Meta
+        $formattedComponents = array_map(function ($value) {
+            return [
+                'type' => 'text',
+                'text' => (string) $value,
+            ];
+        }, $components);
+
+        $payload = [
+            'messaging_product' => 'whatsapp',
+            'to' => $this->formatPhoneApi($to),
+            'type' => 'template',
+            'template' => [
+                'name' => $templateName,
+                'language' => [
+                    'code' => $languageCode,
+                ],
+                'components' => empty($formattedComponents) ? [] : [
+                    [
+                        'type' => 'body',
+                        'parameters' => $formattedComponents,
+                    ]
+                ],
+            ],
+        ];
+
+        $response = Http::withToken($token)->post($url, $payload);
+
+        if ($response->successful()) {
+            Log::info("WhatsApp template '{$templateName}' sent to {$to}", [
+                'message_id' => $response->json('messages.0.id'),
+            ]);
+            return true;
+        }
+
+        Log::error('WhatsApp Template API error', [
+            'status' => $response->status(),
+            'body' => $response->body(),
+            'to' => $to,
+            'template' => $templateName,
+        ]);
+        return false;
+    }
+
+    /**
      * Genera URL de WhatsApp para que el CLIENTE contacte al COCINERO sobre un pedido.
      * Usa wa.me deep links (gratis, sin API de WhatsApp Business).
      */

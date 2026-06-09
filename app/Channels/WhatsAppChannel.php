@@ -24,6 +24,15 @@ class WhatsAppChannel
             return;
         }
 
-        app(WhatsAppService::class)->sendMessage($to, $message);
+        if (is_array($message) && isset($message['type']) && $message['type'] === 'template') {
+            app(WhatsAppService::class)->sendTemplateMessage(
+                $to,
+                $message['name'],
+                $message['components'] ?? [],
+                $message['language'] ?? 'es'
+            );
+        } else {
+            app(WhatsAppService::class)->sendMessage($to, is_array($message) ? ($message['text'] ?? '') : $message);
+        }
     }
 }
