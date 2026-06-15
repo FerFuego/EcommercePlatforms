@@ -46,8 +46,7 @@
                                                 subir</span> o arrastra</p>
                                     </div>
                                 @endif
-                                <input id="photo" name="photo" type="file" class="hidden" accept="image/*"
-                                    onchange="previewImage(this)">
+                                <input id="photo" name="photo" type="file" class="hidden" accept="image/jpeg, image/png, image/webp, image/jpg">
                             </label>
                         </div>
                         @error('photo')
@@ -215,20 +214,88 @@
 
     @push('scripts')
         <script>
-            function previewImage(input) {
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const img = document.getElementById('preview-image');
-                        if (img) {
-                           img.src = e.target.result;
-                        } else {
-                           // Handle case where img doesn't exist yet (uploading first time)
-                           location.reload(); // Simple fix for now
+            const photoInput = document.getElementById('photo');
+
+            if (photoInput) {
+                photoInput.addEventListener('change', async function(e) {
+                    if (this.files && this.files[0]) {
+                        const file = this.files[0];
+                        
+                        if (file.isCompressed) return;
+
+                        try {
+                            const compressedPhoto = await compressImage(file, 1200, 1200, 0.8);
+                            compressedPhoto.isCompressed = true;
+                            
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(compressedPhoto);
+                            this.files = dataTransfer.files;
+
+                            const reader = new FileReader();
+                            reader.onload = function(ev) {
+                                const img = document.getElementById('preview-image');
+                                if (img) {
+                                   img.src = ev.target.result;
+                                } else {
+                                   // Si no había imagen antes, recargamos simple o podríamos inyectar el div
+                                   location.reload(); 
+                                }
+                            };
+                            reader.readAsDataURL(compressedPhoto);
+                        } catch (error) {
+                            console.error("Error al procesar la imagen:", error);
                         }
+                    }
+                });
+            }
+
+            async function compressImage(file, maxWidth, maxHeight, quality) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob(
+                            (blob) => {
+                                if (!blob) {
+                                    reject(new Error('Error al comprimir la imagen'));
+                                    return;
+                                }
+                                const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                                    type: 'image/jpeg',
+                                    lastModified: Date.now()
+                                });
+                                resolve(newFile);
+                            },
+                            'image/jpeg',
+                            quality
+                        );
                     };
-                    reader.readAsDataURL(input.files[0]);
-                }
+                    img.onerror = reject;
+                    const reader = new FileReader();
+                    reader.onload = (e) => img.src = e.target.result;
+                    reader.readAsDataURL(file);
+                });
             }
 
             let groupCount = {{ $dish->optionGroups->count() }};
