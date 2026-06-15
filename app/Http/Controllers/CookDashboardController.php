@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Cook;
 use App\Models\CookSubscription;
 use App\Models\SubscriptionPlan;
+use App\Models\User;
+use App\Notifications\AdminNewCookProfileNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class CookDashboardController extends Controller
@@ -106,6 +109,12 @@ class CookDashboardController extends Controller
                 'status' => 'active',
             ]);
             $cook->update(['current_subscription_id' => $subscription->id]);
+        }
+
+        // Notificar a los administradores
+        $admins = User::where('role', 'admin')->get();
+        if ($admins->count() > 0) {
+            Notification::send($admins, new AdminNewCookProfileNotification($cook));
         }
 
         if ($request->expectsJson()) {

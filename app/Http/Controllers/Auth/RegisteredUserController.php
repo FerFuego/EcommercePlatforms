@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\AdminNewUserNotification;
 
 class RegisteredUserController extends Controller
 {
@@ -45,6 +47,12 @@ class RegisteredUserController extends Controller
         $user->save();
 
         event(new Registered($user));
+
+        // Notificar a los administradores
+        $admins = User::where('role', 'admin')->get();
+        if ($admins->count() > 0) {
+            Notification::send($admins, new AdminNewUserNotification($user));
+        }
 
         Auth::login($user);
 
