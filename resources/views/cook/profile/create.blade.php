@@ -163,7 +163,7 @@
                                     <p class="text-sm text-gray-500"><span class="font-semibold">Subir DNI</span></p>
                                 </div>
                                 <img id="dni_preview" class="hidden absolute inset-0 w-full h-full object-cover" />
-                                <input id="dni_photo" name="dni_photo" type="file" class="hidden" accept="image/*" onchange="previewDNI(this)">
+                                <input id="dni_photo" name="dni_photo" type="file" class="hidden" accept="image/jpeg, image/png, image/webp, image/jpg" onchange="previewDNI(this)">
                             </label>
                             <button type="button" id="remove_dni_btn" class="hidden mt-2 text-sm text-red-500 font-semibold hover:text-red-700" onclick="removeDNI()">Eliminar imagen</button>
                         </div>
@@ -186,7 +186,7 @@
                                     <p class="text-sm text-gray-500"><span class="font-semibold">Añadir Fotos</span></p>
                                     <p class="text-xs text-gray-400 mt-1">PNG, JPG (MAX. 2MB cada una)</p>
                                 </div>
-                                <input id="kitchen_photos" name="kitchen_photos[]" type="file" class="hidden" accept="image/*" multiple onchange="previewKitchenPhotos(this)">
+                                <input id="kitchen_photos" name="kitchen_photos[]" type="file" class="hidden" accept="image/jpeg, image/png, image/webp, image/jpg" multiple onchange="previewKitchenPhotos(this)">
                             </label>
                             <!-- Contenedor para previsualizar múltiples imágenes -->
                             <div id="kitchen_preview_container" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
@@ -432,17 +432,71 @@
                 input.files = dataTransfer.files;
             }
 
+            // --- Utilidad para comprimir imágenes en el cliente ---
+            async function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.8) {
+                return new Promise((resolve) => {
+                    if (!file.type.startsWith('image/')) {
+                        resolve(file);
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = event => {
+                        const img = new Image();
+                        img.src = event.target.result;
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+
+                            if (width > height) {
+                                if (width > maxWidth) {
+                                    height = Math.round((height * maxWidth) / width);
+                                    width = maxWidth;
+                                }
+                            } else {
+                                if (height > maxHeight) {
+                                    width = Math.round((width * maxHeight) / height);
+                                    height = maxHeight;
+                                }
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            canvas.toBlob(blob => {
+                                if (blob) {
+                                    const newName = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
+                                    const compressedFile = new File([blob], newName, {
+                                        type: 'image/jpeg',
+                                        lastModified: Date.now()
+                                    });
+                                    resolve(compressedFile);
+                                } else {
+                                    resolve(file);
+                                }
+                            }, 'image/jpeg', quality);
+                        };
+                        img.onerror = () => resolve(file);
+                    };
+                    reader.onerror = () => resolve(file);
+                });
+            }
+
             // --- Envío del Formulario con Barra de Progreso ---
             const form = document.getElementById('profileForm');
             const overlay = document.getElementById('loadingOverlay');
             const progressBar = document.getElementById('progressBar');
             const progressText = document.getElementById('progressText');
 
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
+                const dniInput = document.getElementById('dni_photo');
                 // Validaciones básicas en cliente
-                if (!document.getElementById('dni_photo').files.length) {
+                if (!dniInput.files.length) {
                     alert('Por favor, selecciona una foto de DNI.');
                     return;
                 }
@@ -456,6 +510,28 @@
                 overlay.classList.add('flex');
                 
                 const formData = new FormData(form);
+                
+                // Comprimir DNI
+                progressText.innerText = 'Preparando imágenes...';
+                try {
+                    const compressedDNI = await compressImage(dniInput.files[0]);
+                    formData.set('dni_photo', compressedDNI);
+                } catch(err) {
+                    console.error('Error comprimiendo DNI', err);
+                }
+                
+                // Comprimir Kitchen Photos
+                formData.delete('kitchen_photos[]');
+                for (let i = 0; i < selectedKitchenFiles.length; i++) {
+                    try {
+                        const compressedPhoto = await compressImage(selectedKitchenFiles[i]);
+                        formData.append('kitchen_photos[]', compressedPhoto);
+                    } catch(err) {
+                        console.error('Error comprimiendo kitchen photo', err);
+                        formData.append('kitchen_photos[]', selectedKitchenFiles[i]);
+                    }
+                }
+                
                 const xhr = new XMLHttpRequest();
                 
                 xhr.open('POST', form.action, true);
@@ -465,7 +541,7 @@
                     if (event.lengthComputable) {
                         const percentComplete = Math.round((event.loaded / event.total) * 100);
                         progressBar.style.width = percentComplete + '%';
-                        progressText.innerText = percentComplete + '%';
+                        progressText.innerText = 'Subiendo: ' + percentComplete + '%';
                     }
                 };
                 
