@@ -67,7 +67,7 @@ class NewOrderNotification extends Notification implements ShouldQueue
             $dishName = $item->dish->name ?? 'Plato';
             $details[] = "- {$item->quantity}x {$dishName}";
         }
-        $detailString = empty($details) ? 'Sin detalle' : implode("\n", $details);
+        $detailString = empty($details) ? 'Sin detalle' : implode(", ", $details);
 
         $deliveryType = $order->delivery_type === 'delivery' ? 'Delivery' : 'Retiro en cocina';
         
