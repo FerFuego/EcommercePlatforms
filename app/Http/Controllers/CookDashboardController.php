@@ -60,7 +60,7 @@ class CookDashboardController extends Controller
             'location_lng' => 'nullable|numeric',
             'address' => 'required|string|max:255',
             'coverage_radius_km' => 'required|numeric|min:1|max:50',
-            'payment_details' => 'required|string',
+            'payment_details' => 'nullable|string',
             'opening_time' => 'nullable|date_format:H:i',
             'closing_time' => 'nullable|date_format:H:i',
             'terms' => 'accepted',
@@ -87,8 +87,8 @@ class CookDashboardController extends Controller
             'location_lat' => $request->location_lat,
             'location_lng' => $request->location_lng,
             'coverage_radius_km' => $request->coverage_radius_km,
-            'payout_method' => 'CBU/Alias',
-            'payout_details' => ['identifier' => $request->payment_details],
+            'payout_method' => $request->payment_details ? 'CBU/Alias' : null,
+            'payout_details' => $request->payment_details ? ['identifier' => $request->payment_details] : null,
             'opening_time' => $request->opening_time,
             'closing_time' => $request->closing_time,
             'food_handler_declaration' => true,
@@ -106,6 +106,14 @@ class CookDashboardController extends Controller
                 'status' => 'active',
             ]);
             $cook->update(['current_subscription_id' => $subscription->id]);
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true, 
+                'redirect_url' => route('cook.dashboard'),
+                'message' => '¡Perfil creado! Tu solicitud será revisada por un administrador.'
+            ]);
         }
 
         return redirect()->route('cook.dashboard')
