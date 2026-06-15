@@ -56,16 +56,24 @@ class OrderStatusNotification extends Notification implements ShouldQueue
     {
         $label = $this->getStatusLabel();
         
+        $components = [
+            $this->order->id,
+            $notifiable->name ?? 'Cliente',
+            $label,
+            route('orders.show', $this->order->id)
+        ];
+
+        // Sanitize components: Meta API rejects new-lines, tabs, or more than 4 spaces
+        $sanitizedComponents = array_map(function($comp) {
+            $comp = str_replace(["\r", "\n", "\t"], ' ', (string) $comp);
+            return preg_replace('/\s+/', ' ', trim($comp));
+        }, $components);
+
         return [
             'type' => 'template',
             'name' => 'actualizacion_pedido_cliente',
             'language' => 'es_AR',
-            'components' => [
-                $this->order->id,
-                $notifiable->name ?? 'Cliente',
-                $label,
-                route('orders.show', $this->order->id)
-            ]
+            'components' => $sanitizedComponents
         ];
     }
 

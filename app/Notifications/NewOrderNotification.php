@@ -71,18 +71,26 @@ class NewOrderNotification extends Notification implements ShouldQueue
 
         $deliveryType = $order->delivery_type === 'delivery' ? 'Delivery' : 'Retiro en cocina';
         
+        $components = [
+            $order->id,
+            $customerName,
+            $detailString,
+            number_format($order->total_amount, 0, ',', '.'),
+            $deliveryType,
+            route('cook.orders.index')
+        ];
+
+        // Sanitize components: Meta API rejects new-lines, tabs, or more than 4 spaces
+        $sanitizedComponents = array_map(function($comp) {
+            $comp = str_replace(["\r", "\n", "\t"], ' ', (string) $comp);
+            return preg_replace('/\s+/', ' ', trim($comp));
+        }, $components);
+        
         return [
             'type' => 'template',
             'name' => 'nuevo_pedido_cocinero',
             'language' => 'es_ES',
-            'components' => [
-                $order->id,
-                $customerName,
-                $detailString,
-                number_format($order->total_amount, 0, ',', '.'),
-                $deliveryType,
-                route('cook.orders.index')
-            ]
+            'components' => $sanitizedComponents
         ];
     }
 
