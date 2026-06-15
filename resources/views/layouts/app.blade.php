@@ -683,6 +683,29 @@
             });
         }
     </script>
+
+    <!-- PWA Pull to Refresh -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pulltorefreshjs/0.1.22/index.umd.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Solo activar el "pull to refresh" si estamos en un dispositivo móvil o en modo PWA (standalone)
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isStandalone || isMobile) {
+                PullToRefresh.init({
+                    mainElement: 'body',
+                    triggerElement: 'body',
+                    instructionsPullToRefresh: 'Desliza hacia abajo para actualizar',
+                    instructionsReleaseToRefresh: 'Suelta para actualizar',
+                    instructionsRefreshing: 'Actualizando...',
+                    onRefresh: function() {
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
