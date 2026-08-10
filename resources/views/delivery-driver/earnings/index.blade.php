@@ -9,41 +9,11 @@
         </h1>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="bg-white rounded-2xl shadow-xl p-6 relative overflow-hidden">
-                @if(auth()->user()->is_suspended)
-                    <div class="absolute inset-0 bg-gray-100 bg-opacity-50 z-10 flex items-center justify-center backdrop-blur-sm">
-                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">Suspendido</span>
-                    </div>
-                @endif
-
-                <h3 class="text-xl font-bold mb-4">Acciones Rápidas</h3>
-                <div class="space-y-3 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none' : '' }}">
-                    @if($driver->is_approved)
-                        <a href="{{ route('delivery-driver.dashboard') }}"
-                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Dashboard
-                        </a>
-                        <a href="{{ route('delivery-driver.orders.available') }}"
-                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Ver Pedidos Disponibles
-                        </a>
-                        <a href="{{ route('delivery-driver.orders.index') }}"
-                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Mis Entregas
-                        </a>
-                        <a href="{{ route('delivery-driver.earnings') }}"
-                            class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                            Ver Ganancias
-                        </a>
-                    @endif
-                    <a href="{{ route('delivery-driver.profile.edit') }}"
-                        class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
-                        Editar Perfil
-                    </a>
-                </div>
+            <div class="lg:col-span-1">
+                @include('delivery-driver.partials.quick-actions')
             </div>
 
-            <div class="g:col-span-2 col-span-2">
+            <div class="lg:col-span-2">
                 <!-- Filters -->
                 <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
                     <form method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
