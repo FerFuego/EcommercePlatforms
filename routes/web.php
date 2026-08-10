@@ -166,8 +166,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/cooks/pending', [AdminController::class, 'pendingCooks'])->name('cooks.pending');
     Route::get('/cooks', [AdminController::class, 'allCooks'])->name('cooks.index');
     Route::get('/cooks/{cookId}', [AdminController::class, 'showCook'])->name('cooks.show');
-    Route::match(['post', 'patch'], '/cooks/{cookId}/approve', [AdminController::class, 'approveCook'])->name('cooks.approve');
-    Route::match(['post', 'patch'], '/cooks/{cookId}/reject', [AdminController::class, 'rejectCook'])->name('cooks.reject');
+    Route::match(['get', 'post', 'patch'], '/cooks/{cookId}/approve', [AdminController::class, 'approveCook'])->name('cooks.approve');
+    Route::match(['get', 'post', 'patch'], '/cooks/{cookId}/reject', [AdminController::class, 'rejectCook'])->name('cooks.reject');
 
     // Órdenes
     Route::get('/orders', [AdminController::class, 'allOrders'])->name('orders.index');
@@ -179,8 +179,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/drivers/pending', [AdminController::class, 'pendingDrivers'])->name('drivers.pending');
     Route::get('/drivers', [AdminController::class, 'allDrivers'])->name('drivers.index');
     Route::get('/drivers/{driverId}', [AdminController::class, 'showDriver'])->name('drivers.show');
-    Route::post('/drivers/{driverId}/approve', [AdminController::class, 'approveDriver'])->name('drivers.approve');
-    Route::post('/drivers/{driverId}/reject', [AdminController::class, 'rejectDriver'])->name('drivers.reject');
+    Route::match(['get', 'post', 'patch'], '/drivers/{driverId}/approve', [AdminController::class, 'approveDriver'])->name('drivers.approve');
+    Route::match(['get', 'post', 'patch'], '/drivers/{driverId}/reject', [AdminController::class, 'rejectDriver'])->name('drivers.reject');
 
     // Gestión de Suscripciones (Admin)
     Route::post('/subscription-plans/sync-mp', [App\Http\Controllers\AdminSubscriptionPlanController::class, 'syncFromMercadoPago'])->name('subscription-plans.sync');
