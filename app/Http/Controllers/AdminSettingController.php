@@ -64,6 +64,26 @@ class AdminSettingController extends Controller
             Setting::set($key, $value);
         }
 
-        return redirect()->route('admin.settings.index')->with('success', 'Configuración actualizada correctamente.');
+        return redirect()->route('settings.index')->with('success', 'Configuraciones actualizadas exitosamente.');
+    }
+
+    /**
+     * Purge all test data (orders, dishes, non-admin users).
+     */
+    public function purgeTestData(Request $request)
+    {
+        $request->validate([
+            'confirm_text' => 'required|string|in:BORRAR,borrar,Borrar',
+        ], [
+            'confirm_text.in' => 'Debe escribir la palabra BORRAR para confirmar la eliminación de datos.',
+        ]);
+
+        try {
+            \Illuminate\Support\Facades\Artisan::call('app:purge-test-data', ['--force' => true]);
+            return redirect()->route('admin.settings.index')->with('success', '¡Datos de prueba eliminados exitosamente para el lanzamiento!');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error purging test data from admin panel: " . $e->getMessage());
+            return redirect()->route('admin.settings.index')->with('error', 'Error al borrar datos de prueba: ' . $e->getMessage());
+        }
     }
 }

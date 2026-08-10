@@ -182,6 +182,28 @@
                         @endif
                     @endforeach
 
+                    <div class="border-t border-gray-100 pt-6">
+                        <h2 class="text-xl font-bold text-red-600 mb-4 flex items-center">
+                            <span class="bg-red-100 text-red-600 p-2 rounded-lg mr-3">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </span>
+                            Herramientas de Lanzamiento (Zona de Peligro)
+                        </h2>
+                        <div class="bg-red-50 p-6 rounded-xl border border-red-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div>
+                                <h3 class="font-bold text-red-900 text-lg">🚀 Limpiar Datos de Prueba para Lanzamiento</h3>
+                                <p class="text-sm text-red-700 mt-1">
+                                    Elimina automáticamente todos los cocineros, repartidores, clientes, platos, pedidos y reseñas de prueba.
+                                    <br><strong class="font-semibold">Preservará intactos:</strong> las cuentas de administradores, configuraciones y planes de suscripción.
+                                </p>
+                            </div>
+                            <button type="button" onclick="openPurgeModal()"
+                                class="px-6 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition shadow-md whitespace-nowrap">
+                                🗑️ Limpiar Datos de Prueba
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="flex items-center justify-end pt-6 border-t border-gray-100">
                         <button type="submit" 
                             class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:scale-105 transform transition duration-300">
@@ -193,8 +215,46 @@
         </div>
     </div>
 
+    {{-- Modal de Confirmación de Limpieza --}}
+    <div id="purgeModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div class="flex items-center text-red-600">
+                <svg class="w-8 h-8 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <h3 class="text-xl font-bold">¿Confirmar Limpieza Pre-Lanzamiento?</h3>
+            </div>
+            <p class="text-sm text-gray-600">
+                Esta acción eliminará de forma <strong>irreversible</strong> todos los platos, cocineros, repartidores, pedidos y clientes de prueba.
+            </p>
+            <form action="{{ route('admin.settings.purge-test-data') }}" method="POST" class="space-y-4">
+                @csrf
+                <div>
+                    <label for="confirm_text" class="block text-sm font-semibold text-gray-700 mb-1">
+                        Escribe la palabra <span class="font-bold text-red-600">BORRAR</span> para confirmar:
+                    </label>
+                    <input type="text" name="confirm_text" id="confirm_text" required placeholder="BORRAR"
+                        class="w-full rounded-xl border-gray-300 focus:border-red-500 focus:ring focus:ring-red-200">
+                </div>
+                <div class="flex items-center justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closePurgeModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 shadow-md">
+                        Confirmar y Borrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     @push('scripts')
     <script>
+        function openPurgeModal() {
+            document.getElementById('purgeModal').classList.remove('hidden');
+        }
+        function closePurgeModal() {
+            document.getElementById('purgeModal').classList.add('hidden');
+        }
+
         document.getElementById('btn-test-mp').addEventListener('click', function() {
             const tokenInput = document.getElementById('mp_access_token');
             const resultDiv = document.getElementById('mp-test-result');
