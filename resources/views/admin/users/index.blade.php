@@ -178,9 +178,12 @@
                                         )
                                         <button onclick="openApprovalModal({
                                                                     id: {{ $user->id }},
-                                                                    name: '{{ $user->name }}',
+                                                                    name: '{{ addslashes($user->name) }}',
                                                                     role: '{{ $user->role }}',
                                                                     roleLabel: '{{ $user->role === 'cook' ? 'Cocinero' : 'Repartidor' }}',
+                                                                    address: '{{ addslashes($user->address ?? '') }}',
+                                                                    phone: '{{ addslashes($user->phone ?? '') }}',
+                                                                    email: '{{ addslashes($user->email ?? '') }}',
                                                                     details: {{ json_encode($user->role === 'cook' ? $user->cook : $user->deliveryDriver) }}
                                                                 })"
                                             class="px-3 py-1 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition"
@@ -375,13 +378,36 @@
                             </div>
                         `;
                     }
-                     // Location
+                     // Location & Hours
+                     const cookManualAddress = data.address && data.address.trim() !== '' 
+                         ? `<span class="font-bold text-gray-900">${data.address}</span>` 
+                         : '<span class="text-amber-600 italic">No especificada manualmente</span>';
+
+                     const cookGpsCoords = (details.location_lat && details.location_lng) 
+                         ? `${details.location_lat}, ${details.location_lng}` 
+                         : '<span class="text-amber-600 font-semibold italic">✕ No detectada automáticamente</span>';
+
+                     const openTime = details.opening_time ? details.opening_time.substring(0, 5) : null;
+                     const closeTime = details.closing_time ? details.closing_time.substring(0, 5) : null;
+                     const hoursFormatted = (openTime && closeTime) 
+                         ? `<span class="font-bold text-purple-700">${openTime} a ${closeTime} hs</span>` 
+                         : '<span class="text-amber-600 italic">No configurado</span>';
+
                      html += `
                         <div class="bg-gray-50 p-5 rounded-xl border">
-                            <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">📍 Ubicación</h4>
-                            <p class="mb-1"><span class="font-semibold">Lat:</span> ${details.location_lat}</p>
-                            <p class="mb-1"><span class="font-semibold">Lng:</span> ${details.location_lng}</p>
-                            <p><span class="font-semibold">Radio:</span> ${details.coverage_radius_km} km</p>
+                            <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">📍 Ubicación & Cobertura</h4>
+                            <p class="mb-2"><span class="font-semibold text-gray-700">Dirección Manual:</span> <br>${cookManualAddress}</p>
+                            <p class="mb-2"><span class="font-semibold text-gray-700">GPS / Coordenadas:</span> ${cookGpsCoords}</p>
+                            <p><span class="font-semibold text-gray-700">Radio de Entrega:</span> ${details.coverage_radius_km || 'N/A'} km</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-5 rounded-xl border">
+                            <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🕒 Horario del Local</h4>
+                            <p class="mb-1"><span class="font-semibold text-gray-700">Apertura:</span> ${openTime || 'N/A'}</p>
+                            <p class="mb-1"><span class="font-semibold text-gray-700">Cierre:</span> ${closeTime || 'N/A'}</p>
+                            <div class="mt-3 p-2.5 bg-purple-50 border border-purple-100 rounded-lg text-sm text-purple-900">
+                                <span class="font-semibold">Jornada Comercial:</span> ${hoursFormatted}
+                            </div>
                         </div>
                     `;
                     html += `</div>`;
@@ -417,13 +443,28 @@
                     }
                     html += `</div>`;
 
-                    // Col 2: Vehículo y Foto Perfil (si existe)
+                    // Col 2: Vehículo, Ubicación y Foto Perfil
+                    const driverManualAddress = data.address && data.address.trim() !== '' 
+                        ? `<span class="font-bold text-gray-900">${data.address}</span>` 
+                        : '<span class="text-amber-600 italic">No especificada manualmente</span>';
+
+                    const driverGpsCoords = (details.location_lat && details.location_lng) 
+                        ? `${details.location_lat}, ${details.location_lng}` 
+                        : '<span class="text-amber-600 font-semibold italic">✕ No detectada automáticamente</span>';
+
                     html += `<div class="space-y-6">`;
                     html += `
                         <div class="bg-gray-50 p-5 rounded-xl border">
                             <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🚗 Vehículo</h4>
                             <p class="mb-2"><span class="font-semibold">Tipo:</span> <span class="capitalize">${details.vehicle_type || 'N/A'}</span></p>
                             <p class="mb-2"><span class="font-semibold">Patente:</span> ${details.vehicle_plate || 'N/A'}</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-5 rounded-xl border">
+                            <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">📍 Ubicación Base & Cobertura</h4>
+                            <p class="mb-2"><span class="font-semibold text-gray-700">Dirección Manual:</span> <br>${driverManualAddress}</p>
+                            <p class="mb-2"><span class="font-semibold text-gray-700">GPS Base:</span> ${driverGpsCoords}</p>
+                            <p><span class="font-semibold text-gray-700">Radio de Cobertura:</span> ${details.coverage_radius_km || 'N/A'} km</p>
                         </div>
                     `;
 

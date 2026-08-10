@@ -151,15 +151,25 @@
 
                 <!-- Coverage Area -->
                 <div class="bg-white rounded-2xl shadow-xl p-6">
-                    <h3 class="text-lg font-bold mb-4">Área de Cobertura</h3>
+                    <h3 class="text-lg font-bold mb-4">Área de Cobertura & Ubicación</h3>
                     <div class="space-y-3">
                         <div>
-                            <p class="text-sm text-gray-600">Radio</p>
-                            <p class="font-bold text-lg">{{ $driver->coverage_radius_km }} km</p>
+                            <p class="text-sm text-gray-600">Dirección Ingresada</p>
+                            <p class="font-bold text-gray-800">{{ $driver->user->address ?? 'No especificada' }}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600">Ubicación Base</p>
-                            <p class="text-sm">{{ $driver->location_lat }}, {{ $driver->location_lng }}</p>
+                            <p class="text-sm text-gray-600">Radio de Cobertura</p>
+                            <p class="font-bold text-lg text-blue-600">{{ $driver->coverage_radius_km }} km</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Coordenadas GPS Base</p>
+                            <p class="text-sm font-semibold text-gray-700">
+                                @if($driver->location_lat && $driver->location_lng)
+                                    {{ $driver->location_lat }}, {{ $driver->location_lng }}
+                                @else
+                                    <span class="text-amber-600 font-normal italic">Sin detección automática</span>
+                                @endif
+                            </p>
                         </div>
                     </div>
                 </div>
