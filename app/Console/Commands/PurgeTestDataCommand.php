@@ -50,23 +50,45 @@ class PurgeTestDataCommand extends Command
             \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
 
             $tablesToPurge = [
+                // Pedidos y Entregas
                 'order_logs',
                 'order_status_logs',
                 'delivery_assignments',
                 'order_item_options',
                 'order_items',
                 'orders',
+
+                // Reseñas y Favoritos
                 'reviews',
                 'user_favorites',
+                'favorite_cooks',
+
+                // Platos y Opciones
                 'dish_options',
                 'dish_option_groups',
                 'dishes',
+
+                // Difusiones de Cocineros
                 'broadcast_recipients',
                 'cook_broadcasts',
+
+                // Suscripciones y Pagos
                 'subscription_payments',
+                'subscription_items',
+                'subscriptions',
                 'cook_subscriptions',
+
+                // Tokens, Sesiones y Feedback
                 'user_push_tokens',
                 'feedback',
+                'personal_access_tokens',
+                'password_reset_tokens',
+                'sessions',
+                'jobs',
+                'job_batches',
+                'failed_jobs',
+
+                // Perfiles
                 'cooks',
                 'delivery_drivers',
             ];
@@ -80,7 +102,7 @@ class PurgeTestDataCommand extends Command
                 }
             }
 
-            // Eliminar usuarios no administradores
+            // Eliminar usuarios no administradores (incluyendo aquellos con rol nulo o vacio)
             $nonAdminUsersCount = DB::table('users')
                 ->where(function ($query) {
                     $query->where('role', '!=', 'admin')
@@ -90,8 +112,28 @@ class PurgeTestDataCommand extends Command
 
             $adminUsersCount = DB::table('users')->where('role', 'admin')->count();
 
+            // Limpieza de archivos de imagen de prueba en el disco 'uploads'
+            try {
+                $uploadDirectories = ['dishes', 'cooks', 'delivery-drivers', 'profile_photos'];
+                foreach ($uploadDirectories as $dir) {
+                    if (\Illuminate\Support\Facades\Storage::disk('uploads')->exists($dir)) {
+                        $files = \Illuminate\Support\Facades\Storage::disk('uploads')->allFiles($dir);
+                        \Illuminate\Support\Facades\Storage::disk('uploads')->delete($files);
+                    }
+                }
+            } catch (\Throwable $e) {
+                Log::warning("No se pudieron eliminar algunos archivos subidos: " . $e->getMessage());
+            }
+
             \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
             DB::commit();
+
+            // Limpiar caché de la aplicación
+            try {
+                \Illuminate\Support\Facades\Artisan::call('cache:clear');
+            } catch (\Throwable $e) {
+                // ignorar si no hay soporte de caché
+            }
 
             $ordersCount = $counts['orders'] ?? 0;
             $dishesCount = $counts['dishes'] ?? 0;
