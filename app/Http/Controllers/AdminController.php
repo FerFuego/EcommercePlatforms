@@ -68,13 +68,24 @@ class AdminController extends Controller
             return redirect()->route('admin.users.index');
         }
 
-        $cook = Cook::findOrFail($cookId);
+        $cook = Cook::find($cookId);
+        if (!$cook) {
+            return back()->with('error', 'El cocinero no existe o ya fue procesado.');
+        }
+
         $cook->is_approved = true;
         $cook->active = true;
         $cook->save();
 
         if ($cook->user) {
-            $cook->user->update(['last_rejection_reason' => null]);
+            try {
+                if (\Illuminate\Support\Facades\Schema::hasColumn('users', 'last_rejection_reason')) {
+                    $cook->user->update(['last_rejection_reason' => null]);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error("Error clearing last_rejection_reason: " . $e->getMessage());
+            }
+
             if ($cook->user->email) {
                 try {
                     Mail::to($cook->user->email)->send(new \App\Mail\CookApprovedMail($cook));
@@ -96,14 +107,23 @@ class AdminController extends Controller
             return redirect()->route('admin.users.index');
         }
 
-        $cook = Cook::findOrFail($cookId);
+        $cook = Cook::find($cookId);
+        if (!$cook) {
+            return back()->with('error', 'La solicitud del cocinero no existe o ya fue procesada.');
+        }
 
         $request->validate([
             'rejection_reason' => 'required|string|max:500',
         ]);
 
         if ($cook->user) {
-            $cook->user->update(['last_rejection_reason' => $request->rejection_reason]);
+            try {
+                if (\Illuminate\Support\Facades\Schema::hasColumn('users', 'last_rejection_reason')) {
+                    $cook->user->update(['last_rejection_reason' => $request->rejection_reason]);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error("Error updating last_rejection_reason: " . $e->getMessage());
+            }
 
             if ($cook->user->email) {
                 try {
@@ -268,12 +288,22 @@ class AdminController extends Controller
             return redirect()->route('admin.users.index');
         }
 
-        $driver = \App\Models\DeliveryDriver::findOrFail($driverId);
+        $driver = \App\Models\DeliveryDriver::find($driverId);
+        if (!$driver) {
+            return back()->with('error', 'El repartidor no existe o ya fue procesado.');
+        }
+
         $driver->is_approved = true;
         $driver->save();
 
         if ($driver->user) {
-            $driver->user->update(['last_rejection_reason' => null]);
+            try {
+                if (\Illuminate\Support\Facades\Schema::hasColumn('users', 'last_rejection_reason')) {
+                    $driver->user->update(['last_rejection_reason' => null]);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error("Error clearing last_rejection_reason: " . $e->getMessage());
+            }
 
             if ($driver->user->email) {
                 try {
@@ -296,14 +326,23 @@ class AdminController extends Controller
             return redirect()->route('admin.users.index');
         }
 
-        $driver = \App\Models\DeliveryDriver::findOrFail($driverId);
+        $driver = \App\Models\DeliveryDriver::find($driverId);
+        if (!$driver) {
+            return back()->with('error', 'La solicitud del repartidor no existe o ya fue procesada.');
+        }
 
         $request->validate([
             'rejection_reason' => 'required|string|max:500',
         ]);
 
         if ($driver->user) {
-            $driver->user->update(['last_rejection_reason' => $request->rejection_reason]);
+            try {
+                if (\Illuminate\Support\Facades\Schema::hasColumn('users', 'last_rejection_reason')) {
+                    $driver->user->update(['last_rejection_reason' => $request->rejection_reason]);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error("Error updating last_rejection_reason: " . $e->getMessage());
+            }
 
             if ($driver->user->email) {
                 try {
