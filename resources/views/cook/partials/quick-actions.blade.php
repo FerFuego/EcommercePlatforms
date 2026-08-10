@@ -1,4 +1,4 @@
-<div x-data="{ open: false }" class="bg-white rounded-2xl shadow-xl p-6 relative overflow-hidden transition-all duration-200">
+<div x-data="{ open: false, isDesktop: window.innerWidth >= 1024 }" x-init="window.addEventListener('resize', () => isDesktop = window.innerWidth >= 1024)" class="bg-white rounded-2xl shadow-xl p-6 relative overflow-hidden transition-all duration-200">
     @if(auth()->user()->is_suspended)
         <div class="absolute inset-0 bg-gray-100 bg-opacity-50 z-10 flex items-center justify-center backdrop-blur-sm">
             <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">Suspendido</span>
@@ -8,8 +8,9 @@
     <!-- Mobile toggle header -->
     <button 
         type="button"
-        @click="open = !open" 
-        class="w-full flex items-center justify-between text-left focus:outline-none lg:cursor-default"
+        @click="if (!isDesktop) open = !open" 
+        class="w-full flex items-center justify-between text-left focus:outline-none"
+        :class="{ 'lg:cursor-default': isDesktop, 'cursor-pointer': !isDesktop }"
         :aria-expanded="open"
     >
         <div class="flex items-center space-x-2">
@@ -20,7 +21,7 @@
                 Acciones Rápidas
             </h3>
         </div>
-        <div class="flex items-center space-x-2 lg:hidden">
+        <div class="flex items-center space-x-2 lg:hidden" :style="isDesktop ? 'display: none !important;' : ''">
             <span class="text-xs font-semibold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-200" x-text="open ? 'Ocultar' : 'Ver menú'">
                 Ver menú
             </span>
