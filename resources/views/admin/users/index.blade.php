@@ -47,7 +47,7 @@
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
             <!-- Search & Status Filters Form -->
             <div class="p-6 border-b border-gray-100 bg-gray-50">
-                <form action="{{ route('admin.users.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <form action="{{ route('admin.users.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="md:col-span-2">
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
                         <div class="relative">
