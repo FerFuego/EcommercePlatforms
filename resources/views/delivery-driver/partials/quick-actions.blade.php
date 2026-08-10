@@ -33,7 +33,7 @@
     <!-- Nav Links -->
     <div 
         class="mt-4 hidden lg:block space-y-3 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none' : '' }}"
-        :class="{ '!block': open }"
+        :style="open ? 'display: block !important;' : ''"
     >
         @if($driver->is_approved)
             <a href="{{ route('delivery-driver.dashboard') }}"

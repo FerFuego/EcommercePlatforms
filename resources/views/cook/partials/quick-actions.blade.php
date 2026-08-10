@@ -33,7 +33,7 @@
     <!-- Nav Links -->
     <div 
         class="mt-4 hidden lg:block space-y-3 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none' : '' }}"
-        :class="{ '!block': open }"
+        :style="open ? 'display: block !important;' : ''"
     >
         <a href="{{ route('cook.dashboard') }}"
             class="block bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-center">
