@@ -69,6 +69,10 @@ class AdminController extends Controller
         $cook->active = true;
         $cook->save();
 
+        if ($cook->user) {
+            $cook->user->update(['last_rejection_reason' => null]);
+        }
+
         // Enviar email de confirmación al cocinero
         try {
             Mail::to($cook->user->email)->send(new \App\Mail\CookApprovedMail($cook));
@@ -90,6 +94,10 @@ class AdminController extends Controller
             'rejection_reason' => 'required|string|max:500',
         ]);
 
+        if ($cook->user) {
+            $cook->user->update(['last_rejection_reason' => $request->rejection_reason]);
+        }
+
         // Enviar email con razón del rechazo
         try {
             Mail::to($cook->user->email)->send(new \App\Mail\CookRejectedMail($cook, $request->rejection_reason));
@@ -99,8 +107,7 @@ class AdminController extends Controller
 
         $cook->delete();
 
-        return redirect()->route('admin.cooks.pending')
-            ->with('success', 'Solicitud rechazada');
+        return back()->with('success', 'Solicitud rechazada exitosamente');
     }
 
     /**
@@ -252,6 +259,10 @@ class AdminController extends Controller
         $driver->is_approved = true;
         $driver->save();
 
+        if ($driver->user) {
+            $driver->user->update(['last_rejection_reason' => null]);
+        }
+
         // Enviar email de confirmación al repartidor
         try {
             Mail::to($driver->user->email)->send(new \App\Mail\DriverApprovedMail($driver));
@@ -273,6 +284,10 @@ class AdminController extends Controller
             'rejection_reason' => 'required|string|max:500',
         ]);
 
+        if ($driver->user) {
+            $driver->user->update(['last_rejection_reason' => $request->rejection_reason]);
+        }
+
         // Enviar email con razón del rechazo
         try {
             Mail::to($driver->user->email)->send(new \App\Mail\DriverRejectedMail($driver, $request->rejection_reason));
@@ -282,8 +297,7 @@ class AdminController extends Controller
 
         $driver->delete();
 
-        return redirect()->route('admin.drivers.pending')
-            ->with('success', 'Solicitud rechazada');
+        return back()->with('success', 'Solicitud rechazada exitosamente');
     }
 
     /**

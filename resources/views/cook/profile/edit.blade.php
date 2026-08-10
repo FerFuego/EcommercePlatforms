@@ -6,7 +6,26 @@
     <div class="container mx-auto px-4 py-12">
         <div class="flex items-center justify-between mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Editar Perfil</h1>
-        </div>
+        @if(auth()->check() && auth()->user()->last_rejection_reason)
+            <div class="bg-red-50 border-2 border-red-300 text-red-900 p-6 mb-8 rounded-2xl shadow-lg">
+                <div class="flex items-start gap-4">
+                    <div class="p-3 bg-red-100 rounded-xl text-red-600 shrink-0">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-red-900 mb-1">❌ Tu solicitud anterior fue rechazada</h3>
+                        <p class="text-sm text-red-700 font-semibold mb-2">Motivo expresado por el administrador:</p>
+                        <div class="bg-white/80 p-4 rounded-xl border border-red-200 text-red-900 font-medium italic text-base mb-3 shadow-inner">
+                            "{{ auth()->user()->last_rejection_reason }}"
+                        </div>
+                        <p class="text-xs text-red-600">Por favor, corrige tus datos y vuelve a guardar para enviar tu postulación nuevamente.</p>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         @if ($errors->any())
             <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8 rounded-r-xl shadow-md" role="alert">
                 <div class="flex items-center mb-2">

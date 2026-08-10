@@ -128,13 +128,9 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('admin.cooks.reject', $cook) }}" method="POST" class="flex-1">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold hover:shadow-lg transition" onclick="return confirm('¿Rechazar este cocinero?')">
-                                        ✗ Rechazar
-                                    </button>
-                                </form>
+                                <button type="button" onclick="openRejectCookModal({{ $cook->id }}, '{{ addslashes($cook->user->name ?? 'Cocinero') }}')" class="flex-1 bg-gradient-to-r from-red-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold hover:shadow-lg transition">
+                                    ✗ Rechazar
+                                </button>
                             @else
                                 <a href="{{ route('marketplace.cook.profile', $cook) }}" class="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-xl font-semibold text-center hover:shadow-lg transition">
                                     Ver Perfil
@@ -159,4 +155,45 @@
         @endif
     </div>
 </div>
+
+<!-- Reject Cook Modal -->
+<div id="rejectCookModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
+        <h3 class="text-xl font-bold text-red-600 mb-2">❌ Rechazar Solicitud de Cocinero</h3>
+        <p class="text-sm text-gray-600 mb-4">Rechazando a: <strong id="rejectCookName"></strong></p>
+        <form id="rejectCookForm" method="POST">
+            @csrf
+            @method('PATCH')
+            <div class="mb-4">
+                <label for="reject_reason" class="block text-xs font-bold text-gray-700 uppercase mb-1">Motivo del Rechazo *</label>
+                <textarea name="rejection_reason" id="reject_reason" required rows="4" 
+                    placeholder="Escribe el motivo del rechazo (ej: DNI no legible, fotos insuficientes...)"
+                    class="w-full px-4 py-3 rounded-xl border-gray-300 focus:border-red-500 focus:ring focus:ring-red-200 text-sm shadow-sm"></textarea>
+            </div>
+            <div class="flex space-x-3">
+                <button type="submit" class="flex-1 bg-red-600 text-white px-4 py-2.5 rounded-xl font-bold hover:bg-red-700 transition shadow-md">
+                    Confirmar Rechazo
+                </button>
+                <button type="button" onclick="closeRejectCookModal()" class="px-4 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openRejectCookModal(id, name) {
+        const modal = document.getElementById('rejectCookModal');
+        const form = document.getElementById('rejectCookForm');
+        const nameSpan = document.getElementById('rejectCookName');
+        form.action = `/admin/cooks/${id}/reject`;
+        nameSpan.textContent = name;
+        modal.classList.remove('hidden');
+    }
+
+    function closeRejectCookModal() {
+        document.getElementById('rejectCookModal').classList.add('hidden');
+    }
+</script>
 @endsection

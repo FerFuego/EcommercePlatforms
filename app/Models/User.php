@@ -26,6 +26,7 @@ class User extends Authenticatable
         'phone',
         'address',
         'profile_photo_path',
+        'last_rejection_reason',
     ];
 
     /**

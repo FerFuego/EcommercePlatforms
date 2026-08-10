@@ -258,13 +258,36 @@
                     </button>
                 </form>
                 
-                <form id="rejectForm" method="POST" class="flex-1">
+                <button type="button" onclick="toggleRejectForm(true)"
+                    class="flex-1 bg-red-500 text-white px-2 py-4 rounded-xl font-bold hover:bg-red-600 transition flex items-center justify-center gap-2 text-lg shadow-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    Rechazar Solicitud
+                </button>
+            </div>
+
+            <!-- Rejection Reason Container (Hidden by default) -->
+            <div id="rejectReasonBox" class="hidden mt-6 bg-red-50 p-6 rounded-2xl border-2 border-red-200">
+                <h4 class="font-bold text-red-800 text-lg mb-2 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Motivo del Rechazo
+                </h4>
+                <p class="text-sm text-red-700 mb-3">Ingresa la explicación del rechazo. El usuario la recibirá por email y se le notificará al acceder a la plataforma.</p>
+                <form id="rejectForm" method="POST">
                     @csrf
-                    <button type="submit"
-                        class="w-full bg-red-500 text-white px-2 py-4 rounded-xl font-bold hover:bg-red-600 transition flex items-center justify-center gap-2 text-lg shadow-lg">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        Rechazar Solicitud
-                    </button>
+                    <div class="mb-4">
+                        <label for="rejection_reason_input" class="block text-xs font-bold text-red-800 uppercase mb-1">Detalle del motivo *</label>
+                        <textarea name="rejection_reason" id="rejection_reason_input" required rows="3" 
+                            placeholder="Escribe el motivo del rechazo (ej: Documentación de DNI ilegible, fotos de cocina insuficientes...)"
+                            class="w-full px-4 py-3 rounded-xl border-red-300 focus:border-red-500 focus:ring focus:ring-red-200 text-sm shadow-sm text-gray-800"></textarea>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button type="submit" class="bg-red-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-red-700 transition text-sm shadow-md flex items-center gap-2">
+                            <span>Confirmar y Enviar Rechazo</span>
+                        </button>
+                        <button type="button" onclick="toggleRejectForm(false)" class="bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-semibold hover:bg-gray-300 transition text-sm">
+                            Cancelar
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -493,10 +516,26 @@
                 }
                 
                 content.innerHTML = html;
+                toggleRejectForm(false);
                 modal.classList.remove('hidden');
             }
 
+            function toggleRejectForm(show) {
+                const box = document.getElementById('rejectReasonBox');
+                const input = document.getElementById('rejection_reason_input');
+                if (!box) return;
+
+                if (show) {
+                    box.classList.remove('hidden');
+                    if (input) input.focus();
+                } else {
+                    box.classList.add('hidden');
+                    if (input) input.value = '';
+                }
+            }
+
             function closeApprovalModal() {
+                toggleRejectForm(false);
                 document.getElementById('approvalModal').classList.add('hidden');
             }
 
