@@ -10,7 +10,7 @@
     </div>
 
     <div style="background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <p style="font-size: 16px; color: #374151;">Hola <strong>{{ $driver->user->name }}</strong>,</p>
+        <p style="font-size: 16px; color: #374151;">Hola <strong>{{ $driver->user->name ?? 'Usuario' }}</strong>,</p>
 
         <p style="font-size: 16px; color: #374151;">
             ¡Bienvenido/a al equipo de repartidores de Cocinarte! Tu solicitud fue revisada y aprobada. Ya puedes empezar a aceptar pedidos de delivery.
