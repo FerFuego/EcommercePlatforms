@@ -4,10 +4,10 @@
 
 @section('content')
     <div class="container mx-auto px-4 py-12">
-        <div class="flex items-center justify-between mb-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
             <div>
                 <h1 class="text-3xl font-bold mb-2">Gestión de Usuarios</h1>
-                <div class="flex space-x-4 text-sm">
+                <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
                     <span class="text-gray-600">Total: <strong>{{ $stats['total'] }}</strong></span>
                     <span class="text-gray-600">Admins: <strong>{{ $stats['admins'] }}</strong></span>
                     <span class="text-gray-600">Cocineros: <strong>{{ $stats['cooks'] }}</strong></span>
@@ -15,13 +15,40 @@
                     <span class="text-gray-600">Clientes: <strong>{{ $stats['customers'] }}</strong></span>
                 </div>
             </div>
+
+            <!-- Quick Filter Pills -->
+            <div class="flex flex-wrap gap-2 text-xs">
+                <a href="{{ route('admin.users.index') }}" 
+                   class="px-3 py-1.5 rounded-xl font-bold transition {{ !request('status') ? 'bg-purple-600 text-white shadow-sm' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                   Todos ({{ $stats['total'] }})
+                </a>
+                <a href="{{ route('admin.users.index', ['status' => 'pending']) }}" 
+                   class="px-3 py-1.5 rounded-xl font-bold transition flex items-center space-x-1 {{ request('status') === 'pending' ? 'bg-amber-500 text-white shadow-sm' : 'bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100' }}">
+                   <span>⏳ Pendientes</span>
+                   <span class="bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded-full text-[10px]">{{ $stats['pending'] }}</span>
+                </a>
+                <a href="{{ route('admin.users.index', ['status' => 'pending_cooks']) }}" 
+                   class="px-3 py-1.5 rounded-xl font-bold transition {{ request('status') === 'pending_cooks' ? 'bg-orange-600 text-white shadow-sm' : 'bg-orange-50 text-orange-700 border border-orange-200 hover:bg-orange-100' }}">
+                   👨‍🍳 Cocineros Pendientes ({{ $stats['pending_cooks'] }})
+                </a>
+                <a href="{{ route('admin.users.index', ['status' => 'pending_drivers']) }}" 
+                   class="px-3 py-1.5 rounded-xl font-bold transition {{ request('status') === 'pending_drivers' ? 'bg-blue-600 text-white shadow-sm' : 'bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100' }}">
+                   🛵 Repartidores Pendientes ({{ $stats['pending_drivers'] }})
+                </a>
+                @if($stats['suspended'] > 0)
+                    <a href="{{ route('admin.users.index', ['status' => 'suspended']) }}" 
+                       class="px-3 py-1.5 rounded-xl font-bold transition {{ request('status') === 'suspended' ? 'bg-red-600 text-white shadow-sm' : 'bg-red-50 text-red-700 border border-red-200 hover:bg-red-100' }}">
+                       ❌ Suspendidos ({{ $stats['suspended'] }})
+                    </a>
+                @endif
+            </div>
         </div>
 
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <!-- Search Filters -->
+            <!-- Search & Status Filters Form -->
             <div class="p-6 border-b border-gray-100 bg-gray-50">
-                <form action="{{ route('admin.users.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="col-span-2">
+                <form action="{{ route('admin.users.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <div class="md:col-span-2">
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
@@ -31,9 +58,22 @@
                             </div>
                             <input type="text" name="search" id="search" 
                                 value="{{ request('search') }}"
-                                placeholder="Nombre, email, dirección, localidad..."
+                                placeholder="Nombre, email, teléfono, dirección..."
                                 class="w-full pl-10 pr-4 py-2 rounded-xl border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50 transition shadow-sm">
                         </div>
+                    </div>
+
+                    <!-- Combo de Estado / Moderación -->
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Estado de Moderación</label>
+                        <select name="status" id="status" class="w-full px-3 py-2 rounded-xl border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50 transition shadow-sm font-semibold text-sm">
+                            <option value="">Todos los Estados</option>
+                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>⏳ Pendientes de Revisión ({{ $stats['pending'] }})</option>
+                            <option value="pending_cooks" {{ request('status') === 'pending_cooks' ? 'selected' : '' }}>👨‍🍳 Cocineros Pendientes ({{ $stats['pending_cooks'] }})</option>
+                            <option value="pending_drivers" {{ request('status') === 'pending_drivers' ? 'selected' : '' }}>🛵 Repartidores Pendientes ({{ $stats['pending_drivers'] }})</option>
+                            <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>✓ Activos</option>
+                            <option value="suspended" {{ request('status') === 'suspended' ? 'selected' : '' }}>❌ Suspendidos ({{ $stats['suspended'] }})</option>
+                        </select>
                     </div>
                     
                     <div>
@@ -46,10 +86,10 @@
                     <div>
                         <label for="submit">&nbsp;</label>
                         <div class="flex items-end space-x-2">
-                            <button type="submit" class="bg-blue-600 text-white px-2 py-2 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md">
-                                Buscar
+                            <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md">
+                                Filtrar
                             </button>
-                            @if(request()->has('search') || request()->has('date'))
+                            @if(request()->has('search') || request()->has('date') || request()->has('status'))
                                 <a href="{{ route('admin.users.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition" title="Limpiar filtros">
                                     ↺
                                 </a>

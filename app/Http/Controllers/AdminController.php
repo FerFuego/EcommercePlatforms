@@ -315,12 +315,46 @@ class AdminController extends Controller
             $query->whereDate('created_at', $request->date);
         }
 
-        // Filtro por rol (opcional, pero útil si se quiere agregar después)
+        // Filtro por rol
         if ($request->has('role') && $request->role) {
             $query->where('role', $request->role);
         }
 
+        // Filtro por estado (moderación / revisión)
+        if ($request->has('status') && $request->status) {
+            $status = $request->status;
+            if ($status === 'pending') {
+                $query->where(function ($q) {
+                    $q->where(function ($q2) {
+                        $q2->where('role', 'cook')
+                           ->whereHas('cook', fn($c) => $c->where('is_approved', false));
+                    })->orWhere(function ($q3) {
+                        $q3->where('role', 'delivery_driver')
+                           ->whereHas('deliveryDriver', fn($d) => $d->where('is_approved', false));
+                    });
+                });
+            } elseif ($status === 'pending_cooks') {
+                $query->where('role', 'cook')
+                      ->whereHas('cook', fn($c) => $c->where('is_approved', false));
+            } elseif ($status === 'pending_drivers') {
+                $query->where('role', 'delivery_driver')
+                      ->whereHas('deliveryDriver', fn($d) => $d->where('is_approved', false));
+            } elseif ($status === 'suspended') {
+                $query->where('is_suspended', true);
+            } elseif ($status === 'active') {
+                $query->where('is_suspended', false)
+                      ->where(function ($q) {
+                          $q->where(fn($q2) => $q2->where('role', 'cook')->whereHas('cook', fn($c) => $c->where('is_approved', true)))
+                            ->orWhere(fn($q3) => $q3->where('role', 'delivery_driver')->whereHas('deliveryDriver', fn($d) => $d->where('is_approved', true)))
+                            ->orWhereNotIn('role', ['cook', 'delivery_driver']);
+                      });
+            }
+        }
+
         $users = $query->latest()->paginate(20)->withQueryString();
+
+        $pendingCooksCount = Cook::where('is_approved', false)->count();
+        $pendingDriversCount = \App\Models\DeliveryDriver::where('is_approved', false)->count();
 
         $stats = [
             'total' => User::count(),
@@ -328,6 +362,10 @@ class AdminController extends Controller
             'cooks' => User::where('role', 'cook')->count(),
             'drivers' => User::where('role', 'delivery_driver')->count(),
             'customers' => User::where('role', 'customer')->count(),
+            'pending_cooks' => $pendingCooksCount,
+            'pending_drivers' => $pendingDriversCount,
+            'pending' => $pendingCooksCount + $pendingDriversCount,
+            'suspended' => User::where('is_suspended', true)->count(),
         ];
 
         return view('admin.users.index', compact('users', 'stats'));
