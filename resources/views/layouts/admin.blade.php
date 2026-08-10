@@ -332,7 +332,7 @@
                             </div>
 
                             <!-- List Content -->
-                            <div class="max-h-80 overflow-y-auto divide-y divide-gray-100">
+                            <div class="max-h-80 overflow-y-auto divide-y divide-gray-100 px-2">
                                 @if($navTotalPending === 0)
                                     <div class="p-6 text-center text-gray-500">
                                         <div class="text-3xl mb-2">🎉</div>
