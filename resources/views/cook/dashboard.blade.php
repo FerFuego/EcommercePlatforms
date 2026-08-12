@@ -370,6 +370,25 @@
                     spinner.classList.add('hidden');
                 });
             }
+
+            window.addEventListener('DOMContentLoaded', function () {
+                const currentPending = {{ $pendingOrders }};
+                if (window.checkAndPlayNewOrderSound) {
+                    window.checkAndPlayNewOrderSound(currentPending, 'cook_pending_orders_count');
+                }
+
+                if (window.Echo) {
+                    window.Echo.private('cook.{{ auth()->user()->id }}')
+                        .listen('OrderStatusUpdated', (e) => {
+                            if (window.playOrderNotificationSound) {
+                                window.playOrderNotificationSound();
+                            }
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 400);
+                        });
+                }
+            });
         </script>
     @endpush
 

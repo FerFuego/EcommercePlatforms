@@ -706,6 +706,52 @@
             }
         });
     </script>
+
+    <!-- Global Sound Notification Helper for PWA -->
+    <script>
+        window.playOrderNotificationSound = function() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const audioCtx = new AudioCtx();
+                
+                function playTone(freq, type, duration, delay) {
+                    setTimeout(() => {
+                        if (audioCtx.state === 'suspended') {
+                            audioCtx.resume();
+                        }
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = type;
+                        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                        
+                        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                        
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + duration);
+                    }, delay);
+                }
+
+                // Reproduce tono doble de notificación (Chime)
+                playTone(587.33, 'sine', 0.25, 0);   // D5
+                playTone(880.00, 'sine', 0.50, 180); // A5
+            } catch (e) {
+                console.warn('AudioContext error:', e);
+            }
+        };
+
+        window.checkAndPlayNewOrderSound = function(currentPendingCount, storageKey = 'last_pending_orders_count') {
+            const previousCount = parseInt(localStorage.getItem(storageKey) || '-1', 10);
+            if (previousCount >= 0 && currentPendingCount > previousCount) {
+                window.playOrderNotificationSound();
+            }
+            localStorage.setItem(storageKey, currentPendingCount.toString());
+        };
+    </script>
 </body>
 
 </html>

@@ -297,12 +297,22 @@
     @push('scripts')
         <script>
             window.addEventListener('DOMContentLoaded', function () {
+                // Sonido si se detectan nuevos pedidos al recargar o refrescar PWA
+                const currentPending = {{ $orders->where('status', 'awaiting_cook_acceptance')->count() }};
+                if (window.checkAndPlayNewOrderSound) {
+                    window.checkAndPlayNewOrderSound(currentPending, 'cook_pending_orders_count');
+                }
+
                 if (window.Echo) {
                     window.Echo.private('cook.{{ auth()->user()->id }}')
                         .listen('OrderStatusUpdated', (e) => {
                             console.log('Order status updated:', e);
-                            // Refresh page to show new orders or status changes
-                            window.location.reload();
+                            if (window.playOrderNotificationSound) {
+                                window.playOrderNotificationSound();
+                            }
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 400);
                         });
                 }
             });
