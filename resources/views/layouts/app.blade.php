@@ -744,10 +744,50 @@
             }
         };
 
+        window.triggerPushNotification = function(title, body, url = '/cook/orders') {
+            if (!('Notification' in window)) return;
+
+            const sendPush = () => {
+                if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+                    navigator.serviceWorker.ready.then(registration => {
+                        registration.showNotification(title, {
+                            body: body,
+                            icon: '/icon-192x192.png',
+                            badge: '/icon-192x192.png',
+                            tag: 'order-notification-' + Date.now(),
+                            data: { url: url },
+                            vibrate: [200, 100, 200]
+                        });
+                    });
+                } else {
+                    new Notification(title, {
+                        body: body,
+                        icon: '/icon-192x192.png',
+                        data: { url: url }
+                    });
+                }
+            };
+
+            if (Notification.permission === 'granted') {
+                sendPush();
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        sendPush();
+                    }
+                });
+            }
+        };
+
         window.checkAndPlayNewOrderSound = function(currentPendingCount, storageKey = 'last_pending_orders_count') {
             const previousCount = parseInt(localStorage.getItem(storageKey) || '-1', 10);
             if (previousCount >= 0 && currentPendingCount > previousCount) {
                 window.playOrderNotificationSound();
+                window.triggerPushNotification(
+                    '🍳 ¡Nuevo Pedido Recibido!',
+                    'Tienes un nuevo pedido pendiente de confirmación en tu cocina.',
+                    '/cook/orders'
+                );
             }
             localStorage.setItem(storageKey, currentPendingCount.toString());
         };

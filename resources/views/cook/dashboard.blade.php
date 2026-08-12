@@ -383,6 +383,13 @@
                             if (window.playOrderNotificationSound) {
                                 window.playOrderNotificationSound();
                             }
+                            if (window.triggerPushNotification) {
+                                window.triggerPushNotification(
+                                    '🍳 Actualización de Pedido',
+                                    'Se ha actualizado el estado de un pedido.',
+                                    '/cook/orders'
+                                );
+                            }
                             setTimeout(() => {
                                 window.location.reload();
                             }, 400);
