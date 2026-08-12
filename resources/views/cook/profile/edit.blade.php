@@ -5,7 +5,16 @@
 @section('content')
     <div class="container mx-auto px-4 py-12">
         <div class="flex items-center justify-between mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Editar Perfil</h1>
+            <div>
+                <h1 class="text-4xl font-bold mb-2">
+                    <span
+                        class="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
+                        Editar Perfil
+                    </span>
+                </h1>
+                <p class="text-gray-600">Actualiza la información y ubicación de tu cocina</p>
+            </div>
+        </div>
         @if(auth()->check() && auth()->user()->last_rejection_reason)
             <div class="bg-red-50 border-2 border-red-300 text-red-900 p-6 mb-8 rounded-2xl shadow-lg">
                 <div class="flex items-start gap-4">
