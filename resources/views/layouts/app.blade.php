@@ -90,6 +90,14 @@
 
                     @auth
                         @if(auth()->user()->isCook())
+                            <a href="{{ route('home') }}"
+                                class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
+                                Home
+                            </a>
+                            <a href="{{ route('marketplace.catalog') }}"
+                                class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
+                                Explorar
+                            </a>
                             <a href="{{ route('cook.dashboard') }}"
                                 class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
                                 Mi Cocina
@@ -387,7 +395,8 @@
                     <p class="text-gray-300">info@cocinarte.app</p>
                 </div>
             </div>
-            <div class="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between text-gray-400">
+            <div
+                class="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between text-gray-400">
                 <p>&copy; {{ date('Y') }} Cocinarte. Todos los derechos reservados.</p>
                 <div class="mt-4 md:mt-0 space-x-4">
                     <a href="{{ route('privacy') }}" class="hover:text-white transition">Políticas de Privacidad</a>
@@ -687,11 +696,11 @@
     <!-- PWA Pull to Refresh -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pulltorefreshjs/0.1.22/index.umd.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Solo activar el "pull to refresh" si estamos en un dispositivo móvil o en modo PWA (standalone)
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            
+
             if (isStandalone || isMobile) {
                 PullToRefresh.init({
                     mainElement: 'body',
@@ -699,7 +708,7 @@
                     instructionsPullToRefresh: 'Desliza hacia abajo para actualizar',
                     instructionsReleaseToRefresh: 'Suelta para actualizar',
                     instructionsRefreshing: 'Actualizando...',
-                    onRefresh: function() {
+                    onRefresh: function () {
                         window.location.reload();
                     }
                 });
@@ -709,12 +718,12 @@
 
     <!-- Global Sound Notification Helper for PWA -->
     <script>
-        window.playOrderNotificationSound = function() {
+        window.playOrderNotificationSound = function () {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 if (!AudioCtx) return;
                 const audioCtx = new AudioCtx();
-                
+
                 function playTone(freq, type, duration, delay) {
                     setTimeout(() => {
                         if (audioCtx.state === 'suspended') {
@@ -724,13 +733,13 @@
                         const gain = audioCtx.createGain();
                         osc.type = type;
                         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                        
+
                         gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
                         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-                        
+
                         osc.connect(gain);
                         gain.connect(audioCtx.destination);
-                        
+
                         osc.start();
                         osc.stop(audioCtx.currentTime + duration);
                     }, delay);
@@ -744,7 +753,7 @@
             }
         };
 
-        window.triggerPushNotification = function(title, body, url = '/cook/orders') {
+        window.triggerPushNotification = function (title, body, url = '/cook/orders') {
             if (!('Notification' in window)) return;
 
             const sendPush = () => {
@@ -779,7 +788,7 @@
             }
         };
 
-        window.checkAndPlayNewOrderSound = function(currentPendingCount, storageKey = 'last_pending_orders_count') {
+        window.checkAndPlayNewOrderSound = function (currentPendingCount, storageKey = 'last_pending_orders_count') {
             const previousCount = parseInt(localStorage.getItem(storageKey) || '-1', 10);
             if (previousCount >= 0 && currentPendingCount > previousCount) {
                 window.playOrderNotificationSound();
