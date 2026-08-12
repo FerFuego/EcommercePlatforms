@@ -195,15 +195,17 @@
 
                 // Add cooks to map (Using mapCooks variable which contains ALL matching cooks, not just paginated ones)
                 @foreach($mapCooks as $cook)
+                    @if(!is_null($cook->location_lat) && !is_null($cook->location_lng))
                     addCookToMap({
                         id: {{ $cook->id }},
-                        name: '{{ $cook->user->name }}',
-                        lat: {{ $cook->location_lat }},
-                        lng: {{ $cook->location_lng }},
-                        rating: {{ $cook->rating_avg }},
-                        radius: {{ $cook->coverage_radius_km }},
+                        name: '{{ addslashes($cook->user->name ?? 'Cocinero') }}',
+                        lat: {{ (float)$cook->location_lat }},
+                        lng: {{ (float)$cook->location_lng }},
+                        rating: {{ (float)($cook->rating_avg ?? 0) }},
+                        radius: {{ (float)($cook->coverage_radius_km ?? 10) }},
                         photo_path: '{{ $cook->user->profile_photo_path }}'
                     });
+                    @endif
                 @endforeach
                         // Intentar tomar ubicación real del usuario al cargar
                             if (navigator.geolocation) {
@@ -236,6 +238,9 @@
 
             // Add cook marker to map
             function addCookToMap(cook) {
+                if (!cook || !cook.lat || !cook.lng || isNaN(cook.lat) || isNaN(cook.lng)) {
+                    return;
+                }
 
                 // filtrar por radio (evito cocineros, fuera del radio)
                 const radiusKm = parseFloat(document.getElementById("radiusSelect").value);
@@ -391,28 +396,39 @@
                     const cookLat = parseFloat(card.dataset.lat);
                     const cookLng = parseFloat(card.dataset.lng);
 
+                    if (isNaN(cookLat) || isNaN(cookLng)) {
+                        return;
+                    }
+
                     const distance = calculateDistance(userLat, userLng, cookLat, cookLng);
+                    if (distance === null || isNaN(distance)) return;
+
                     const deliveryFee = calculateDeliveryFee(distance);
 
                     const distanceBadge = card.querySelector('.distance-badge');
                     const distanceValue = card.querySelector('.distance-value');
                     const deliveryFeeBadge = card.querySelector('.delivery-fee-badge');
 
-                    distanceBadge.classList.remove('hidden');
-                    distanceValue.textContent = distance.toFixed(1);
+                    if (distanceBadge && distanceValue && deliveryFeeBadge) {
+                        distanceBadge.classList.remove('hidden');
+                        distanceValue.textContent = distance.toFixed(1);
 
-                    if (deliveryFee === 0) {
-                        deliveryFeeBadge.textContent = 'Envío Gratis';
-                        deliveryFeeBadge.className = 'delivery-fee-badge text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700';
-                    } else {
-                        deliveryFeeBadge.textContent = `Envío $${deliveryFee}`;
-                        deliveryFeeBadge.className = 'delivery-fee-badge text-xs font-bold px-3 py-1 rounded-full bg-orange-100 text-orange-700';
+                        if (deliveryFee === 0) {
+                            deliveryFeeBadge.textContent = 'Envío Gratis';
+                            deliveryFeeBadge.className = 'delivery-fee-badge text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700';
+                        } else {
+                            deliveryFeeBadge.textContent = `Envío $${deliveryFee}`;
+                            deliveryFeeBadge.className = 'delivery-fee-badge text-xs font-bold px-3 py-1 rounded-full bg-orange-100 text-orange-700';
+                        }
                     }
                 });
             }
 
             // Calculate distance using Leaflet's accurate method
             function calculateDistance(lat1, lon1, lat2, lon2) {
+                if (!lat1 || !lon1 || !lat2 || !lon2 || isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) {
+                    return null;
+                }
                 return map.distance([lat1, lon1], [lat2, lon2]) / 1000;
             }
 
@@ -575,11 +591,14 @@
                 const radiusKm = parseFloat(document.getElementById("radiusSelect").value);
 
                 cooks.forEach(cook => {
+                    if (!cook || !cook.location_lat || !cook.location_lng || isNaN(parseFloat(cook.location_lat)) || isNaN(parseFloat(cook.location_lng))) {
+                        return;
+                    }
 
                     if (userLocation) {
-                        const dist = calculateDistance(userLocation.lat, userLocation.lng, cook.location_lat, cook.location_lng);
+                        const dist = calculateDistance(userLocation.lat, userLocation.lng, parseFloat(cook.location_lat), parseFloat(cook.location_lng));
 
-                        if (dist > radiusKm) return; // SALTAR markers lejos
+                        if (dist !== null && dist > radiusKm) return; // SALTAR markers lejos
                     }
 
                     addCookToMap({

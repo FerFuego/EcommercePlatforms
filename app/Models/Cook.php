@@ -47,6 +47,25 @@ class Cook extends Model
     ];
 
     /**
+     * Bootstrap model events.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (Cook $cook) {
+            if ((is_null($cook->location_lat) || is_null($cook->location_lng) || ($cook->location_lat == 0 && $cook->location_lng == 0))) {
+                $address = $cook->user->address ?? null;
+                if (!empty($address)) {
+                    $coords = \App\Services\GeocodingService::geocodeAddress($address);
+                    if ($coords) {
+                        $cook->location_lat = $coords['lat'];
+                        $cook->location_lng = $coords['lng'];
+                    }
+                }
+            }
+        });
+    }
+
+    /**
      * Relación con User
      */
     public function user(): BelongsTo

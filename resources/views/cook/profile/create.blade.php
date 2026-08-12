@@ -365,8 +365,50 @@
                 }
             }
 
+            let geocodeTimeout;
+
+            function geocodeAddressInput(addressText) {
+                if (!addressText || addressText.trim().length < 4) return Promise.resolve(false);
+                return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressText)}&limit=1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.length > 0) {
+                            const lat = parseFloat(data[0].lat);
+                            const lng = parseFloat(data[0].lon);
+                            document.getElementById('location_lat').value = lat.toFixed(4);
+                            document.getElementById('location_lng').value = lng.toFixed(4);
+                            if (map && marker) {
+                                marker.setLatLng([lat, lng]);
+                                map.setView([lat, lng], 15);
+                            }
+                            return true;
+                        }
+                        return false;
+                    })
+                    .catch(err => {
+                        console.error('Error in forward geocoding:', err);
+                        return false;
+                    });
+            }
+
             // Inicializar mapa al cargar el DOM
-            document.addEventListener('DOMContentLoaded', initMap);
+            document.addEventListener('DOMContentLoaded', function() {
+                initMap();
+
+                const addrInput = document.getElementById('address');
+                if (addrInput) {
+                    addrInput.addEventListener('change', function() {
+                        geocodeAddressInput(this.value);
+                    });
+                    addrInput.addEventListener('input', function() {
+                        clearTimeout(geocodeTimeout);
+                        const val = this.value;
+                        geocodeTimeout = setTimeout(() => {
+                            geocodeAddressInput(val);
+                        }, 1000);
+                    });
+                }
+            });
 
             // --- Previsualización DNI ---
             function previewDNI(input) {
@@ -524,6 +566,16 @@
                     return;
                 }
                 
+                // Si latitud o longitud están vacías, geolocalizar la dirección ingresada antes de enviar
+                const latVal = document.getElementById('location_lat').value;
+                const lngVal = document.getElementById('location_lng').value;
+                if (!latVal || !lngVal || parseFloat(latVal) === 0 || parseFloat(lngVal) === 0) {
+                    const addrText = document.getElementById('address').value;
+                    if (addrText) {
+                        await geocodeAddressInput(addrText);
+                    }
+                }
+
                 // Mostrar overlay
                 overlay.classList.remove('hidden');
                 overlay.classList.add('flex');

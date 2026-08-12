@@ -81,14 +81,24 @@ class CookDashboardController extends Controller
         // Actualizar dirección en el usuario
         auth()->user()->update(['address' => $request->address]);
 
+        $lat = $request->location_lat;
+        $lng = $request->location_lng;
+        if ((is_null($lat) || is_null($lng) || ($lat == 0 && $lng == 0)) && !empty($request->address)) {
+            $coords = \App\Services\GeocodingService::geocodeAddress($request->address);
+            if ($coords) {
+                $lat = $coords['lat'];
+                $lng = $coords['lng'];
+            }
+        }
+
         // Crear perfil de cocinero
         $cook = Cook::create([
             'user_id' => auth()->id(),
             'bio' => $request->bio,
             'dni_photo' => $dniPath,
             'kitchen_photos' => $kitchenPhotos,
-            'location_lat' => $request->location_lat,
-            'location_lng' => $request->location_lng,
+            'location_lat' => $lat,
+            'location_lng' => $lng,
             'coverage_radius_km' => $request->coverage_radius_km,
             'payout_method' => $request->payment_details ? 'CBU/Alias' : null,
             'payout_details' => $request->payment_details ? ['identifier' => $request->payment_details] : null,
@@ -164,11 +174,23 @@ class CookDashboardController extends Controller
             'max_scheduled_portions_per_day' => 'nullable|integer|min:1',
         ]);
 
+        $lat = $request->location_lat;
+        $lng = $request->location_lng;
+        $addressChanged = auth()->user()->address !== $request->address;
+
+        if ((is_null($lat) || is_null($lng) || ($lat == 0 && $lng == 0) || ($addressChanged && $request->filled('address')))) {
+            $coords = \App\Services\GeocodingService::geocodeAddress($request->address);
+            if ($coords) {
+                $lat = $coords['lat'];
+                $lng = $coords['lng'];
+            }
+        }
+
         $data = [
             'bio' => $request->bio,
             'coverage_radius_km' => $request->coverage_radius_km,
-            'location_lat' => $request->location_lat,
-            'location_lng' => $request->location_lng,
+            'location_lat' => $lat ?? $cook->location_lat,
+            'location_lng' => $lng ?? $cook->location_lng,
             'active' => $request->boolean('active'),
             'opening_time' => $request->opening_time,
             'closing_time' => $request->closing_time,
