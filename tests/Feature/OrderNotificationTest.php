@@ -132,7 +132,7 @@ class OrderNotificationTest extends TestCase
 
         $this->assertIsArray($whatsappMessage);
         $this->assertEquals('template', $whatsappMessage['type']);
-        $this->assertContains($order->id, $whatsappMessage['components']);
+        $this->assertContains((string) $order->id, $whatsappMessage['components']);
         $this->assertContains('En Preparación', $whatsappMessage['components']);
 
         $this->assertEquals('Actualización de Pedido #' . $order->id, $pushData['title']);
