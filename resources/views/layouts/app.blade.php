@@ -46,6 +46,11 @@
 
     <!-- Google reCAPTCHA v3 -->
     @if(config('services.recaptcha.site_key') && \App\Models\Setting::get('recaptcha_enabled', '0') == '1')
+        <style>
+            .grecaptcha-badge {
+                visibility: hidden !important;
+            }
+        </style>
         <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
         <script>
             window.getRecaptchaToken = function (action = 'homepage') {
@@ -397,7 +402,7 @@
             </div>
             <div
                 class="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between text-gray-400">
-                <p>&copy; {{ date('Y') }} Cocinarte. Todos los derechos reservados.</p>
+                <p>&copy; {{ date('Y') }} Cocinarte. Todos los derechos reservados. <span class="text-xs text-gray-500 block sm:inline mt-1 sm:mt-0">Protegido por reCAPTCHA (<a href="https://policies.google.com/privacy" target="_blank" class="underline hover:text-gray-300">Privacidad</a> / <a href="https://policies.google.com/terms" target="_blank" class="underline hover:text-gray-300">Términos</a> de Google)</span></p>
                 <div class="mt-4 md:mt-0 space-x-4">
                     <a href="{{ route('privacy') }}" class="hover:text-white transition">Políticas de Privacidad</a>
                     <span class="text-gray-600">|</span>
