@@ -427,9 +427,9 @@
     @if(!request()->routeIs('home'))
         <!-- Floating Back Button for Mobile -->
         <button id="floating-back-btn" type="button"
-            class="md:hidden fixed bottom-8 left-6 bg-white/90 hover:bg-white text-gray-800 p-3.5 rounded-full shadow-2xl border border-gray-200 backdrop-blur-md active:scale-95 transition-all z-50 flex items-center justify-center text-gray-700 hover:text-orange-600"
+            class="md:hidden fixed bottom-8 left-2 bg-white/90 hover:bg-white text-gray-800 p-3.5 rounded-full shadow-2xl border border-gray-200 backdrop-blur-md active:scale-95 transition-all z-50 flex items-center justify-center text-gray-700 hover:text-orange-600 p-3"
             aria-label="Volver atrás">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
         </button>
