@@ -402,7 +402,12 @@
             </div>
             <div
                 class="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between text-gray-400">
-                <p>&copy; {{ date('Y') }} Cocinarte. Todos los derechos reservados. <span class="text-xs text-gray-500 block sm:inline mt-1 sm:mt-0">Protegido por reCAPTCHA (<a href="https://policies.google.com/privacy" target="_blank" class="underline hover:text-gray-300">Privacidad</a> / <a href="https://policies.google.com/terms" target="_blank" class="underline hover:text-gray-300">Términos</a> de Google)</span></p>
+                <p>&copy; {{ date('Y') }} Cocinarte. Todos los derechos reservados. <span
+                        class="text-xs text-gray-500 block sm:inline mt-1 sm:mt-0">Protegido por reCAPTCHA (<a
+                            href="https://policies.google.com/privacy" target="_blank"
+                            class="underline hover:text-gray-300">Privacidad</a> / <a
+                            href="https://policies.google.com/terms" target="_blank"
+                            class="underline hover:text-gray-300">Términos</a> de Google)</span></p>
                 <div class="mt-4 md:mt-0 space-x-4">
                     <a href="{{ route('privacy') }}" class="hover:text-white transition">Políticas de Privacidad</a>
                     <span class="text-gray-600">|</span>
@@ -416,7 +421,7 @@
 
     <!-- Floating Cart Button -->
     <a href="{{ route('cart.index') }}" id="floating-cart-btn"
-        class="fixed bottom-8 right-8 bg-gradient-to-r from-orange-500 to-pink-600 text-white p-3 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 {{ count(session('cart', [])) > 0 ? 'flex' : 'hidden' }} items-center justify-center">
+        class="fixed bottom-8 right-2 bg-gradient-to-r from-orange-500 to-pink-600 text-white p-3 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 {{ count(session('cart', [])) > 0 ? 'flex' : 'hidden' }} items-center justify-center">
         <div class="relative">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
