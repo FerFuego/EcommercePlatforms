@@ -471,14 +471,21 @@
                     fetch(form.action, {
                         method: 'POST',
                         headers: {
+                            'Accept': 'application/json',
                             'X-Requested-With': 'XMLHttpRequest',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                         },
                         body: formData
                     })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
+                        .then(async response => {
+                            let data = null;
+                            try {
+                                data = await response.json();
+                            } catch (err) {
+                                console.warn('Non-JSON response received:', err);
+                            }
+
+                            if (response.ok && data && data.success) {
                                 // Update floating button
                                 floatingCount.textContent = data.cart_count;
                                 floatingBtn.classList.remove('hidden');
@@ -491,12 +498,13 @@
                                 // Show toast
                                 window.showToast(data.message || 'Producto agregado correctamente', 'success');
                             } else {
-                                window.showToast(data.message || 'Error al agregar producto', 'error');
+                                const errorMsg = (data && data.message) ? data.message : 'No se pudo agregar el producto al carrito.';
+                                window.showToast(errorMsg, 'error');
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            window.showToast('Error de conexión', 'error');
+                            window.showToast('No se pudo procesar la solicitud. Por favor intenta de nuevo.', 'error');
                         })
                         .finally(() => {
                             submitBtn.disabled = false;

@@ -218,6 +218,37 @@ class Cook extends Model
     }
 
     /**
+     * Evalúa dinámicamente si el cocinero superó los límites de su plan actual.
+     * Sincroniza automáticamente la columna is_selling_blocked en la base de datos.
+     */
+    public function isSellingBlocked(): bool
+    {
+        $plan = $this->plan();
+
+        if (!$plan) {
+            return (bool) $this->is_selling_blocked;
+        }
+
+        $exceedsSales = $plan->monthly_sales_limit !== null
+            && (float) $plan->monthly_sales_limit > 0
+            && (float) $this->monthly_sales_accumulated > (float) $plan->monthly_sales_limit;
+
+        $exceedsOrders = $plan->monthly_orders_limit !== null
+            && (int) $plan->monthly_orders_limit > 0
+            && (int) $this->monthly_orders_accumulated > (int) $plan->monthly_orders_limit;
+
+        $shouldBlock = $exceedsSales || $exceedsOrders;
+
+        // Si el estado en BD difiere del estado real calculado, corregirlo en la BD
+        if ((bool) $this->is_selling_blocked !== $shouldBlock) {
+            $this->is_selling_blocked = $shouldBlock;
+            $this->save();
+        }
+
+        return $shouldBlock;
+    }
+
+    /**
      * Incrementa las métricas mensuales y verifica si supera el límite de su plan actual.
      */
     public function incrementMetricsAndCheckLimits(float $amount): void
@@ -225,20 +256,7 @@ class Cook extends Model
         $this->monthly_sales_accumulated = number_format((float) $this->monthly_sales_accumulated + $amount, 2, '.', '');
         $this->monthly_orders_accumulated = (int) $this->monthly_orders_accumulated + 1;
 
-        $plan = $this->plan();
-
-        if ($plan) {
-            $exceedsSales = $plan->monthly_sales_limit !== null && $this->monthly_sales_accumulated > $plan->monthly_sales_limit;
-            $exceedsOrders = $plan->monthly_orders_limit !== null && $this->monthly_orders_accumulated > $plan->monthly_orders_limit;
-
-            if ($exceedsSales || $exceedsOrders) {
-                // Not using active subscription status logic yet, just basic blocking
-                // If they have a "fixed" premium plan, we can bypass this or adjust logic.
-                // For MVP, if limit exceeded, block.
-                $this->is_selling_blocked = true;
-            }
-        }
-
+        $this->isSellingBlocked();
         $this->save();
     }
 }

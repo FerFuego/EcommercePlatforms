@@ -24,25 +24,28 @@ class OrderController extends Controller
     /**
      * Agregar al carrito
      */
+    /**
+     * Agregar al carrito
+     */
     public function addToCart(Request $request, $dishId)
     {
         $dish = Dish::with(['cook', 'optionGroups.options'])->findOrFail($dishId);
 
         if (!$dish->isAvailableToday() || $dish->available_stock < 1) {
-            return back()->with('error', 'Este plato no está disponible');
+            return $this->addToCartError($request, 'Este plato no está disponible en este momento');
         }
 
         $cart = session()->get('cart', []);
 
         // Validar que todos los items sean del mismo cocinero
         if (!empty($cart) && $cart[0]['cook_id'] !== $dish->cook_id) {
-            return back()->with('error', 'Solo puedes ordenar platos de un mismo cocinero a la vez');
+            return $this->addToCartError($request, 'Solo puedes ordenar platos de un mismo cocinero a la vez');
         }
 
         $quantity = $request->input('quantity', 1);
 
         if ($quantity > $dish->available_stock) {
-            return back()->with('error', 'Stock insuficiente');
+            return $this->addToCartError($request, "Stock insuficiente (disponible: {$dish->available_stock})");
         }
 
         // Procesar opciones seleccionadas
@@ -85,7 +88,7 @@ class OrderController extends Controller
 
         session()->put('cart', $cart);
 
-        if ($request->ajax()) {
+        if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
                 'success' => true,
                 'message' => 'Plato agregado al carrito',
@@ -96,16 +99,32 @@ class OrderController extends Controller
         return back()->with('success', 'Plato agregado al carrito');
     }
 
-    /**
-     * Remover del carrito
-     */
-    public function removeFromCart($index)
+    private function addToCartError(Request $request, string $message)
     {
-        $cart = session()->get('cart', []);
-        unset($cart[$index]);
-        session()->put('cart', array_values($cart));
+        if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+            return response()->json([
+                'success' => false,
+                'message' => $message
+            ], 400);
+        }
+        return back()->with('error', $message);
+    }
 
-        return back()->with('success', 'Plato eliminado del carrito');
+    private function checkCookCanReceiveOrders(Cook $cook): ?string
+    {
+        if ($cook->user && $cook->user->is_suspended) {
+            return 'El cocinero se encuentra suspendido.';
+        }
+        if (!$cook->is_approved) {
+            return 'La cocina aún no ha sido aprobada para recibir pedidos.';
+        }
+        if (!$cook->active) {
+            return 'La cocina se encuentra cerrada en este momento.';
+        }
+        if ($cook->isSellingBlocked()) {
+            return 'El cocinero está temporalmente fuera de servicio (alcanzó el límite de su plan).';
+        }
+        return null;
     }
 
     /**
@@ -121,6 +140,10 @@ class OrderController extends Controller
 
         $cookId = $cart[0]['cook_id'];
         $cook = Cook::with('user')->findOrFail($cookId);
+
+        if ($error = $this->checkCookCanReceiveOrders($cook)) {
+            return redirect()->route('marketplace.catalog')->with('error', $error);
+        }
 
         $subtotal = array_reduce($cart, function ($carry, $item) {
             return $carry + ($item['price'] * $item['quantity']);
@@ -158,7 +181,11 @@ class OrderController extends Controller
         }
 
         $cookId = $cart[0]['cook_id'];
-        $cook = Cook::findOrFail($cookId);
+        $cook = Cook::with('user')->findOrFail($cookId);
+
+        if ($error = $this->checkCookCanReceiveOrders($cook)) {
+            return back()->with('error', $error)->withInput();
+        }
 
         // Validar horario si es programado
         if ($request->schedule_type === 'scheduled') {
