@@ -99,6 +99,20 @@ class OrderController extends Controller
         return back()->with('success', 'Plato agregado al carrito');
     }
 
+    /**
+     * Remover del carrito
+     */
+    public function removeFromCart($index)
+    {
+        $cart = session()->get('cart', []);
+        if (isset($cart[$index])) {
+            unset($cart[$index]);
+            session()->put('cart', array_values($cart));
+        }
+
+        return back()->with('success', 'Plato eliminado del carrito');
+    }
+
     private function addToCartError(Request $request, string $message)
     {
         if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
