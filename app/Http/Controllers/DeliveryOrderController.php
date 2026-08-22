@@ -122,6 +122,18 @@ class DeliveryOrderController extends Controller
             \Illuminate\Support\Facades\Log::error("Error broadcasting OrderStatusUpdated for order #{$order->id}: " . $e->getMessage());
         }
 
+        try {
+            $notification = new \App\Notifications\OrderDeliveryStatusNotification($order, 'assigned');
+            if ($order->customer) {
+                $order->customer->notify($notification);
+            }
+            if ($order->cook && $order->cook->user) {
+                $order->cook->user->notify($notification);
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error notifying delivery status for order #{$order->id}: " . $e->getMessage());
+        }
+
         return redirect()->route('delivery-driver.orders.index')
             ->with('success', 'Pedido aceptado exitosamente. Dirígete al punto de retiro.');
     }
@@ -149,7 +161,6 @@ class DeliveryOrderController extends Controller
         ]);
 
         // El pedido vuelve a estar disponible para otros repartidores
-        // (opcional: podrías eliminar la asignación en lugar de marcarla como rejected)
 
         return redirect()->route('delivery-driver.orders.index')
             ->with('success', 'Pedido rechazado.');
@@ -211,6 +222,19 @@ class DeliveryOrderController extends Controller
             }
 
             $delivery->save();
+
+            // Notificar cambios de entrega por WhatsApp al cliente y al cocinero
+            try {
+                $notification = new \App\Notifications\OrderDeliveryStatusNotification($delivery->order, $validated['status']);
+                if ($delivery->order->customer) {
+                    $delivery->order->customer->notify($notification);
+                }
+                if ($delivery->order->cook && $delivery->order->cook->user) {
+                    $delivery->order->cook->user->notify($notification);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error("Error sending delivery status notification for delivery #{$id}: " . $e->getMessage());
+            }
 
             return back()->with('success', 'Estado actualizado exitosamente.');
         } catch (\Throwable $e) {
