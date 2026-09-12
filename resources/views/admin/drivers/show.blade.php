@@ -61,7 +61,7 @@
                 <div class="bg-white rounded-2xl shadow-xl p-6">
                     <h3 class="text-xl font-bold mb-4">Documento de Identidad</h3>
                     @if($driver->dni_photo)
-                        <img src="{{ asset('uploads/' . $driver->dni_photo) }}" alt="DNI"
+                        <img src="{{ route('admin.documents.dni', ['type' => 'driver', 'id' => $driver->id]) }}" alt="DNI"
                             class="w-full max-w-md rounded-lg shadow-lg">
                     @else
                         <p class="text-gray-600">No disponible</p>

@@ -22,9 +22,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Carbon::setLocale('es');
 
-        if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
-            $settings = \App\Models\Setting::all()->pluck('value', 'key');
-            \Illuminate\Support\Facades\View::share('globalSettings', $settings);
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+                $settings = \App\Models\Setting::all()->pluck('value', 'key');
+                \Illuminate\Support\Facades\View::share('globalSettings', $settings);
+            }
+        } catch (\Throwable $e) {
+            // Ignorar fallos de conexión a DB durante compilación de composer/artisan CLI
         }
 
         \Illuminate\Support\Facades\Event::listen(

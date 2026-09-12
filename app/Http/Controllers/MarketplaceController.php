@@ -27,9 +27,9 @@ class MarketplaceController extends Controller
      */
     public function catalog(Request $request)
     {
-        $lat = $request->get('lat');
-        $lng = $request->get('lng');
-        $radius = $request->get('radius', 1); // Default 1km
+        $lat = is_numeric($request->get('lat')) ? (float) $request->get('lat') : null;
+        $lng = is_numeric($request->get('lng')) ? (float) $request->get('lng') : null;
+        $radius = is_numeric($request->get('radius')) ? (float) $request->get('radius') : 1.0;
         $diet = $request->get('diet');
         $maxPrice = $request->get('max_price');
         $search = $request->get('search');
@@ -198,13 +198,13 @@ class MarketplaceController extends Controller
      */
     public function nearbyCooksApi(Request $request)
     {
-        $lat = $request->input('lat');
-        $lng = $request->input('lng');
-        $radius = $request->input('radius', 10);
+        $lat = is_numeric($request->input('lat')) ? (float) $request->input('lat') : null;
+        $lng = is_numeric($request->input('lng')) ? (float) $request->input('lng') : null;
+        $radius = is_numeric($request->input('radius')) ? (float) $request->input('radius') : 10.0;
         $search = $request->input('search');
 
-        if (!$lat || !$lng) {
-            return response()->json(['error' => 'Lat/Lng required'], 400);
+        if ($lat === null || $lng === null) {
+            return response()->json(['error' => 'Lat/Lng required and must be numeric'], 400);
         }
 
         $query = Cook::nearby($lat, $lng, $radius)
