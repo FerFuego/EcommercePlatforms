@@ -46,10 +46,15 @@ return [
     ],
 
     'whatsapp' => [
+        'driver' => env('WHATSAPP_DRIVER', 'meta'),
         'token' => env('WHATSAPP_API_TOKEN'),
         'phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'),
         'api_version' => env('WHATSAPP_API_VERSION', 'v22.0'),
         'verify_token' => env('WHATSAPP_VERIFY_TOKEN', 'cocinarte_wh_verify'),
+        'openwa' => [
+            'url' => env('OPENWA_BASE_URL', 'http://localhost:3000'),
+            'api_key' => env('OPENWA_API_KEY', ''),
+        ],
     ],
 
 ];

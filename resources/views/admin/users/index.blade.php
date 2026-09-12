@@ -372,7 +372,7 @@
                             <div class="bg-gray-50 p-5 rounded-xl border">
                                 <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🆔 Documento de Identidad</h4>
                                 <div class="rounded-lg overflow-hidden border shadow-sm">
-                                    <img src="${storageUrl(details.dni_photo)}" class="w-full h-auto object-contain hover:scale-105 transition duration-300" alt="Foto DNI">
+                                    <img src="/admin/documents/dni/cook/${details.id}" class="w-full h-auto object-contain hover:scale-105 transition duration-300" alt="Foto DNI">
                                 </div>
                             </div>
                         `;
@@ -459,7 +459,7 @@
                             <div class="bg-gray-50 p-5 rounded-xl border">
                                 <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">🆔 Foto DNI</h4>
                                 <div class="rounded-lg overflow-hidden border shadow-sm">
-                                    <img src="${storageUrl(details.dni_photo)}" class="w-full h-auto object-contain" alt="Foto DNI">
+                                    <img src="/admin/documents/dni/driver/${details.id}" class="w-full h-auto object-contain" alt="Foto DNI">
                                 </div>
                             </div>
                         `;

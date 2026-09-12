@@ -10,20 +10,93 @@ use Illuminate\Support\Facades\Log;
 class WhatsAppService
 {
     /**
-     * Envía un mensaje de WhatsApp a través de Meta Cloud API.
+     * Envía un mensaje de WhatsApp según el driver configurado (meta u openwa).
      */
     public function sendMessage(string $to, string $message): bool
+    {
+        $driver = config('services.whatsapp.driver', 'meta');
+
+        if ($driver === 'openwa') {
+            return $this->sendOpenWAMessage($to, $message);
+        }
+
+        return $this->sendMetaMessage($to, $message);
+    }
+
+    /**
+     * Envía una plantilla de WhatsApp según el driver configurado.
+     */
+    public function sendTemplateMessage(string $to, string $templateName, array $components = [], string $languageCode = 'es'): bool
+    {
+        $driver = config('services.whatsapp.driver', 'meta');
+
+        if ($driver === 'openwa') {
+            $formattedText = $this->formatTemplateToText($templateName, $components);
+            return $this->sendOpenWAMessage($to, $formattedText);
+        }
+
+        return $this->sendMetaTemplateMessage($to, $templateName, $components, $languageCode);
+    }
+
+    /**
+     * Envía mensaje usando OpenWA Gateway (Pasarela Libre).
+     */
+    protected function sendOpenWAMessage(string $to, string $message): bool
+    {
+        $baseUrl = config('services.whatsapp.openwa.url', 'http://localhost:3000');
+        $apiKey = config('services.whatsapp.openwa.api_key');
+
+        if (!$baseUrl) {
+            Log::warning('OpenWA not configured: missing OPENWA_BASE_URL');
+            return false;
+        }
+
+        $formattedPhone = $this->formatPhoneOpenWA($to);
+        $endpoint = rtrim($baseUrl, '/') . '/send-message';
+
+        $payload = [
+            'to' => $formattedPhone,
+            'content' => $message,
+            'message' => $message,
+        ];
+
+        $request = Http::timeout(10);
+        if ($apiKey) {
+            $request->withToken($apiKey);
+        }
+
+        $response = $request->post($endpoint, $payload);
+
+        if ($response->successful()) {
+            Log::info("OpenWA message sent to {$to}", [
+                'phone' => $formattedPhone,
+                'status' => $response->status(),
+            ]);
+            return true;
+        }
+
+        Log::error('OpenWA API error', [
+            'status' => $response->status(),
+            'body' => $response->body(),
+            'to' => $to,
+        ]);
+        return false;
+    }
+
+    /**
+     * Envía texto simple vía Meta Cloud API.
+     */
+    protected function sendMetaMessage(string $to, string $message): bool
     {
         $token = config('services.whatsapp.token');
         $phoneNumberId = config('services.whatsapp.phone_number_id');
         $apiVersion = config('services.whatsapp.api_version', 'v22.0');
 
         if (!$token || !$phoneNumberId) {
-            Log::warning('WhatsApp not configured: missing token or phone_number_id');
+            Log::warning('WhatsApp Meta API not configured: missing token or phone_number_id');
             return false;
         }
 
-        $phoneNumberId = config('services.whatsapp.phone_number_id');
         $url = "https://graph.facebook.com/{$apiVersion}/{$phoneNumberId}/messages";
 
         $payload = [
@@ -37,17 +110,16 @@ class WhatsAppService
             ],
         ];
 
-        $response = Http::withToken($token)
-            ->post($url, $payload);
+        $response = Http::withToken($token)->post($url, $payload);
 
         if ($response->successful()) {
-            Log::info("WhatsApp message sent to {$to}", [
+            Log::info("Meta WhatsApp message sent to {$to}", [
                 'message_id' => $response->json('messages.0.id'),
             ]);
             return true;
         }
 
-        Log::error('WhatsApp API error', [
+        Log::error('Meta WhatsApp API error', [
             'status' => $response->status(),
             'body' => $response->body(),
             'to' => $to,
@@ -56,27 +128,21 @@ class WhatsAppService
     }
 
     /**
-     * Envía una plantilla de WhatsApp a través de Meta Cloud API.
-     * 
-     * @param string $to Número de teléfono de destino
-     * @param string $templateName Nombre de la plantilla (ej: 'nuevo_pedido_cocinero')
-     * @param array $components Variables de la plantilla en orden
-     * @param string $languageCode Código de idioma de la plantilla (ej: 'es')
+     * Envía plantilla vía Meta Cloud API.
      */
-    public function sendTemplateMessage(string $to, string $templateName, array $components = [], string $languageCode = 'es'): bool
+    protected function sendMetaTemplateMessage(string $to, string $templateName, array $components = [], string $languageCode = 'es'): bool
     {
         $token = config('services.whatsapp.token');
         $phoneNumberId = config('services.whatsapp.phone_number_id');
         $apiVersion = config('services.whatsapp.api_version', 'v25.0');
 
         if (!$token || !$phoneNumberId) {
-            Log::warning('WhatsApp not configured: missing token or phone_number_id');
+            Log::warning('WhatsApp Meta API not configured: missing token or phone_number_id');
             return false;
         }
 
         $url = "https://graph.facebook.com/{$apiVersion}/{$phoneNumberId}/messages";
 
-        // Mapear los componentes simples al formato esperado por Meta
         $formattedComponents = array_map(function ($value) {
             return [
                 'type' => 'text',
@@ -105,13 +171,13 @@ class WhatsAppService
         $response = Http::withToken($token)->post($url, $payload);
 
         if ($response->successful()) {
-            Log::info("WhatsApp template '{$templateName}' sent to {$to}", [
+            Log::info("Meta WhatsApp template '{$templateName}' sent to {$to}", [
                 'message_id' => $response->json('messages.0.id'),
             ]);
             return true;
         }
 
-        Log::error('WhatsApp Template API error', [
+        Log::error('Meta WhatsApp Template API error', [
             'status' => $response->status(),
             'body' => $response->body(),
             'to' => $to,
@@ -119,6 +185,42 @@ class WhatsAppService
         ]);
         return false;
     }
+
+    /**
+     * Convierte las plantillas de Meta a texto plano enriquecido para OpenWA.
+     */
+    protected function formatTemplateToText(string $templateName, array $components): string
+    {
+        if ($templateName === 'actualizacion_pedido_cliente') {
+            $orderId = $components[0] ?? '';
+            $name = $components[1] ?? 'Cliente';
+            $status = $components[2] ?? '';
+            $url = $components[3] ?? '';
+            return "🍲 *Actualización de tu pedido #{$orderId}*\n\n¡Hola {$name}! Tu pedido cambió a estado: *{$status}*.\n\n📱 Ver detalles: {$url}";
+        }
+
+        if ($templateName === 'nuevo_pedido_cocinero') {
+            $orderId = $components[0] ?? '';
+            $customerName = $components[1] ?? 'Cliente';
+            $detailString = $components[2] ?? '';
+            $totalAmount = $components[3] ?? '';
+            $deliveryType = $components[4] ?? '';
+            $url = $components[5] ?? '';
+            return "🔔 *¡Nuevo Pedido Recibido! #{$orderId}*\n\n👤 *Cliente:* {$customerName}\n📋 *Detalles:* {$detailString}\n💰 *Total:* \${$totalAmount}\n🛵 *Entrega:* {$deliveryType}\n\n👉 Ver pedido: {$url}";
+        }
+
+        // Fallback genérico para cualquier otra plantilla
+        return "📌 *Notificación de Cocinarte*\n\n" . implode("\n", array_filter($components));
+    }
+
+    /**
+     * Formatea un número de teléfono para OpenWA (ej: 5493537675680).
+     */
+    public function formatPhoneOpenWA(string $phone): string
+    {
+        return $this->formatPhone($phone);
+    }
+
 
     /**
      * Genera URL de WhatsApp para que el CLIENTE contacte al COCINERO sobre un pedido.

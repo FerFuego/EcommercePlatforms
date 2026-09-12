@@ -184,6 +184,61 @@ class WhatsAppServiceTest extends TestCase
     }
 
     // ──────────────────────────────────────────────
+    // OpenWA Driver Tests
+    // ──────────────────────────────────────────────
+
+    /** @test */
+    public function it_sends_openwa_message_when_driver_is_openwa()
+    {
+        config([
+            'services.whatsapp.driver' => 'openwa',
+            'services.whatsapp.openwa.url' => 'http://localhost:3000',
+        ]);
+
+        \Illuminate\Support\Facades\Http::fake([
+            'http://localhost:3000/send-message' => \Illuminate\Support\Facades\Http::response(['status' => 'success'], 200),
+        ]);
+
+        $sent = $this->service->sendMessage('+54 9 11 1234-5678', 'Hola mundo desde OpenWA');
+
+        $this->assertTrue($sent);
+
+        \Illuminate\Support\Facades\Http::assertSent(function ($request) {
+            return $request->url() === 'http://localhost:3000/send-message' &&
+                $request['to'] === '5491112345678' &&
+                $request['content'] === 'Hola mundo desde OpenWA';
+        });
+    }
+
+    /** @test */
+    public function it_converts_templates_to_text_when_using_openwa_driver()
+    {
+        config([
+            'services.whatsapp.driver' => 'openwa',
+            'services.whatsapp.openwa.url' => 'http://localhost:3000',
+        ]);
+
+        \Illuminate\Support\Facades\Http::fake([
+            'http://localhost:3000/send-message' => \Illuminate\Support\Facades\Http::response(['status' => 'success'], 200),
+        ]);
+
+        $sent = $this->service->sendTemplateMessage(
+            '+54 9 11 1234-5678',
+            'actualizacion_pedido_cliente',
+            ['#101', 'Juan', 'En Preparación', 'http://localhost/orders/101']
+        );
+
+        $this->assertTrue($sent);
+
+        \Illuminate\Support\Facades\Http::assertSent(function ($request) {
+            return $request->url() === 'http://localhost:3000/send-message' &&
+                str_contains($request['content'], 'Actualización de tu pedido') &&
+                str_contains($request['content'], 'Juan') &&
+                str_contains($request['content'], 'En Preparación');
+        });
+    }
+
+    // ──────────────────────────────────────────────
     // Helpers
     // ──────────────────────────────────────────────
 
@@ -204,3 +259,4 @@ class WhatsAppServiceTest extends TestCase
         $this->assertStringContainsString($needle, $haystack);
     }
 }
+

@@ -275,6 +275,24 @@ class Order extends Model
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error("Error notifying customer for order #{$this->id}: " . $e->getMessage());
         }
+
+        // Notificar a los repartidores disponibles si el pedido es Delivery
+        if ($this->delivery_type === 'delivery') {
+            try {
+                $drivers = \App\Models\DeliveryDriver::where('is_approved', true)
+                    ->where('is_available', true)
+                    ->with('user')
+                    ->get();
+
+                foreach ($drivers as $driver) {
+                    if ($driver->user && ($driver->isWithinCoverage((float) ($this->cook->location_lat ?? 0), (float) ($this->cook->location_lng ?? 0)) || !$this->cook->location_lat)) {
+                        $driver->user->notify(new \App\Notifications\DeliveryDriverAssignedNotification($this));
+                    }
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error("Error notifying delivery drivers for order #{$this->id}: " . $e->getMessage());
+            }
+        }
     }
 
     /**
