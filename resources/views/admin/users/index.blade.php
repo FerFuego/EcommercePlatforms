@@ -948,8 +948,8 @@
                             </button>
                         </form>
 
-                        <button type="button" onclick="closeUserDetailsModal(); confirmDelete(${user.id}, '${user.name.replace(/'/g, "\\'")}')" class="px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-sm">
-                            <span>Eliminar Usuario</span>
+                        <button type="button" onclick="closeUserDetailsModal(); confirmDelete(${user.id}, '${user.name.replace(/'/g, "\\'")}')" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                            Eliminar Usuario
                         </button>
                     `;
                 }
