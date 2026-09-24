@@ -107,17 +107,21 @@ class Cook extends Model
      */
     public function scopeNearby($query, $lat, $lng, $radius = 10)
     {
-        $haversine = "(6371 * acos(cos(radians($lat)) 
+        $lat = (float) $lat;
+        $lng = (float) $lng;
+        $radius = (float) $radius;
+
+        $haversine = "(6371 * acos(cos(radians(?)) 
                      * cos(radians(location_lat)) 
-                     * cos(radians(location_lng) - radians($lng)) 
-                     + sin(radians($lat)) 
+                     * cos(radians(location_lng) - radians(?)) 
+                     + sin(radians(?)) 
                      * sin(radians(location_lat))))";
 
         return $query
-            ->whereRaw("{$haversine} < ?", [$radius])
+            ->whereRaw("{$haversine} < ?", [$lat, $lng, $lat, $radius])
             ->where('is_approved', true)
             ->where('active', true)
-            ->orderByRaw("{$haversine} ASC");
+            ->orderByRaw("{$haversine} ASC", [$lat, $lng, $lat]);
     }
 
     /**

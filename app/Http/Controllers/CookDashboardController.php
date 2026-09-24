@@ -69,8 +69,8 @@ class CookDashboardController extends Controller
             'terms' => 'accepted',
         ]);
 
-        // Subir DNI
-        $dniPath = Storage::disk('uploads')->putFile('cooks/dni', $request->file('dni_photo'));
+        // Subir DNI a almacenamiento privado seguro
+        $dniPath = Storage::disk('local')->putFile('cooks/dni', $request->file('dni_photo'));
 
         // Subir fotos de cocina
         $kitchenPhotos = [];

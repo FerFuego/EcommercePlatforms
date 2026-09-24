@@ -89,8 +89,8 @@ class DeliveryDriverController extends Controller
             'cbu_cvu' => 'nullable|string',
         ]);
 
-        // Subir fotos
-        $validated['dni_photo'] = Storage::disk('uploads')->putFile('delivery-drivers/dni', $request->file('dni_photo'));
+        // Subir fotos: DNI en almacenamiento privado seguro
+        $validated['dni_photo'] = Storage::disk('local')->putFile('delivery-drivers/dni', $request->file('dni_photo'));
 
         if ($request->hasFile('profile_photo')) {
             $validated['profile_photo'] = Storage::disk('uploads')->putFile('delivery-drivers/profiles', $request->file('profile_photo'));

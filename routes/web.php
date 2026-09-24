@@ -202,6 +202,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/users/{userId}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
     Route::delete('/users/{userId}', [AdminController::class, 'deleteUser'])->name('users.delete');
 
+    // Documentos confidenciales (DNI)
+    Route::get('/documents/dni/{type}/{id}', [\App\Http\Controllers\Admin\DocumentController::class, 'showDni'])->name('documents.dni');
+
     // Configuración
     Route::get('/settings', [App\Http\Controllers\AdminSettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [App\Http\Controllers\AdminSettingController::class, 'update'])->name('settings.update');
