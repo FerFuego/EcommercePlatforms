@@ -411,6 +411,11 @@ class AdminController extends Controller
             } elseif ($status === 'pending_drivers') {
                 $query->where('role', 'delivery_driver')
                       ->whereHas('deliveryDriver', fn($d) => $d->where('is_approved', false));
+            } elseif ($status === 'incomplete') {
+                $query->where(function ($q) {
+                    $q->where(fn($q2) => $q2->where('role', 'cook')->whereDoesntHave('cook'))
+                      ->orWhere(fn($q3) => $q3->where('role', 'delivery_driver')->whereDoesntHave('deliveryDriver'));
+                });
             } elseif ($status === 'suspended') {
                 $query->where('is_suspended', true);
             } elseif ($status === 'active') {
@@ -423,10 +428,14 @@ class AdminController extends Controller
             }
         }
 
-        $users = $query->latest()->paginate(20)->withQueryString();
+        $users = $query->withCount('orders')->latest()->paginate(20)->withQueryString();
 
         $pendingCooksCount = Cook::where('is_approved', false)->count();
         $pendingDriversCount = \App\Models\DeliveryDriver::where('is_approved', false)->count();
+        $incompleteCount = User::where(function ($q) {
+            $q->where(fn($q2) => $q2->where('role', 'cook')->whereDoesntHave('cook'))
+              ->orWhere(fn($q3) => $q3->where('role', 'delivery_driver')->whereDoesntHave('deliveryDriver'));
+        })->count();
 
         $stats = [
             'total' => User::count(),
@@ -437,6 +446,7 @@ class AdminController extends Controller
             'pending_cooks' => $pendingCooksCount,
             'pending_drivers' => $pendingDriversCount,
             'pending' => $pendingCooksCount + $pendingDriversCount,
+            'incomplete' => $incompleteCount,
             'suspended' => User::where('is_suspended', true)->count(),
         ];
 

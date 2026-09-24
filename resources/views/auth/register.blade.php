@@ -47,6 +47,11 @@
                     @csrf
                     <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
+                    {{-- Honeypot Anti-Bot Field (Invisible to real humans) --}}
+                    <div style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+                        <input type="text" name="system_website_check" tabindex="-1" autocomplete="off" value="">
+                    </div>
+
                     <!-- Step 1: Role Selection -->
                     <div x-show="step === 1" x-transition:enter="transition ease-out duration-300"
                         x-transition:enter-start="opacity-0 transform translate-x-8"

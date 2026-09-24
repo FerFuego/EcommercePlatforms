@@ -17,6 +17,7 @@
             </div>
 
             <!-- Quick Filter Pills -->
+            <!-- Quick Filter Pills -->
             <div class="flex flex-wrap gap-2 text-xs">
                 <a href="{{ route('admin.users.index') }}" 
                    class="px-3 py-1.5 rounded-xl font-bold transition {{ !request('status') ? 'bg-purple-600 text-white shadow-sm' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
@@ -35,6 +36,12 @@
                    class="px-3 py-1.5 rounded-xl font-bold transition {{ request('status') === 'pending_drivers' ? 'bg-blue-600 text-white shadow-sm' : 'bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100' }}">
                    🛵 Repartidores Pendientes ({{ $stats['pending_drivers'] }})
                 </a>
+                @if(isset($stats['incomplete']) && $stats['incomplete'] > 0)
+                    <a href="{{ route('admin.users.index', ['status' => 'incomplete']) }}" 
+                       class="px-3 py-1.5 rounded-xl font-bold transition flex items-center space-x-1 {{ request('status') === 'incomplete' ? 'bg-amber-600 text-white shadow-sm' : 'bg-amber-50 text-amber-800 border border-amber-300 hover:bg-amber-100' }}">
+                       <span>⚠️ Sin Perfil ({{ $stats['incomplete'] }})</span>
+                    </a>
+                @endif
                 @if($stats['suspended'] > 0)
                     <a href="{{ route('admin.users.index', ['status' => 'suspended']) }}" 
                        class="px-3 py-1.5 rounded-xl font-bold transition {{ request('status') === 'suspended' ? 'bg-red-600 text-white shadow-sm' : 'bg-red-50 text-red-700 border border-red-200 hover:bg-red-100' }}">
@@ -71,6 +78,9 @@
                             <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>⏳ Pendientes de Revisión ({{ $stats['pending'] }})</option>
                             <option value="pending_cooks" {{ request('status') === 'pending_cooks' ? 'selected' : '' }}>👨‍🍳 Cocineros Pendientes ({{ $stats['pending_cooks'] }})</option>
                             <option value="pending_drivers" {{ request('status') === 'pending_drivers' ? 'selected' : '' }}>🛵 Repartidores Pendientes ({{ $stats['pending_drivers'] }})</option>
+                            @if(isset($stats['incomplete']) && $stats['incomplete'] > 0)
+                                <option value="incomplete" {{ request('status') === 'incomplete' ? 'selected' : '' }}>⚠️ Sin Perfil / Incompletos ({{ $stats['incomplete'] }})</option>
+                            @endif
                             <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>✓ Activos</option>
                             <option value="suspended" {{ request('status') === 'suspended' ? 'selected' : '' }}>❌ Suspendidos ({{ $stats['suspended'] }})</option>
                         </select>
@@ -112,6 +122,60 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @foreach($users as $user)
+                        @php
+                            $cookData = $user->cook ? [
+                                'id' => $user->cook->id,
+                                'bio' => $user->cook->bio,
+                                'is_approved' => (bool)$user->cook->is_approved,
+                                'active' => (bool)$user->cook->active,
+                                'coverage_radius_km' => $user->cook->coverage_radius_km,
+                                'opening_time' => $user->cook->opening_time,
+                                'closing_time' => $user->cook->closing_time,
+                                'payout_method' => $user->cook->payout_method,
+                                'payout_details' => $user->cook->payout_details,
+                                'food_handler_declaration' => (bool)$user->cook->food_handler_declaration,
+                                'dni_photo' => $user->cook->dni_photo,
+                                'kitchen_photos' => $user->cook->kitchen_photos,
+                                'location_lat' => $user->cook->location_lat,
+                                'location_lng' => $user->cook->location_lng,
+                            ] : null;
+
+                            $driverData = $user->deliveryDriver ? [
+                                'id' => $user->deliveryDriver->id,
+                                'dni_number' => $user->deliveryDriver->dni_number,
+                                'dni_photo' => $user->deliveryDriver->dni_photo,
+                                'bank_name' => $user->deliveryDriver->bank_name,
+                                'cbu_cvu' => $user->deliveryDriver->cbu_cvu,
+                                'account_number' => $user->deliveryDriver->account_number,
+                                'vehicle_type' => $user->deliveryDriver->vehicle_type,
+                                'vehicle_plate' => $user->deliveryDriver->vehicle_plate,
+                                'vehicle_photo' => $user->deliveryDriver->vehicle_photo,
+                                'profile_photo' => $user->deliveryDriver->profile_photo,
+                                'coverage_radius_km' => $user->deliveryDriver->coverage_radius_km,
+                                'is_approved' => (bool)$user->deliveryDriver->is_approved,
+                                'is_available' => (bool)$user->deliveryDriver->is_available,
+                                'location_lat' => $user->deliveryDriver->location_lat,
+                                'location_lng' => $user->deliveryDriver->location_lng,
+                            ] : null;
+
+                            $userPayload = [
+                                'id' => $user->id,
+                                'name' => $user->name,
+                                'email' => $user->email,
+                                'phone' => $user->phone ?? 'No especificado',
+                                'address' => $user->address ?? 'No especificada',
+                                'role' => $user->role,
+                                'role_label' => $user->role === 'cook' ? 'Cocinero' : ($user->role === 'delivery_driver' ? 'Repartidor' : ($user->role === 'admin' ? 'Administrador' : 'Cliente')),
+                                'is_suspended' => (bool)($user->is_suspended ?? false),
+                                'email_verified' => $user->email_verified_at ? $user->email_verified_at->format('d/m/Y H:i') : null,
+                                'created_at' => $user->created_at->format('d/m/Y H:i:s'),
+                                'created_diff' => $user->created_at->diffForHumans(),
+                                'orders_count' => $user->orders_count ?? 0,
+                                'cook' => $cookData,
+                                'driver' => $driverData,
+                                'is_self' => $user->id === auth()->id(),
+                            ];
+                        @endphp
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-2 py-4">
                                 <div class="flex items-center space-x-3">
@@ -125,15 +189,30 @@
                                         </div>
                                     @endif
                                     <div>
-                                        <p class="font-bold">{{ $user->name }}</p>
-                                        @if($user->role === 'cook' && $user->cook)
-                                            <p class="text-xs text-gray-600">
-                                                {{ $user->cook->is_approved ? '✓ Aprobado' : '⏳ Pendiente' }}
-                                            </p>
-                                        @elseif($user->role === 'delivery_driver' && $user->deliveryDriver)
-                                            <p class="text-xs text-gray-600">
-                                                {{ $user->deliveryDriver->is_approved ? '✓ Aprobado' : '⏳ Pendiente' }}
-                                            </p>
+                                        <button type="button" onclick='openUserDetailsModal(@json($userPayload))' 
+                                            class="font-bold text-gray-900 hover:text-purple-600 transition text-left cursor-pointer">
+                                            {{ $user->name }}
+                                        </button>
+                                        @if($user->role === 'cook')
+                                            @if(!$user->cook)
+                                                <p class="text-[11px] text-amber-600 font-semibold flex items-center gap-0.5">
+                                                    <span>⚠️ Perfil no creado</span>
+                                                </p>
+                                            @else
+                                                <p class="text-xs text-gray-600">
+                                                    {{ $user->cook->is_approved ? '✓ Aprobado' : '⏳ Pendiente' }}
+                                                </p>
+                                            @endif
+                                        @elseif($user->role === 'delivery_driver')
+                                            @if(!$user->deliveryDriver)
+                                                <p class="text-[11px] text-amber-600 font-semibold flex items-center gap-0.5">
+                                                    <span>⚠️ Doc. no enviada</span>
+                                                </p>
+                                            @else
+                                                <p class="text-xs text-gray-600">
+                                                    {{ $user->deliveryDriver->is_approved ? '✓ Aprobado' : '⏳ Pendiente' }}
+                                                </p>
+                                            @endif
                                         @endif
                                     </div>
                                 </div>
@@ -156,12 +235,20 @@
                                 @endif
                             </td>
                             <td class="px-2 py-4 text-center">
-                                @if($user->role === 'cook' && $user->cook && !$user->cook->is_approved)
-                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Pendiente</span>
-                                @elseif($user->role === 'delivery_driver' && $user->deliveryDriver && !$user->deliveryDriver->is_approved)
-                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Pendiente</span>
-                                @elseif($user->is_suspended ?? false)
+                                @if($user->is_suspended ?? false)
                                     <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">Suspendido</span>
+                                @elseif($user->role === 'cook' && !$user->cook)
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300" title="Registrado como cocinero pero nunca completó su perfil de cocina">
+                                        Incompleto
+                                    </span>
+                                @elseif($user->role === 'cook' && $user->cook && !$user->cook->is_approved)
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 animate-pulse">Pendiente</span>
+                                @elseif($user->role === 'delivery_driver' && !$user->deliveryDriver)
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300" title="Registrado como repartidor pero nunca completó su documentación">
+                                        Incompleto
+                                    </span>
+                                @elseif($user->role === 'delivery_driver' && $user->deliveryDriver && !$user->deliveryDriver->is_approved)
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 animate-pulse">Pendiente</span>
                                 @else
                                     <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">Activo</span>
                                 @endif
@@ -171,7 +258,15 @@
                             </td>
                             <td class="px-2 py-4">
                                 <div class="flex items-center justify-end space-x-2">
-                                    {{-- Botón Aprobar (Solo para pendientes) --}}
+                                    {{-- Botón Ver Datos (Para TODOS los usuarios) --}}
+                                    <button type="button" onclick='openUserDetailsModal(@json($userPayload))'
+                                        class="px-2.5 py-1 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 rounded-lg text-xs font-semibold transition flex items-center gap-1 shadow-sm"
+                                        title="Ver ficha y datos del usuario">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        Ver Datos
+                                    </button>
+
+                                    {{-- Botón Aprobar (Solo para pendientes con perfil creado) --}}
                                     @if(
                                             ($user->role === 'cook' && $user->cook && !$user->cook->is_approved) ||
                                             ($user->role === 'delivery_driver' && $user->deliveryDriver && !$user->deliveryDriver->is_approved)
@@ -186,8 +281,8 @@
                                                                     email: '{{ addslashes($user->email ?? '') }}',
                                                                     details: {{ json_encode($user->role === 'cook' ? $user->cook : $user->deliveryDriver) }}
                                                                 })"
-                                            class="px-3 py-1 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition"
-                                            title="Revisar Solicitud">Revisar
+                                            class="px-2.5 py-1 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition"
+                                            title="Revisar Solicitud de Aprobación">Revisar
                                         </button>
                                     @endif
 
@@ -197,15 +292,15 @@
                                             class="inline">
                                             @csrf
                                             <button type="submit"
-                                                class="px-3 py-1 rounded-lg text-xs font-semibold transition {{ ($user->is_suspended ?? false) ? 'bg-green-500 text-white hover:bg-green-700' : 'bg-yellow-500 text-white hover:bg-yellow-600' }}"
+                                                class="px-2.5 py-1 rounded-lg text-xs font-semibold transition {{ ($user->is_suspended ?? false) ? 'bg-green-500 text-white hover:bg-green-700' : 'bg-yellow-500 text-white hover:bg-yellow-600' }}"
                                                 title="{{ ($user->is_suspended ?? false) ? 'Activar' : 'Suspender' }}">
                                                 {{ ($user->is_suspended ?? false) ? 'Activar' : 'Suspender' }}
                                             </button>
                                         </form>
 
                                         {{-- Eliminar --}}
-                                        <button onclick="confirmDelete({{ $user->id }}, '{{ $user->name }}')"
-                                            class="px-3 py-1 bg-red-600 text-white rounded-lg text-xs font-semibold hover:bg-red-700 transition"
+                                        <button onclick="confirmDelete({{ $user->id }}, '{{ addslashes($user->name) }}')"
+                                            class="px-2.5 py-1 bg-red-600 text-white rounded-lg text-xs font-semibold hover:bg-red-700 transition"
                                             title="Eliminar">Eliminar
                                         </button>
                                     @else
@@ -316,6 +411,48 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    {{-- User Details Modal (Ficha del Usuario / Detección Bot) --}}
+    <div id="userDetailsModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 overflow-y-auto py-10 px-4">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-4xl w-full shadow-2xl relative max-h-[90vh] flex flex-col">
+            {{-- Modal Header --}}
+            <div class="flex items-start justify-between pb-4 border-b border-gray-100 shrink-0">
+                <div class="flex items-center space-x-4">
+                    <div id="udmAvatar" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold shadow-md">
+                        U
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h3 id="udmName" class="text-2xl font-bold text-gray-900">Usuario</h3>
+                            <span id="udmRoleBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold"></span>
+                            <span id="udmStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold"></span>
+                        </div>
+                        <p id="udmEmail" class="text-sm text-gray-500 font-medium"></p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeUserDetailsModal()" class="text-gray-400 hover:text-gray-600 p-2 rounded-xl hover:bg-gray-100 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            {{-- Modal Body (Scrollable) --}}
+            <div class="overflow-y-auto py-6 pr-2 space-y-6 flex-1" id="udmBody">
+                <!-- Dynamically populated by JS -->
+            </div>
+
+            {{-- Modal Footer --}}
+            <div class="pt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                <div class="flex items-center gap-2" id="udmActions">
+                    <!-- Action buttons (Suspend, Delete, Review) -->
+                </div>
+                <button type="button" onclick="closeUserDetailsModal()" class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm transition">
+                    Cerrar
+                </button>
+            </div>
         </div>
     </div>
 
@@ -551,6 +688,279 @@
 
             function closeDeleteModal() {
                 document.getElementById('deleteModal').classList.add('hidden');
+            }
+
+            function openUserDetailsModal(user) {
+                const modal = document.getElementById('userDetailsModal');
+                const avatar = document.getElementById('udmAvatar');
+                const nameEl = document.getElementById('udmName');
+                const emailEl = document.getElementById('udmEmail');
+                const roleBadge = document.getElementById('udmRoleBadge');
+                const statusBadge = document.getElementById('udmStatusBadge');
+                const body = document.getElementById('udmBody');
+                const actions = document.getElementById('udmActions');
+
+                // Header info
+                avatar.textContent = (user.name || 'U').charAt(0).toUpperCase();
+                nameEl.textContent = user.name;
+                emailEl.textContent = user.email;
+
+                // Role badge
+                let roleColor = 'bg-gray-100 text-gray-800';
+                if (user.role === 'admin') roleColor = 'bg-purple-100 text-purple-800';
+                else if (user.role === 'cook') roleColor = 'bg-orange-100 text-orange-800';
+                else if (user.role === 'delivery_driver') roleColor = 'bg-blue-100 text-blue-800';
+                else if (user.role === 'customer') roleColor = 'bg-green-100 text-green-800';
+                roleBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-bold ${roleColor}`;
+                roleBadge.textContent = user.role_label;
+
+                // Status badge
+                let statusText = 'Activo';
+                let statusColor = 'bg-green-100 text-green-800';
+                if (user.is_suspended) {
+                    statusText = 'Suspendido';
+                    statusColor = 'bg-red-100 text-red-800';
+                } else if (user.role === 'cook' && !user.cook) {
+                    statusText = 'Incompleto (Sin Cocina)';
+                    statusColor = 'bg-amber-100 text-amber-800 border border-amber-300';
+                } else if (user.role === 'cook' && user.cook && !user.cook.is_approved) {
+                    statusText = 'Pendiente de Aprobación';
+                    statusColor = 'bg-yellow-100 text-yellow-800 animate-pulse';
+                } else if (user.role === 'delivery_driver' && !user.driver) {
+                    statusText = 'Incompleto (Sin Doc)';
+                    statusColor = 'bg-amber-100 text-amber-800 border border-amber-300';
+                } else if (user.role === 'delivery_driver' && user.driver && !user.driver.is_approved) {
+                    statusText = 'Pendiente de Aprobación';
+                    statusColor = 'bg-yellow-100 text-yellow-800 animate-pulse';
+                }
+                statusBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-bold ${statusColor}`;
+                statusBadge.textContent = statusText;
+
+                // Body content
+                const safe = str => str ? String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)) : '';
+
+                let html = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
+
+                // Columna 1: Datos de Registro y Contacto
+                html += `
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                            <h4 class="font-bold text-gray-800 mb-3 text-sm flex items-center gap-2">
+                                <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                Información de la Cuenta
+                            </h4>
+                            <div class="space-y-2 text-sm">
+                                <p><span class="text-gray-500 font-medium">ID Usuario:</span> <strong class="text-gray-800">#${user.id}</strong></p>
+                                <p><span class="text-gray-500 font-medium">Nombre:</span> <strong class="text-gray-900">${safe(user.name)}</strong></p>
+                                <p><span class="text-gray-500 font-medium">Email:</span> <span class="font-semibold">${safe(user.email)}</span></p>
+                                <p><span class="text-gray-500 font-medium">Verificación Email:</span> ${user.email_verified ? `<span class="text-green-600 font-bold">✓ Verificado (${user.email_verified})</span>` : `<span class="text-amber-600 font-semibold">⚠️ No verificado</span>`}</p>
+                                <p><span class="text-gray-500 font-medium">Teléfono:</span> <strong class="text-gray-800">${safe(user.phone)}</strong></p>
+                                <p><span class="text-gray-500 font-medium">Dirección:</span> <span class="text-gray-800">${safe(user.address)}</span></p>
+                                <p><span class="text-gray-500 font-medium">Fecha Alta:</span> <span class="text-gray-800">${user.created_at} <span class="text-xs text-gray-500">(${user.created_diff})</span></span></p>
+                                ${user.role === 'customer' ? `<p><span class="text-gray-500 font-medium">Pedidos realizados:</span> <strong>${user.orders_count || 0}</strong></p>` : ''}
+                            </div>
+                        </div>
+                `;
+
+                // Diagnóstico de Bot / Alerta de Incompleto
+                const isCookIncomplete = user.role === 'cook' && !user.cook;
+                const isDriverIncomplete = user.role === 'delivery_driver' && !user.driver;
+                const isForeignPhone = user.phone && (user.phone.startsWith('+34') || user.phone.startsWith('34') || (!user.phone.startsWith('+54') && !user.phone.startsWith('54') && !user.phone.startsWith('35') && !user.phone.startsWith('11') && user.phone.startsWith('+')));
+
+                if (isCookIncomplete || isDriverIncomplete || isForeignPhone) {
+                    html += `
+                        <div class="bg-amber-50 border-2 border-amber-200 p-5 rounded-2xl">
+                            <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                Diagnóstico de Cuenta / Detección de Bot
+                            </h4>
+                            <div class="text-xs text-amber-800 space-y-1.5">
+                                ${isCookIncomplete ? `
+                                    <p class="font-semibold text-red-700">⚠️ Registro Incompleto (Sin Cocina Creada):</p>
+                                    <p>Este usuario completó el Paso 1 de registro como "Cocinero", pero <strong>NUNCA envió fotos de cocina, DNI ni completó el formulario de aprobación</strong>.</p>
+                                    <p class="font-semibold text-gray-800 mt-1">🔒 Impacto en la Plataforma:</p>
+                                    <p>El usuario <strong>NO puede operar, NO puede publicar platos y NO aparece en la tienda</strong>.</p>
+                                ` : ''}
+                                ${isDriverIncomplete ? `
+                                    <p class="font-semibold text-red-700">⚠️ Registro Incompleto (Sin Documentación):</p>
+                                    <p>No cargó vehículo, patente ni DNI de repartidor. No puede tomar pedidos.</p>
+                                ` : ''}
+                                ${isForeignPhone ? `
+                                    <p class="font-semibold text-amber-900 mt-2">🌍 Prefijo Telefónico Internacional:</p>
+                                    <p>El teléfono <code>${safe(user.phone)}</code> parece ser internacional o de prueba (común en bots automatizados).</p>
+                                ` : ''}
+                                <p class="text-[11px] text-gray-500 italic mt-2">💡 Si sospechas que es una cuenta falsa o bot, puedes eliminarla directamente con el botón rojo abajo.</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `</div>`; // Fin Columna 1
+
+                // Columna 2: Datos de Cocinero / Repartidor
+                html += `<div class="space-y-4">`;
+
+                if (user.role === 'cook') {
+                    if (user.cook) {
+                        const cook = user.cook;
+                        html += `
+                            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                                <h4 class="font-bold text-gray-800 mb-3 text-sm flex items-center justify-between">
+                                    <span class="flex items-center gap-2">👨‍🍳 Perfil de Cocina</span>
+                                    ${cook.is_approved ? '<span class="text-green-600 text-xs font-bold">✓ Aprobado</span>' : '<span class="text-amber-600 text-xs font-bold animate-pulse">⏳ Pendiente de Aprobación</span>'}
+                                </h4>
+                                <div class="space-y-2 text-sm">
+                                    <p><span class="text-gray-500 font-medium">Bio:</span> <span class="text-gray-800">${safe(cook.bio || 'Sin descripción')}</span></p>
+                                    <p><span class="text-gray-500 font-medium">Manipulación Alimentos:</span> ${cook.food_handler_declaration ? '<span class="text-green-600 font-bold">✓ Declarado</span>' : '<span class="text-red-600 font-bold">✕ No</span>'}</p>
+                                    <p><span class="text-gray-500 font-medium">Radio de entrega:</span> <strong class="text-gray-800">${cook.coverage_radius_km || 'N/A'} km</strong></p>
+                                    <p><span class="text-gray-500 font-medium">Horario:</span> <span class="text-purple-700 font-bold">${cook.opening_time ? cook.opening_time.substring(0, 5) : 'N/A'} a ${cook.closing_time ? cook.closing_time.substring(0, 5) : 'N/A'} hs</span></p>
+                                    <p><span class="text-gray-500 font-medium">Método de cobro:</span> <span>${safe(cook.payout_method || 'No configurado')}</span></p>
+                                </div>
+                            </div>
+                        `;
+
+                        // DNI y Fotos de cocina
+                        if (cook.dni_photo) {
+                            html += `
+                                <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                                    <h4 class="font-bold text-gray-800 mb-2 text-sm">🆔 Documento de Identidad</h4>
+                                    <a href="/admin/documents/dni/cook/${cook.id}" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-purple-600 hover:text-purple-800 bg-purple-50 px-3 py-2 rounded-xl border border-purple-200">
+                                        <span>Ver DNI Confidencial ↗</span>
+                                    </a>
+                                </div>
+                            `;
+                        }
+
+                        if (cook.kitchen_photos) {
+                            let photos = [];
+                            try {
+                                photos = typeof cook.kitchen_photos === 'string' ? JSON.parse(cook.kitchen_photos) : cook.kitchen_photos;
+                            } catch(e) { photos = []; }
+
+                            if (Array.isArray(photos) && photos.length > 0) {
+                                html += `
+                                    <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                                        <h4 class="font-bold text-gray-800 mb-3 text-sm">🍳 Fotos de la Cocina (${photos.length})</h4>
+                                        <div class="grid grid-cols-3 gap-2">
+                                            ${photos.map(p => `
+                                                <a href="/uploads/${p}" target="_blank" class="block rounded-lg overflow-hidden border hover:opacity-80">
+                                                    <img src="/uploads/${p}" class="w-full h-16 object-cover" alt="Cocina">
+                                                </a>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                        }
+                    } else {
+                        html += `
+                            <div class="bg-gray-50 p-5 rounded-2xl border border-dashed border-gray-300 text-center py-8">
+                                <div class="text-4xl mb-2">🍳</div>
+                                <p class="font-bold text-gray-700">Sin Datos de Cocina</p>
+                                <p class="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
+                                    Este usuario no ha completado el formulario de cocinero. No tiene DNI cargado ni fotos de cocina en la base de datos.
+                                </p>
+                            </div>
+                        `;
+                    }
+                } else if (user.role === 'delivery_driver') {
+                    if (user.driver) {
+                        const driver = user.driver;
+                        html += `
+                            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                                <h4 class="font-bold text-gray-800 mb-3 text-sm flex items-center justify-between">
+                                    <span class="flex items-center gap-2">🛵 Perfil de Repartidor</span>
+                                    ${driver.is_approved ? '<span class="text-green-600 text-xs font-bold">✓ Aprobado</span>' : '<span class="text-amber-600 text-xs font-bold animate-pulse">⏳ Pendiente</span>'}
+                                </h4>
+                                <div class="space-y-2 text-sm">
+                                    <p><span class="text-gray-500 font-medium">Vehículo:</span> <strong class="capitalize">${safe(driver.vehicle_type || 'N/A')}</strong></p>
+                                    <p><span class="text-gray-500 font-medium">Patente:</span> <span class="font-mono font-bold">${safe(driver.vehicle_plate || 'N/A')}</span></p>
+                                    <p><span class="text-gray-500 font-medium">Radio Cobertura:</span> <span>${driver.coverage_radius_km || 'N/A'} km</span></p>
+                                    <p><span class="text-gray-500 font-medium">Banco / CBU:</span> <span>${safe(driver.bank_name || '')} (${safe(driver.cbu_cvu || 'N/A')})</span></p>
+                                </div>
+                            </div>
+                        `;
+                        if (driver.dni_photo) {
+                            html += `
+                                <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                                    <h4 class="font-bold text-gray-800 mb-2 text-sm">🆔 DNI Repartidor: ${safe(driver.dni_number || '')}</h4>
+                                    <a href="/admin/documents/dni/driver/${driver.id}" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-2 rounded-xl border border-blue-200">
+                                        <span>Ver DNI Confidencial ↗</span>
+                                    </a>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        html += `
+                            <div class="bg-gray-50 p-5 rounded-2xl border border-dashed border-gray-300 text-center py-8">
+                                <div class="text-4xl mb-2">🛵</div>
+                                <p class="font-bold text-gray-700">Sin Documentación de Repartidor</p>
+                                <p class="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
+                                    No ha enviado datos de vehículo, licencia ni DNI.
+                                </p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    html += `
+                        <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                            <h4 class="font-bold text-gray-800 mb-3 text-sm">🛒 Actividad del Cliente</h4>
+                            <p class="text-sm"><span class="text-gray-500">Total de pedidos:</span> <strong>${user.orders_count || 0}</strong></p>
+                            <p class="text-xs text-gray-500 mt-2">Los clientes no requieren moderación administrativa ni subida de DNI.</p>
+                        </div>
+                    `;
+                }
+
+                html += `</div>`; // Fin Columna 2
+                html += `</div>`; // Fin Grid
+
+                body.innerHTML = html;
+
+                // Actions Footer
+                let actionsHtml = '';
+                const isPendingCook = user.role === 'cook' && user.cook && !user.cook.is_approved;
+                const isPendingDriver = user.role === 'delivery_driver' && user.driver && !user.driver.is_approved;
+
+                if (isPendingCook || isPendingDriver) {
+                    actionsHtml += `
+                        <button type="button" onclick="closeUserDetailsModal(); openApprovalModal({
+                            id: ${user.id},
+                            name: '${user.name.replace(/'/g, "\\'")}',
+                            role: '${user.role}',
+                            roleLabel: '${user.role_label}',
+                            address: '${(user.address || '').replace(/'/g, "\\'")}',
+                            phone: '${(user.phone || '').replace(/'/g, "\\'")}',
+                            email: '${(user.email || '').replace(/'/g, "\\'")}',
+                            details: ${JSON.stringify(isPendingCook ? user.cook : user.driver)}
+                        })" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                            <span>📋 Revisar / Aprobar Solicitud</span>
+                        </button>
+                    `;
+                }
+
+                if (!user.is_self) {
+                    const token = document.querySelector('input[name="_token"]')?.value || '';
+                    actionsHtml += `
+                        <form action="/admin/users/${user.id}/toggle-status" method="POST" class="inline">
+                            <input type="hidden" name="_token" value="${token}">
+                            <button type="submit" class="px-3.5 py-2 rounded-xl text-xs font-bold transition ${user.is_suspended ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-yellow-500 hover:bg-yellow-600 text-white'} shadow-sm">
+                                ${user.is_suspended ? '✓ Activar Cuenta' : '⏸ Suspender Cuenta'}
+                            </button>
+                        </form>
+
+                        <button type="button" onclick="closeUserDetailsModal(); confirmDelete(${user.id}, '${user.name.replace(/'/g, "\\'")}')" class="px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                            <span>🗑️ Eliminar Usuario</span>
+                        </button>
+                    `;
+                }
+
+                actions.innerHTML = actionsHtml;
+                modal.classList.remove('hidden');
+            }
+
+            function closeUserDetailsModal() {
+                const modal = document.getElementById('userDetailsModal');
+                if (modal) modal.classList.add('hidden');
             }
         </script>
     @endpush

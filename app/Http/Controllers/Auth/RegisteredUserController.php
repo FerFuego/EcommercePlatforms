@@ -31,6 +31,17 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Honeypot anti-bot check: los bots suelen completar todos los campos del formulario
+        if (!empty($request->input('system_website_check'))) {
+            \Illuminate\Support\Facades\Log::warning("Bot de registro bloqueado por Honeypot desde IP: " . $request->ip(), [
+                'email' => $request->input('email'),
+                'name' => $request->input('name'),
+                'honeypot_value' => $request->input('system_website_check'),
+            ]);
+            // Redirigir de forma silenciosa simulando éxito para no alertar al bot
+            return redirect()->route('login')->with('success', 'Registro completado. Por favor inicia sesión.');
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
