@@ -724,3 +724,39 @@ Control Detallado: Listado global de todas las acreditaciones por usuario en tie
 NOTE
 
 Cada vez que una plataforma (Stripe o MercadoPago) confirma un pago a través de un webhook, el sistema registra automáticamente una entrada en la tabla subscription_payments, asegurando que el historial esté siempre actualizado sin intervención manual.
+
+# GESTIÓN Y AUDITORÍA DE USUARIOS & PROTECCIÓN ANTI-BOT
+Bitácora de actualización: Panel de Usuarios, Auditoría de Moderación y Seguridad
+
+1. Contexto y Diagnóstico del Problema
+- Se detectó una inconsistencia visual en el panel de Gestión de Usuarios (`/admin/users`), donde usuarios registrados con rol Cocinero o Repartidor que no habían completado su perfil (Paso 2) figuraban con estado visual "Activo" en color verde sin haber sido aprobados por el administrador.
+- Causa raíz: La vista condicionaba el estado "Pendiente" únicamente a la existencia del registro en la tabla `cooks` (`$user->cook && !$user->cook->is_approved`). Si el usuario solo se registraba en el formulario base (`/register`) y abandonaba o era un bot de spam automatizado, el sistema caía en el descarte por defecto y lo etiquetaba como "Activo".
+- Adicionalmente, el panel carecía de una acción universal para inspeccionar los datos completos de cualquier usuario (clientes, cocineros activos, repartidores o registros incompletos), ya que el botón "Revisar" solo se mostraba para postulantes pendientes con perfil creado.
+
+2. Mejoras Implementadas en la Gestión de Usuarios (Admin)
+- **Ficha Integral de Usuario ("Ver Datos"):**
+  - Se incorporó un botón "Ver Datos" en la columna de acciones para todos los usuarios, además de permitir abrir la ficha haciendo clic sobre el nombre del usuario.
+  - El modal de visualización (`userDetailsModal`) despliega:
+    - Información de cuenta: ID, Nombre, Email, Estado de verificación de correo, Teléfono (con llamada/WhatsApp), Dirección y Fecha/Hora exacta de alta con tiempo relativo.
+    - Panel de Diagnóstico Anti-Bot: Detección inteligente de registros incompletos (sin cocina ni documentación enviada) y advertencia visual ante números de teléfono internacionales sospechosos (+34, etc.).
+    - Información de perfil de cocina o repartidor: Bio, radio de cobertura, horarios comerciales, galería de fotos de cocina, link seguro de acceso al DNI y método de cobro/CBU.
+    - Acciones contextuales directas: Aprobar/Rechazar solicitud (si está pendiente), Activar/Suspender cuenta y Eliminar usuario.
+- **Corrección de Estados Visuales:**
+  - Nueva insignia de estado: `⚠️ Incompleto` (color ámbar) para usuarios registrados con rol cocinero o repartidor que no han enviado su perfil obligatorio.
+  - Subtítulo explicativo bajo el nombre: `⚠️ Perfil no creado` o `⚠️ Doc. no enviada`.
+  - El estado `✓ Activo` queda reservado exclusivamente para clientes/admins activos y cocineros/repartidores aprobados por el administrador.
+- **Filtros Rápidos en el Dashboard:**
+  - Nuevo filtro y píldora superior: `⚠️ Sin Perfil (X)` para listar y auditar de inmediato todos los registros incompletos y eliminar cuentas falsas o bots de forma masiva.
+
+3. Protección Anti-Bot en el Registro (Frontend & Backend)
+- **Honeypot Invisible:**
+  - Se implementó un campo trampa oculto (`system_website_check`) en el formulario de registro (`resources/views/auth/register.blade.php`), invisible para usuarios legítimos pero completado automáticamente por bots de spam.
+  - En `app/Http/Controllers/Auth/RegisteredUserController.php`, las solicitudes donde dicho campo venga completado son interceptadas, registradas en el log del sistema y descartadas silenciosamente sin crear registros en la base de datos.
+- **Doble Factor de Seguridad:**
+  - El sistema mantiene la compatibilidad con Google reCAPTCHA v3 activable desde la Configuración (`/admin/settings`).
+
+4. Archivos Modificados
+- `resources/views/admin/users/index.blade.php`: Modal `userDetailsModal`, botón "Ver Datos", badges de estado corregidos, filtros de incompletos y funciones JS.
+- `app/Http/Controllers/AdminController.php`: Soporte para filtro `status=incomplete`, conteo de incompletos en `$stats` y `withCount('orders')`.
+- `resources/views/auth/register.blade.php`: Campo Honeypot invisible contra bots.
+- `app/Http/Controllers/Auth/RegisteredUserController.php`: Validación y descarte silencioso de bots detectados por Honeypot.

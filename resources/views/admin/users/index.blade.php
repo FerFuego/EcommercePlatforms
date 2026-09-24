@@ -933,7 +933,7 @@
                             email: '${(user.email || '').replace(/'/g, "\\'")}',
                             details: ${JSON.stringify(isPendingCook ? user.cook : user.driver)}
                         })" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-sm">
-                            <span>📋 Revisar / Aprobar Solicitud</span>
+                            <span>Revisar / Aprobar Solicitud</span>
                         </button>
                     `;
                 }
@@ -943,13 +943,13 @@
                     actionsHtml += `
                         <form action="/admin/users/${user.id}/toggle-status" method="POST" class="inline">
                             <input type="hidden" name="_token" value="${token}">
-                            <button type="submit" class="px-3.5 py-2 rounded-xl text-xs font-bold transition ${user.is_suspended ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-yellow-500 hover:bg-yellow-600 text-white'} shadow-sm">
-                                ${user.is_suspended ? '✓ Activar Cuenta' : '⏸ Suspender Cuenta'}
+                            <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold transition ${user.is_suspended ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-yellow-500 hover:bg-yellow-600 text-white'} shadow-sm">
+                                ${user.is_suspended ? 'Activar Cuenta' : 'Suspender Cuenta'}
                             </button>
                         </form>
 
                         <button type="button" onclick="closeUserDetailsModal(); confirmDelete(${user.id}, '${user.name.replace(/'/g, "\\'")}')" class="px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-sm">
-                            <span>🗑️ Eliminar Usuario</span>
+                            <span>Eliminar Usuario</span>
                         </button>
                     `;
                 }
