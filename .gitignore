@@ -16,6 +16,8 @@
 /public/hot
 /public/uploads
 /storage/*.key
+/storage/*.json
+/storage/firebase-auth.json
 /storage/pail
 /vendor
 Homestead.json
