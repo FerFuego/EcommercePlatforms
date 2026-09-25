@@ -71,7 +71,7 @@
 
             <!-- Summary -->
             <div class="lg:col-span-1">
-                <div class="bg-gradient-to-br from-orange-600 via-pink-600 to-purple-600 rounded-2xl shadow-2xl p-6 text-white sticky top-24">
+                <div class="bg-white rounded-2xl shadow-2xl p-6 sticky top-24">
                     <h3 class="text-2xl font-bold mb-6">Resumen</h3>
                     
                     @php

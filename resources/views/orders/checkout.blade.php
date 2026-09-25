@@ -23,7 +23,7 @@
                 @endphp
 
                 @if($isScheduledOnly)
-                    <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-800 text-white p-6 rounded-2xl shadow-xl border border-purple-400/30 flex items-start space-x-4 mb-6">
+                    <div class="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white p-6 rounded-2xl shadow-xl border border-purple-400/30 flex items-start space-x-4 mb-6">
                         <div class="text-3xl p-3 bg-white/10 rounded-2xl flex-shrink-0">📅</div>
                         <div class="flex-1">
                             <div class="flex flex-wrap items-center gap-2 mb-1.5">
