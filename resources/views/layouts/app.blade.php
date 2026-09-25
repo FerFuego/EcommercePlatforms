@@ -111,26 +111,27 @@
 
     <!-- Navbar -->
     <nav class="bg-white/95 backdrop-blur-lg sticky top-0 z-50 border-b border-gray-100 shadow-sm">
-        <div class="container mx-auto px-4 sm:px-4 lg:px-6">
-            <div class="flex justify-between items-center h-20 gap-2 lg:gap-4">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-3 lg:gap-6">
+                
                 <!-- Menu: Logo + Explorar, Quiero Cocinar -->
                 <div class="flex items-center space-x-3 lg:space-x-6 flex-shrink-0">
                     <!-- Logo Cocinarte -->
-                    <a href="{{ route('home') }}" class="flex items-center space-x-2 flex-shrink-0">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-2 transition-transform hover:scale-[1.02]">
                         <img src="{{ asset('assets/front/logo-8.webp') }}"
                             alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}" width="150" height="60"
-                            class="h-12 md:h-14 w-auto object-contain" fetchpriority="high">
+                            class="h-11 md:h-12 w-auto object-contain" fetchpriority="high">
                     </a>
 
                     <!-- Explorar, Quiero Cocinar -->
-                    <div class="hidden md:flex items-center space-x-4 lg:space-x-6">
+                    <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
                         <a href="{{ route('marketplace.catalog') }}"
-                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors text-sm lg:text-base whitespace-nowrap">
+                            class="px-3 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:text-orange-600 hover:bg-orange-50/70 transition-all whitespace-nowrap">
                             Explorar
                         </a>
                         @if(!auth()->check() || !auth()->user()->isCook())
                             <a href="{{ route('register', ['role' => 'cook']) }}"
-                                class="text-gray-700 hover:text-purple-600 font-medium transition-colors text-sm lg:text-base whitespace-nowrap">
+                                class="px-3 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:text-purple-600 hover:bg-purple-50/70 transition-all whitespace-nowrap">
                                 Quiero Cocinar
                             </a>
                         @endif
@@ -139,45 +140,57 @@
 
                 <!-- Buscador (solo fuera de login/páginas de autenticación) -->
                 @if(!$isAuthPage)
-                    <div class="hidden md:flex flex-1 max-w-xs lg:max-w-md mx-2">
-                        <form action="{{ route('marketplace.catalog') }}" method="GET" class="relative w-full">
-                            <input type="text" name="search" value="{{ request('search') }}"
-                                placeholder="Buscar cocinero o plato..."
-                                class="w-full px-4 py-2 pr-10 rounded-xl border-2 border-gray-200 focus:border-purple-500 transition text-sm focus:outline-none">
-                            <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600 transition" aria-label="Buscar">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </button>
+                    <div class="hidden md:flex flex-1 max-w-md lg:max-w-lg xl:max-w-xl mx-2 lg:mx-4">
+                        <form action="{{ route('marketplace.catalog') }}" method="GET" class="w-full">
+                            <div class="relative flex items-center w-full bg-gray-50/90 hover:bg-gray-100/90 focus-within:bg-white rounded-full border border-gray-200/90 focus-within:border-orange-500 focus-within:ring-4 focus-within:ring-orange-500/10 shadow-sm hover:shadow transition-all duration-200">
+                                <div class="pl-4 pr-1 text-gray-400 flex items-center pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                                <input type="text" name="search" value="{{ request('search') }}"
+                                    placeholder="Buscar cocinero o plato..."
+                                    class="w-full py-2.5 pl-2 pr-11 bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none">
+                                <button type="submit" 
+                                    class="absolute right-1.5 w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white flex items-center justify-center shadow-sm hover:shadow transition-all transform hover:scale-105 active:scale-95"
+                                    aria-label="Buscar">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </button>
+                            </div>
                         </form>
                     </div>
                 @endif
 
                 <!-- Acciones (Ingresar, Botón Registro) + Iconos (Carrito, Mi Cocina, Mis Pedidos, Instagram) -->
-                <div class="hidden md:flex items-center space-x-3 lg:space-x-5 flex-shrink-0">
+                <div class="hidden md:flex items-center space-x-2.5 lg:space-x-3.5 flex-shrink-0">
                     <!-- Ingresar & Botón registro (para usuarios no logueados) -->
                     @guest
                         <a href="{{ route('login') }}"
-                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors text-sm lg:text-base whitespace-nowrap">
+                            class="px-3 py-2 text-sm font-semibold text-gray-700 hover:text-orange-600 transition-colors whitespace-nowrap">
                             Ingresar
                         </a>
                         <a href="{{ route('register') }}"
-                            class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-4 py-2 lg:px-5 lg:py-2.5 rounded-xl font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all text-xs lg:text-sm whitespace-nowrap">
+                            class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-5 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs lg:text-sm whitespace-nowrap">
                             Registrarse
                         </a>
                     @endguest
 
-                    <!-- Iconos -->
-                    <div class="flex items-center space-x-1 lg:space-x-2 text-gray-700">
+                    <!-- Separador sutil -->
+                    <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+                    <!-- Iconos con contenedores circulares y hover suave -->
+                    <div class="flex items-center space-x-1 lg:space-x-1.5 text-gray-700">
                         <!-- Carrito -->
                         <a href="{{ route('cart.index') }}"
-                            class="relative p-2 text-gray-700 hover:text-orange-600 transition-colors"
+                            class="w-10 h-10 rounded-full flex items-center justify-center text-gray-600 hover:text-orange-600 hover:bg-orange-50 transition-all relative group"
                             title="Carrito de compras" aria-label="Carrito">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
-                            <span class="header-cart-badge absolute -top-1 -right-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs font-bold rounded-full w-5 h-5 {{ $cartCount > 0 ? 'flex' : 'hidden' }} items-center justify-center shadow">
+                            <span class="header-cart-badge absolute -top-0.5 -right-0.5 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-[11px] font-bold rounded-full min-w-[18px] h-[18px] px-1 {{ $cartCount > 0 ? 'flex' : 'hidden' }} items-center justify-center shadow-sm">
                                 <span class="header-cart-count">{{ $cartCount }}</span>
                             </span>
                         </a>
@@ -186,9 +199,9 @@
                             <!-- Mi Cocina (si ya se logueó como cocinero) -->
                             @if(auth()->user()->isCook())
                                 <a href="{{ route('cook.dashboard') }}"
-                                    class="relative p-2 text-gray-700 hover:text-purple-600 transition-colors"
+                                    class="w-10 h-10 rounded-full flex items-center justify-center text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-all group"
                                     title="Mi Cocina" aria-label="Mi Cocina">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                             d="M12 4a3.5 3.5 0 00-3.4 2.7A3.5 3.5 0 005 10a3.5 3.5 0 002.5 3.37L7 18h10l-.5-4.63A3.5 3.5 0 0019 10a3.5 3.5 0 00-3.6-3.3A3.5 3.5 0 0012 4zM9 18h6v2H9v-2z" />
                                     </svg>
@@ -198,14 +211,14 @@
                             <!-- Mis Pedidos (si ya se logueó como cliente / tiene pedidos) -->
                             @if(auth()->user()->isCustomer() || auth()->user()->orders()->exists())
                                 <a href="{{ route('orders.my') }}"
-                                    class="relative p-2 text-gray-700 hover:text-pink-600 transition-colors"
+                                    class="w-10 h-10 rounded-full flex items-center justify-center text-gray-600 hover:text-pink-600 hover:bg-pink-50 transition-all relative group"
                                     title="Mis Pedidos" aria-label="Mis Pedidos">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                     </svg>
                                     @if($pendingCount > 0)
-                                        <span class="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow">
+                                        <span class="absolute -top-0.5 -right-0.5 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-[11px] font-bold rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center shadow-sm">
                                             {{ $pendingCount }}
                                         </span>
                                     @endif
@@ -216,9 +229,9 @@
                         <!-- Instagram -->
                         <a href="{{ $globalSettings['instagram_url'] ?? 'https://www.instagram.com/cocinarte.ar' }}"
                             target="_blank" rel="noopener noreferrer"
-                            class="p-2 text-gray-700 hover:text-pink-600 transition-all transform hover:scale-110"
+                            class="w-10 h-10 rounded-full flex items-center justify-center text-gray-600 hover:text-pink-600 hover:bg-pink-50 transition-all group"
                             title="Instagram Cocinarte" aria-label="Instagram">
-                            <svg class="w-6 h-6 fill-currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 fill-currentColor transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.13-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                             </svg>
                         </a>
@@ -228,16 +241,16 @@
                             <div class="relative group ml-1">
                                 <button class="flex items-center space-x-2 text-gray-700 hover:text-purple-600 focus:outline-none" aria-label="Menú de usuario">
                                     @if (auth()->user()->profile_photo_path)
-                                        <img class="h-9 w-9 rounded-full object-cover border-2 border-purple-200"
+                                        <img class="h-9 w-9 rounded-full object-cover border-2 border-purple-200 shadow-sm"
                                             src="{{ asset('uploads/' . auth()->user()->profile_photo_path) }}"
                                             alt="{{ auth()->user()->name }}" />
                                     @else
-                                        <div class="w-9 h-9 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                        <div class="w-9 h-9 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm">
                                             {{ substr(auth()->user()->name, 0, 1) }}
                                         </div>
                                     @endif
                                 </button>
-                                <div class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-gray-100">
+                                <div class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-gray-100">
                                     <div class="py-2">
                                         <div class="px-4 py-2 border-b border-gray-100">
                                             <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->name }}</p>
@@ -290,13 +303,13 @@
                 <div class="flex items-center space-x-2 md:hidden">
                     <!-- Mobile Cart Icon -->
                     <a href="{{ route('cart.index') }}"
-                        class="relative p-2 text-gray-700 hover:text-orange-600 transition-colors"
+                        class="w-10 h-10 rounded-full flex items-center justify-center text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors relative"
                         aria-label="Carrito">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
-                        <span class="header-cart-badge absolute -top-1 -right-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs font-bold rounded-full w-5 h-5 {{ $cartCount > 0 ? 'flex' : 'hidden' }} items-center justify-center">
+                        <span class="header-cart-badge absolute top-0 right-0 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-[11px] font-bold rounded-full min-w-[18px] h-[18px] px-1 {{ $cartCount > 0 ? 'flex' : 'hidden' }} items-center justify-center shadow-sm">
                             <span class="header-cart-count">{{ $cartCount }}</span>
                         </span>
                     </a>
@@ -304,18 +317,18 @@
                     <!-- Mobile Instagram -->
                     <a href="{{ $globalSettings['instagram_url'] ?? 'https://www.instagram.com/cocinarte.ar' }}"
                         target="_blank" rel="noopener noreferrer"
-                        class="p-2 text-gray-700 hover:text-pink-600 transition-colors"
+                        class="w-10 h-10 rounded-full flex items-center justify-center text-gray-700 hover:text-pink-600 hover:bg-pink-50 transition-colors"
                         aria-label="Instagram">
-                        <svg class="w-6 h-6 fill-currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 fill-currentColor" viewBox="0 0 24 24">
                             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.13-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                         </svg>
                     </a>
 
                     <!-- Hamburger Button -->
                     <button id="mobile-menu-button" type="button"
-                        class="text-gray-700 hover:text-purple-600 focus:outline-none p-1.5 rounded-lg"
+                        class="w-10 h-10 rounded-full flex items-center justify-center text-gray-700 hover:text-purple-600 hover:bg-purple-50 focus:outline-none transition-colors"
                         aria-label="Abrir menú">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -331,13 +344,18 @@
                 <!-- Buscador Mobile -->
                 @if(!$isAuthPage)
                     <form action="{{ route('marketplace.catalog') }}" method="GET" class="mb-3">
-                        <div class="relative">
+                        <div class="relative flex items-center w-full bg-gray-50 rounded-full border border-gray-200 focus-within:border-orange-500 focus-within:bg-white shadow-sm">
+                            <div class="pl-3.5 pr-1 text-gray-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
                             <input type="text" name="search" value="{{ request('search') }}"
                                 placeholder="Buscar cocinero o plato..."
-                                class="w-full px-4 py-2.5 pr-10 rounded-xl border-2 border-gray-200 focus:border-purple-500 transition text-sm focus:outline-none">
-                            <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600" aria-label="Buscar">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                class="w-full py-2.5 pl-2 pr-10 bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none">
+                            <button type="submit" class="absolute right-1.5 w-7 h-7 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 text-white flex items-center justify-center shadow-sm" aria-label="Buscar">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
                             </button>
                         </div>
@@ -345,7 +363,7 @@
                 @endif
 
                 <a href="{{ route('marketplace.catalog') }}"
-                    class="block px-4 py-2.5 text-gray-700 hover:bg-purple-50 rounded-xl font-medium transition-colors">
+                    class="block px-4 py-2.5 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-xl font-medium transition-colors">
                     🔍 Explorar
                 </a>
 
@@ -423,7 +441,7 @@
                             Ingresar
                         </a>
                         <a href="{{ route('register') }}"
-                            class="block px-4 py-3 text-center bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white rounded-xl font-bold shadow-md">
+                            class="block px-4 py-3 text-center bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white rounded-full font-bold shadow-md">
                             Registrarse
                         </a>
                     </div>
