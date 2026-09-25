@@ -183,11 +183,38 @@
                         </div>
                     </div>
 
+                    <!-- Phone / WhatsApp -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <h2 class="text-2xl font-bold mb-6 flex items-center">
+                            <span
+                                class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white mr-3">4</span>
+                            Tu Teléfono Celular (WhatsApp)
+                        </h2>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label for="customer_phone" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Número Celular *
+                                </label>
+                                <input type="tel" name="phone" id="customer_phone"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring focus:ring-emerald-200 transition @error('phone') border-red-500 @enderror"
+                                    placeholder="Ej: 11 2345 6789 o 351 234 5678"
+                                    value="{{ old('phone', auth()->user()->phone ?? '') }}" required>
+                                <p class="text-xs text-gray-500 mt-1.5 flex items-center">
+                                    <span class="mr-1">💬</span> El cocinero y la plataforma usarán este número para coordinar y avisarte el estado de tu pedido por WhatsApp.
+                                </p>
+                                @error('phone')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Notes -->
                     <div class="bg-white rounded-2xl shadow-lg p-8">
                         <h2 class="text-2xl font-bold mb-6 flex items-center">
                             <span
-                                class="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-600 rounded-full flex items-center justify-center text-white mr-3">4</span>
+                                class="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-600 rounded-full flex items-center justify-center text-white mr-3">5</span>
                             Notas Adicionales (Opcional)
                         </h2>
 
@@ -475,7 +502,16 @@
                     }
                 }
 
-                // 3. Validaciones condicionales de pedido programado
+                // 3. Validar teléfono de contacto
+                const phoneInput = document.getElementById('customer_phone');
+                if (phoneInput && !phoneInput.value.trim()) {
+                    e.preventDefault();
+                    alert('Por favor ingresa tu número de teléfono celular para recibir notificaciones por WhatsApp.');
+                    phoneInput.focus();
+                    return;
+                }
+
+                // 4. Validaciones condicionales de pedido programado
                 const scheduleRadio = document.querySelector('input[name="schedule_type"]:checked');
                 if (scheduleRadio && scheduleRadio.value === 'scheduled') {
                     const scheduledTime = document.getElementById('scheduled_time');

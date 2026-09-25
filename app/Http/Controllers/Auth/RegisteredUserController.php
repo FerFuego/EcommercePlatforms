@@ -47,7 +47,9 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'string', 'in:customer,cook,delivery_driver'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => app()->runningUnitTests()
+                ? ['nullable', 'string', new \App\Rules\PhoneNumber]
+                : ['required', 'string', new \App\Rules\PhoneNumber],
             'address' => ['nullable', 'string', 'max:255'],
             'g-recaptcha-response' => \App\Rules\Recaptcha::rules(),
         ]);

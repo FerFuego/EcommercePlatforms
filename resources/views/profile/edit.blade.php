@@ -98,9 +98,15 @@
 
                             <!-- Phone -->
                             <div>
-                                <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Teléfono</label>
+                                <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Teléfono Celular (WhatsApp)
+                                </label>
                                 <input type="tel" name="phone" id="phone" value="{{ old('phone', $user->phone) }}"
+                                    placeholder="Ej: 11 2345 6789 o +54 9 11 2345-6789"
                                     class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition @error('phone') border-red-500 @enderror">
+                                <p class="text-xs text-gray-500 mt-1.5 flex items-center">
+                                    <span class="mr-1">💡</span> 10 dígitos con código de área (sin 0 ni 15). Necesario para recibir avisos de tus pedidos.
+                                </p>
                                 @error('phone')
                                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                 @enderror

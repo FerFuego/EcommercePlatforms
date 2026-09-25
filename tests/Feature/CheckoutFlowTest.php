@@ -56,7 +56,7 @@ class CheckoutFlowTest extends TestCase
     {
         $cook = Cook::factory()->create(['is_approved' => true]);
         $this->createActiveSubscription($cook);
-        $dish = Dish::factory()->create(['cook_id' => $cook->id]);
+        $dish = Dish::factory()->create(['cook_id' => $cook->id, 'available_stock' => 5]);
 
         $response = $this->actingAs($customer = User::factory()->create())->get(route('marketplace.cook.profile', $cook->id));
 

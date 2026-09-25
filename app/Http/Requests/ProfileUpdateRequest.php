@@ -25,7 +25,7 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => ['sometimes', 'nullable', 'string', new \App\Rules\PhoneNumber],
             'address' => ['nullable', 'string', 'max:255'],
             'photo' => ['nullable', 'image', 'max:1024'], // 1MB Max
         ];

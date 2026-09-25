@@ -406,6 +406,11 @@ class WhatsAppService
             return '54' . $rest;
         }
 
+        // Si empieza con 9 y tiene 11 dígitos (9 + 10 dígitos locales)
+        if (str_starts_with($digits, '9') && strlen($digits) === 11) {
+            return '54' . substr($digits, 1);
+        }
+
         // Número local de 10 dígitos
         if (strlen($digits) === 10) {
             return '54' . $digits;
@@ -454,6 +459,11 @@ class WhatsAppService
                 return '549' . $matches[1] . $matches[2];
             }
             return '549' . $rest;
+        }
+
+        // Si empieza con 9 y tiene 11 dígitos (9 + 10 dígitos locales)
+        if (str_starts_with($digits, '9') && strlen($digits) === 11) {
+            return '54' . $digits;
         }
 
         // Si tiene 10 dígitos (número local sin prefijo: 1112345678)

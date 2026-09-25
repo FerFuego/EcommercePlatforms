@@ -185,8 +185,13 @@ class OrderController extends Controller
             'schedule_type' => 'required|in:immediate,scheduled',
             'scheduled_time' => 'required_if:schedule_type,scheduled|nullable|date|after:now',
             'notes' => 'nullable|string|max:1000',
+            'phone' => ['nullable', 'string', new \App\Rules\PhoneNumber],
             'g-recaptcha-response' => \App\Rules\Recaptcha::rules(),
         ]);
+
+        if ($request->filled('phone')) {
+            auth()->user()->update(['phone' => $request->phone]);
+        }
 
         $cart = session()->get('cart', []);
 
