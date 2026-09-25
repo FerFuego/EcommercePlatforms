@@ -311,13 +311,18 @@ class OrderController extends Controller
                 }
             }
 
-            // Notificar al cocinero (push + in-app)
-            $order->notifyNewOrder();
-
             DB::commit();
 
             // Limpiar carrito
             session()->forget('cart');
+
+            // Notificar al cocinero y cliente fuera de la transacción de base de datos
+            // para evitar bloqueos en MySQL durante llamadas externas (Pusher, Meta WhatsApp, FCM, SMTP)
+            try {
+                $order->notifyNewOrder();
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error("Error notifying new order #{$order->id}: " . $e->getMessage());
+            }
 
             return redirect()->route('orders.success', $order->id);
 

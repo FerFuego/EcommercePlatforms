@@ -210,12 +210,21 @@
                             </div>
                         </div>
 
-                        <button type="submit"
-                            class="w-full bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 text-white px-8 py-5 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all flex items-center justify-center space-x-3">
-                            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                            </svg>
-                            <span>Confirmar y Contactar por WhatsApp</span>
+                        <button type="submit" id="submitOrderBtn"
+                            class="w-full bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 text-white px-8 py-5 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all flex items-center justify-center space-x-3 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed disabled:transform-none">
+                            <span id="btnDefaultState" class="flex items-center justify-center space-x-3">
+                                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                </svg>
+                                <span>Confirmar y Contactar por WhatsApp</span>
+                            </span>
+                            <span id="btnLoadingState" class="hidden items-center justify-center space-x-3">
+                                <svg class="animate-spin -ml-1 mr-3 h-7 w-7 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span>Procesando pedido...</span>
+                            </span>
                         </button>
                     </div>
                 </form>
@@ -393,19 +402,164 @@
                 });
             });
 
-            // reCAPTCHA handler
+            // Control del loader y prevención de doble submit
+            let isSubmitting = false;
+
+            function showCheckoutLoader() {
+                const overlay = document.getElementById('checkoutLoadingOverlay');
+                const btn = document.getElementById('submitOrderBtn');
+                const btnDefault = document.getElementById('btnDefaultState');
+                const btnLoading = document.getElementById('btnLoadingState');
+
+                if (overlay) {
+                    overlay.classList.remove('hidden');
+                    overlay.classList.add('flex');
+                }
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-75', 'cursor-not-allowed');
+                }
+                if (btnDefault) btnDefault.classList.add('hidden');
+                if (btnLoading) {
+                    btnLoading.classList.remove('hidden');
+                    btnLoading.classList.add('flex');
+                }
+            }
+
+            function hideCheckoutLoader() {
+                const overlay = document.getElementById('checkoutLoadingOverlay');
+                const btn = document.getElementById('submitOrderBtn');
+                const btnDefault = document.getElementById('btnDefaultState');
+                const btnLoading = document.getElementById('btnLoadingState');
+
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                    overlay.classList.remove('flex');
+                }
+                if (btn) {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                }
+                if (btnDefault) btnDefault.classList.remove('hidden');
+                if (btnLoading) {
+                    btnLoading.classList.add('hidden');
+                    btnLoading.classList.remove('flex');
+                }
+                isSubmitting = false;
+            }
+
+            // reCAPTCHA handler y submit seguro
             document.getElementById('orderForm').addEventListener('submit', function(e) {
-                e.preventDefault();
+                if (isSubmitting) {
+                    e.preventDefault();
+                    return false;
+                }
+
                 const form = this;
-                window.getRecaptchaToken('order_process').then(token => {
-                    document.getElementById('g-recaptcha-response').value = token;
+
+                // 1. Validar requeridos estándar de HTML5
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                // 2. Validaciones condicionales de entrega
+                const deliveryRadio = document.querySelector('input[name="delivery_type"]:checked');
+                if (deliveryRadio && deliveryRadio.value === 'delivery') {
+                    const address = document.getElementById('delivery_address');
+                    if (!address || !address.value.trim()) {
+                        e.preventDefault();
+                        alert('Por favor ingresa la dirección completa de entrega.');
+                        if (address) address.focus();
+                        return;
+                    }
+                }
+
+                // 3. Validaciones condicionales de pedido programado
+                const scheduleRadio = document.querySelector('input[name="schedule_type"]:checked');
+                if (scheduleRadio && scheduleRadio.value === 'scheduled') {
+                    const scheduledTime = document.getElementById('scheduled_time');
+                    if (!scheduledTime || !scheduledTime.value.trim()) {
+                        e.preventDefault();
+                        alert('Por favor selecciona la fecha y hora para tu pedido programado.');
+                        if (scheduledTime) scheduledTime.focus();
+                        return;
+                    }
+                }
+
+                e.preventDefault();
+                isSubmitting = true;
+                showCheckoutLoader();
+
+                // Timeout de seguridad: si después de 25 segundos no hubo respuesta, liberar la interfaz
+                const safetyTimeout = setTimeout(function() {
+                    hideCheckoutLoader();
+                }, 25000);
+
+                if (typeof window.getRecaptchaToken === 'function') {
+                    window.getRecaptchaToken('order_process').then(token => {
+                        document.getElementById('g-recaptcha-response').value = token;
+                        form.submit();
+                    }).catch(err => {
+                        console.error('reCAPTCHA error:', err);
+                        form.submit();
+                    });
+                } else {
                     form.submit();
-                }).catch(err => {
-                    console.error(err);
-                    form.submit();
-                });
+                }
             });
         </script>
     @endpush
+
+    @push('styles')
+        <style>
+            @keyframes indeterminate {
+                0% { transform: translateX(-100%); width: 45%; }
+                50% { transform: translateX(60%); width: 75%; }
+                100% { transform: translateX(220%); width: 45%; }
+            }
+            .animate-indeterminate {
+                animation: indeterminate 1.6s infinite cubic-bezier(0.65, 0.815, 0.735, 0.395);
+            }
+        </style>
+    @endpush
+
+    <!-- Fullscreen Processing Overlay Loader -->
+    <div id="checkoutLoadingOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-950/65 backdrop-blur-md hidden transition-all duration-300">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl border border-gray-100 text-center relative overflow-hidden animate-fade-in">
+            <!-- Barra decorativa superior con gradiente de marca -->
+            <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-orange-500 via-pink-500 to-green-500"></div>
+
+            <!-- Contenedor del ícono animado -->
+            <div class="relative w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+                <div class="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-30"></div>
+                <div class="relative w-20 h-20 bg-gradient-to-tr from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-4xl shadow-xl shadow-green-500/30">
+                    <span class="animate-bounce">🍳</span>
+                </div>
+                <!-- Anillo de progreso circular giratorio -->
+                <svg class="absolute inset-0 w-24 h-24 animate-spin text-green-500/40" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="4" stroke-dasharray="70 200" stroke-linecap="round"></circle>
+                </svg>
+            </div>
+
+            <h3 class="text-2xl font-black text-gray-900 mb-2">¡Procesando tu pedido!</h3>
+            <p class="text-gray-600 text-sm mb-6 leading-relaxed">
+                Estamos registrando tus platos y notificando a la cocina. Esto demorará sólo unos segundos...
+            </p>
+
+            <!-- Barra de progreso indeterminada animada -->
+            <div class="w-full bg-gray-100 rounded-full h-2 mb-4 overflow-hidden relative">
+                <div class="h-full bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 rounded-full animate-indeterminate"></div>
+            </div>
+
+            <!-- Mensaje de seguridad y paciencia -->
+            <div class="flex items-center justify-center space-x-2 text-xs text-gray-500 bg-gray-50 py-2.5 px-4 rounded-xl">
+                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                <span>Por favor no cierres ni toques el botón otra vez</span>
+            </div>
+        </div>
+    </div>
 
 @endsection

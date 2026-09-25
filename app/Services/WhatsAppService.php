@@ -110,7 +110,7 @@ class WhatsAppService
             ],
         ];
 
-        $response = Http::withToken($token)->post($url, $payload);
+        $response = Http::timeout(6)->withToken($token)->post($url, $payload);
 
         if ($response->successful()) {
             Log::info("Meta WhatsApp message sent to {$to}", [
@@ -201,7 +201,7 @@ class WhatsAppService
             ],
         ];
 
-        $response = Http::withToken($token)->post($url, $payload);
+        $response = Http::timeout(6)->withToken($token)->post($url, $payload);
 
         if ($response->successful()) {
             Log::info("Meta WhatsApp template '{$templateName}' sent to {$to}", [

@@ -118,7 +118,7 @@ class Cook extends Model
                      * sin(radians(location_lat))))";
 
         return $query
-            ->whereRaw("{$haversine} < ?", [$lat, $lng, $lat, $radius])
+            ->whereRaw("{$haversine} < (? + 0)", [$lat, $lng, $lat, $radius])
             ->where('is_approved', true)
             ->where('active', true)
             ->orderByRaw("{$haversine} ASC", [$lat, $lng, $lat]);
