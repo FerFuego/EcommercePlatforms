@@ -5,8 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@hasSection('title')@yield('title') | {{ $globalSettings['site_name'] ?? 'Cocinarte' }}@else{{ $globalSettings['site_name'] ?? 'Cocinarte' }} - {{ $globalSettings['meta_title'] ?? 'Comida Casera de Cocineros Locales' }}@endif</title>
-    <meta name="description" content="@yield('meta_description', $globalSettings['meta_description'] ?? 'Descubre cocineros independientes cerca de ti, comida casera auténtica y delivery a domicilio en Cocinarte.')">
+    <title>@hasSection('title')@yield('title') |
+    {{ $globalSettings['site_name'] ?? 'Cocinarte' }}@else{{ $globalSettings['site_name'] ?? 'Cocinarte' }} -
+        {{ $globalSettings['meta_title'] ?? 'Comida Casera de Cocineros Locales' }}@endif</title>
+    <meta name="description"
+        content="@yield('meta_description', $globalSettings['meta_description'] ?? 'Descubre cocineros independientes cerca de ti, comida casera auténtica y delivery a domicilio en Cocinarte.')">
     <link rel="canonical" href="@yield('canonical', url()->current())">
     <meta name="facebook-domain-verification" content="g272z4he3on44wlxw6z3kgt5b51w4u" />
 
@@ -14,15 +17,19 @@
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:site_name" content="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}">
     <meta property="og:url" content="@yield('canonical', url()->current())">
-    <meta property="og:title" content="@yield('og_title', View::hasSection('title') ? View::getSection('title') . ' | ' . ($globalSettings['site_name'] ?? 'Cocinarte') : ($globalSettings['site_name'] ?? 'Cocinarte') . ' - ' . ($globalSettings['meta_title'] ?? 'Comida Casera'))">
-    <meta property="og:description" content="@yield('meta_description', $globalSettings['meta_description'] ?? 'Descubre cocineros independientes cerca de ti, comida casera auténtica y delivery a domicilio en Cocinarte.')">
+    <meta property="og:title"
+        content="@yield('og_title', View::hasSection('title') ? View::getSection('title') . ' | ' . ($globalSettings['site_name'] ?? 'Cocinarte') : ($globalSettings['site_name'] ?? 'Cocinarte') . ' - ' . ($globalSettings['meta_title'] ?? 'Comida Casera'))">
+    <meta property="og:description"
+        content="@yield('meta_description', $globalSettings['meta_description'] ?? 'Descubre cocineros independientes cerca de ti, comida casera auténtica y delivery a domicilio en Cocinarte.')">
     <meta property="og:image" content="@yield('og_image', asset('assets/front/logo-8.webp'))">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="@yield('canonical', url()->current())">
-    <meta name="twitter:title" content="@yield('og_title', View::hasSection('title') ? View::getSection('title') . ' | ' . ($globalSettings['site_name'] ?? 'Cocinarte') : ($globalSettings['site_name'] ?? 'Cocinarte') . ' - ' . ($globalSettings['meta_title'] ?? 'Comida Casera'))">
-    <meta name="twitter:description" content="@yield('meta_description', $globalSettings['meta_description'] ?? 'Descubre cocineros independientes cerca de ti, comida casera auténtica y delivery a domicilio en Cocinarte.')">
+    <meta name="twitter:title"
+        content="@yield('og_title', View::hasSection('title') ? View::getSection('title') . ' | ' . ($globalSettings['site_name'] ?? 'Cocinarte') : ($globalSettings['site_name'] ?? 'Cocinarte') . ' - ' . ($globalSettings['meta_title'] ?? 'Comida Casera'))">
+    <meta name="twitter:description"
+        content="@yield('meta_description', $globalSettings['meta_description'] ?? 'Descubre cocineros independientes cerca de ti, comida casera auténtica y delivery a domicilio en Cocinarte.')">
     <meta name="twitter:image" content="@yield('og_image', asset('assets/front/logo-8.webp'))">
 
     @stack('meta')
@@ -98,7 +105,9 @@
                 <!-- Logo -->
                 <div class="flex-shrink-0">
                     <a href="{{ route('home') }}" class="flex items-center space-x-3">
-                        <img src="{{ asset('assets/front/logo-8.webp') }}" alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}" width="160" height="64" class="h-16 w-auto" fetchpriority="high">
+                        <img src="{{ asset('assets/front/logo-8.webp') }}"
+                            alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}" width="160" height="64"
+                            class="h-16 w-auto" fetchpriority="high">
                     </a>
                 </div>
 
@@ -237,7 +246,7 @@
                         </a>
                         <a href="{{ route('register', ['role' => 'cook']) }}"
                             class="text-gray-700 hover:text-purple-600 font-medium transition-colors flex items-center gap-1.5">
-                            <span>👨‍🍳</span> Quiero Cocinar
+                            Quiero Cocinar
                         </a>
                         <a href="{{ route('login') }}"
                             class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
@@ -405,17 +414,21 @@
                 <div>
                     <h4 class="font-semibold mb-4">Para Cocineros</h4>
                     <ul class="space-y-2 text-gray-300">
-                        <li><a href="{{ route('register', ['role' => 'cook']) }}" class="hover:text-pink-400 transition">Registrarse como Cocinero</a>
+                        <li><a href="{{ route('register', ['role' => 'cook']) }}"
+                                class="hover:text-pink-400 transition">Registrarse como Cocinero</a>
                         </li>
-                        <li><a href="{{ route('home') }}#cooks" class="hover:text-pink-400 transition">Beneficios</a></li>
+                        <li><a href="{{ route('home') }}#cooks" class="hover:text-pink-400 transition">Beneficios</a>
+                        </li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-semibold mb-4">Para Repartidores</h4>
                     <ul class="space-y-2 text-gray-300">
-                        <li><a href="{{ route('register', ['role' => 'delivery_driver']) }}" class="hover:text-pink-400 transition">Registrarse como Repartidor</a>
+                        <li><a href="{{ route('register', ['role' => 'delivery_driver']) }}"
+                                class="hover:text-pink-400 transition">Registrarse como Repartidor</a>
                         </li>
-                        <li><a href="{{ route('home') }}#drivers" class="hover:text-pink-400 transition">Beneficios</a></li>
+                        <li><a href="{{ route('home') }}#drivers" class="hover:text-pink-400 transition">Beneficios</a>
+                        </li>
                     </ul>
                 </div>
                 <div>

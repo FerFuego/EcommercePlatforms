@@ -29,7 +29,7 @@
                     <div class="flex flex-col sm:flex-row gap-4">
                         <a href="{{ route('register', ['role' => 'cook']) }}"
                             class="bg-white border-2 border-orange-500 text-orange-600 px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-purple-50 transition-all inline-flex items-center justify-center">
-                            Soy Cocinero
+                            Quiero Cocinar
                         </a>
 
                         <a href="{{ route('marketplace.catalog') }}"
@@ -73,8 +73,9 @@
                             <div
                                 class="bg-white p-4 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform hover-card">
                                 <div class="w-full h-48 bg-gray-100 rounded-2xl overflow-hidden">
-                                    <img src="{{ asset('assets/front/pasta_casera.png') }}" alt="Plato Casero - Pasta Casera"
-                                        width="240" height="192" class="w-full h-full object-cover">
+                                    <img src="{{ asset('assets/front/pasta_casera.png') }}"
+                                        alt="Plato Casero - Pasta Casera" width="240" height="192"
+                                        class="w-full h-full object-cover">
                                 </div>
                                 <p class="mt-3 font-semibold text-gray-800">Pasta Casera</p>
                                 <p class="text-sm text-gray-600">$1,200</p>
@@ -82,8 +83,9 @@
                             <div
                                 class="bg-white p-4 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform hover-card">
                                 <div class="w-full h-48 bg-gray-100 rounded-2xl overflow-hidden">
-                                    <img src="{{ asset('assets/front/ensalada_casera.png') }}" alt="Plato Saludable - Ensalada Fresca"
-                                        width="240" height="192" loading="lazy" class="w-full h-full object-cover">
+                                    <img src="{{ asset('assets/front/ensalada_casera.png') }}"
+                                        alt="Plato Saludable - Ensalada Fresca" width="240" height="192" loading="lazy"
+                                        class="w-full h-full object-cover">
                                 </div>
                                 <p class="mt-3 font-semibold text-gray-800">Ensalada Fresca</p>
                                 <p class="text-sm text-gray-600">$800</p>
@@ -93,8 +95,9 @@
                             <div
                                 class="bg-white p-4 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform hover-card">
                                 <div class="w-full h-48 bg-gray-100 rounded-2xl overflow-hidden">
-                                    <img src="{{ asset('assets/front/pollo_curry_casero.png') }}" alt="Especialidad Casera - Curry de Pollo"
-                                        width="240" height="192" loading="lazy" class="w-full h-full object-cover">
+                                    <img src="{{ asset('assets/front/pollo_curry_casero.png') }}"
+                                        alt="Especialidad Casera - Curry de Pollo" width="240" height="192" loading="lazy"
+                                        class="w-full h-full object-cover">
                                 </div>
                                 <p class="mt-3 font-semibold text-gray-800">Curry de Pollo</p>
                                 <p class="text-sm text-gray-600">$1,500</p>
@@ -102,8 +105,9 @@
                             <div
                                 class="bg-white p-4 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform hover-card">
                                 <div class="w-full h-48 bg-gray-100 rounded-2xl overflow-hidden">
-                                    <img src="{{ asset('assets/front/torta_casera.png') }}" alt="Postre Artesanal - Torta Casera"
-                                        width="240" height="192" loading="lazy" class="w-full h-full object-cover">
+                                    <img src="{{ asset('assets/front/torta_casera.png') }}"
+                                        alt="Postre Artesanal - Torta Casera" width="240" height="192" loading="lazy"
+                                        class="w-full h-full object-cover">
                                 </div>
                                 <p class="mt-3 font-semibold text-gray-800">Torta Casera</p>
                                 <p class="text-sm text-gray-600">$2,000</p>
@@ -660,40 +664,40 @@
 @endsection
 
 @push('meta')
-<script type="application/ld+json">
-{
-  "@@context": "https://schema.org",
-  "@@graph": [
+    <script type="application/ld+json">
     {
-      "@@type": "Organization",
-      "@@id": "{{ route('home') }}#organization",
-      "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-      "url": "{{ route('home') }}",
-      "logo": {
-        "@@type": "ImageObject",
-        "url": "{{ asset('assets/front/logo-8.webp') }}",
-        "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
-      }
-    },
-    {
-      "@@type": "WebSite",
-      "@@id": "{{ route('home') }}#website",
-      "url": "{{ route('home') }}",
-      "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-      "description": "{{ $globalSettings['meta_description'] ?? 'Comida casera auténtica de cocineros locales' }}",
-      "publisher": {
-        "@@id": "{{ route('home') }}#organization"
-      },
-      "potentialAction": {
-        "@@type": "SearchAction",
-        "target": {
-          "@@type": "EntryPoint",
-          "urlTemplate": "{{ route('marketplace.catalog') }}?search={search_term_string}"
+      "@@context": "https://schema.org",
+      "@@graph": [
+        {
+          "@@type": "Organization",
+          "@@id": "{{ route('home') }}#organization",
+          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+          "url": "{{ route('home') }}",
+          "logo": {
+            "@@type": "ImageObject",
+            "url": "{{ asset('assets/front/logo-8.webp') }}",
+            "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
+          }
         },
-        "query-input": "required name=search_term_string"
-      }
+        {
+          "@@type": "WebSite",
+          "@@id": "{{ route('home') }}#website",
+          "url": "{{ route('home') }}",
+          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+          "description": "{{ $globalSettings['meta_description'] ?? 'Comida casera auténtica de cocineros locales' }}",
+          "publisher": {
+            "@@id": "{{ route('home') }}#organization"
+          },
+          "potentialAction": {
+            "@@type": "SearchAction",
+            "target": {
+              "@@type": "EntryPoint",
+              "urlTemplate": "{{ route('marketplace.catalog') }}?search={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
     }
-  ]
-}
-</script>
+    </script>
 @endpush
