@@ -26,16 +26,16 @@ class WhatsAppService
     /**
      * Envía una plantilla de WhatsApp según el driver configurado.
      */
-    public function sendTemplateMessage(string $to, string $templateName, array $components = [], string $languageCode = 'es'): bool
+    public function sendTemplateMessage(string $to, string $templateName, array $components = [], string $languageCode = 'es', array $buttons = []): bool
     {
         $driver = config('services.whatsapp.driver', 'meta');
 
         if ($driver === 'openwa') {
-            $formattedText = $this->formatTemplateToText($templateName, $components);
+            $formattedText = $this->formatTemplateToText($templateName, $components, $buttons);
             return $this->sendOpenWAMessage($to, $formattedText);
         }
 
-        return $this->sendMetaTemplateMessage($to, $templateName, $components, $languageCode);
+        return $this->sendMetaTemplateMessage($to, $templateName, $components, $languageCode, $buttons);
     }
 
     /**
@@ -130,11 +130,16 @@ class WhatsAppService
     /**
      * Envía plantilla vía Meta Cloud API.
      */
-    protected function sendMetaTemplateMessage(string $to, string $templateName, array $components = [], string $languageCode = 'es'): bool
-    {
+    protected function sendMetaTemplateMessage(
+        string $to,
+        string $templateName,
+        array $components = [],
+        string $languageCode = 'es',
+        array $buttons = []
+    ): bool {
         $token = config('services.whatsapp.token');
         $phoneNumberId = config('services.whatsapp.phone_number_id');
-        $apiVersion = config('services.whatsapp.api_version', 'v25.0');
+        $apiVersion = config('services.whatsapp.api_version', 'v22.0');
 
         if (!$token || !$phoneNumberId) {
             Log::warning('WhatsApp Meta API not configured: missing token or phone_number_id');
@@ -150,6 +155,39 @@ class WhatsAppService
             ];
         }, $components);
 
+        $templateComponents = [];
+
+        if (!empty($formattedComponents)) {
+            $templateComponents[] = [
+                'type' => 'body',
+                'parameters' => $formattedComponents,
+            ];
+        }
+
+        if (!empty($buttons)) {
+            foreach ($buttons as $button) {
+                if (isset($button['type']) && $button['type'] === 'button') {
+                    $templateComponents[] = $button;
+                } else {
+                    $subType = $button['sub_type'] ?? $button['type'] ?? 'url';
+                    $index = (string) ($button['index'] ?? '0');
+                    $paramValue = $button['parameter'] ?? $button['text'] ?? $button['value'] ?? '';
+
+                    $templateComponents[] = [
+                        'type' => 'button',
+                        'sub_type' => $subType,
+                        'index' => $index,
+                        'parameters' => [
+                            [
+                                'type' => 'text',
+                                'text' => (string) $paramValue,
+                            ],
+                        ],
+                    ];
+                }
+            }
+        }
+
         $payload = [
             'messaging_product' => 'whatsapp',
             'to' => $this->formatPhoneApi($to),
@@ -159,12 +197,7 @@ class WhatsAppService
                 'language' => [
                     'code' => $languageCode,
                 ],
-                'components' => empty($formattedComponents) ? [] : [
-                    [
-                        'type' => 'body',
-                        'parameters' => $formattedComponents,
-                    ]
-                ],
+                'components' => $templateComponents,
             ],
         ];
 
@@ -189,24 +222,30 @@ class WhatsAppService
     /**
      * Convierte las plantillas de Meta a texto plano enriquecido para OpenWA.
      */
-    protected function formatTemplateToText(string $templateName, array $components): string
+    protected function formatTemplateToText(string $templateName, array $components, array $buttons = []): string
     {
-        if ($templateName === 'actualizacion_pedido_cliente') {
+        if ($templateName === 'actualizacion_pedido_cliente_v1' || $templateName === 'actualizacion_pedido_cliente') {
             $orderId = $components[0] ?? '';
             $name = $components[1] ?? 'Cliente';
             $status = $components[2] ?? '';
-            $url = $components[3] ?? '';
-            return "🍲 *Actualización de tu pedido #{$orderId}*\n\n¡Hola {$name}! Tu pedido cambió a estado: *{$status}*.\n\n📱 Ver detalles: {$url}";
+            $url = $components[3] ?? ($buttons[0]['parameter'] ?? ($buttons[0]['parameters'][0]['text'] ?? ''));
+            if ($url && !str_starts_with($url, 'http')) {
+                $url = rtrim(config('app.url'), '/') . '/orders/' . $url;
+            }
+            if (!$url) {
+                $url = route('orders.show', $orderId ?: 1);
+            }
+            return "🍱 *Actualización de tu pedido #{$orderId}*\n\nHola {$name},\nTu pedido tiene un nuevo estado.\n>> *{$status}*\n\n¡Gracias por elegirnos! 😍\n\n🔗 *Ver detalle:* {$url}";
         }
 
-        if ($templateName === 'nuevo_pedido_cocinero') {
+        if ($templateName === 'nuevo_pedido_cocinero_v1' || $templateName === 'nuevo_pedido_cocinero') {
             $orderId = $components[0] ?? '';
             $customerName = $components[1] ?? 'Cliente';
             $detailString = $components[2] ?? '';
             $totalAmount = $components[3] ?? '';
             $deliveryType = $components[4] ?? '';
-            $url = $components[5] ?? '';
-            return "🔔 *¡Nuevo Pedido Recibido! #{$orderId}*\n\n👤 *Cliente:* {$customerName}\n📋 *Detalles:* {$detailString}\n💰 *Total:* \${$totalAmount}\n🛵 *Entrega:* {$deliveryType}\n\n👉 Ver pedido: {$url}";
+            $url = $components[5] ?? route('cook.orders.index');
+            return "🍲 *Pedido #{$orderId}*\n\nHola, recibiste un pedido de *{$customerName}*.\n\n📋 *Detalle del pedido:*\n{$detailString}\n\n💰 *Total:* \${$totalAmount}\n🛵 *Entrega:* {$deliveryType}\n\n¡Vamos a cocinar!! 😝\n\n👉 Ver en el panel: {$url}";
         }
 
         // Fallback genérico para cualquier otra plantilla

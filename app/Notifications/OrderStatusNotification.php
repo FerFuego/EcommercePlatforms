@@ -60,7 +60,6 @@ class OrderStatusNotification extends Notification implements ShouldQueue
             $this->order->id,
             $notifiable->name ?? 'Cliente',
             $label,
-            route('orders.show', $this->order->id)
         ];
 
         // Sanitize components: Meta API rejects new-lines, tabs, or more than 4 spaces
@@ -71,9 +70,16 @@ class OrderStatusNotification extends Notification implements ShouldQueue
 
         return [
             'type' => 'template',
-            'name' => 'actualizacion_pedido_cliente',
+            'name' => 'actualizacion_pedido_cliente_v1',
             'language' => 'es_AR',
-            'components' => $sanitizedComponents
+            'components' => $sanitizedComponents,
+            'buttons' => [
+                [
+                    'type' => 'url',
+                    'index' => '0',
+                    'parameter' => (string) $this->order->id,
+                ],
+            ],
         ];
     }
 

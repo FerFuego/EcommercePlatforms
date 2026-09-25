@@ -32,11 +32,11 @@ class TestWhatsAppTemplates extends Command
         $notifiable->email = 'test_whatsapp@example.com';
 
         try {
-            $this->info("Sending NewOrderNotification (nuevo_pedido_cocinero)...");
+            $this->info("Sending NewOrderNotification (nuevo_pedido_cocinero_v1)...");
             $notifiable->notifyNow(new \App\Notifications\NewOrderNotification($order));
             $this->info("NewOrderNotification dispatched successfully.");
 
-            $this->info("Sending OrderStatusNotification (actualizacion_pedido_cliente)...");
+            $this->info("Sending OrderStatusNotification (actualizacion_pedido_cliente_v1)...");
             $notifiable->notifyNow(new \App\Notifications\OrderStatusNotification($order));
             $this->info("OrderStatusNotification dispatched successfully.");
 

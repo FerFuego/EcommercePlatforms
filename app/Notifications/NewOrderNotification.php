@@ -77,7 +77,6 @@ class NewOrderNotification extends Notification implements ShouldQueue
             $detailString,
             number_format($order->total_amount, 0, ',', '.'),
             $deliveryType,
-            route('cook.orders.index')
         ];
 
         // Sanitize components: Meta API rejects new-lines, tabs, or more than 4 spaces
@@ -88,8 +87,8 @@ class NewOrderNotification extends Notification implements ShouldQueue
         
         return [
             'type' => 'template',
-            'name' => 'nuevo_pedido_cocinero',
-            'language' => 'es_ES',
+            'name' => 'nuevo_pedido_cocinero_v1',
+            'language' => 'es_AR',
             'components' => $sanitizedComponents
         ];
     }

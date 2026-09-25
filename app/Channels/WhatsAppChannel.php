@@ -29,7 +29,8 @@ class WhatsAppChannel
                 $to,
                 $message['name'],
                 $message['components'] ?? [],
-                $message['language'] ?? 'es'
+                $message['language'] ?? 'es',
+                $message['buttons'] ?? []
             );
         } else {
             app(WhatsAppService::class)->sendMessage($to, is_array($message) ? ($message['text'] ?? '') : $message);

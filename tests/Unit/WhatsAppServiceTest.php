@@ -238,6 +238,97 @@ class WhatsAppServiceTest extends TestCase
         });
     }
 
+    /** @test */
+    public function it_sends_meta_template_message_with_dynamic_url_button()
+    {
+        config([
+            'services.whatsapp.driver' => 'meta',
+            'services.whatsapp.token' => 'fake_token',
+            'services.whatsapp.phone_number_id' => '123456789',
+        ]);
+
+        \Illuminate\Support\Facades\Http::fake([
+            'https://graph.facebook.com/*/123456789/messages' => \Illuminate\Support\Facades\Http::response([
+                'messages' => [['id' => 'wamid.HBgL...']]
+            ], 200),
+        ]);
+
+        $buttons = [
+            [
+                'type' => 'url',
+                'index' => '0',
+                'parameter' => '101',
+            ],
+        ];
+
+        $sent = $this->service->sendTemplateMessage(
+            '+54 9 11 1234-5678',
+            'actualizacion_pedido_cliente_v1',
+            ['101', 'Juan', 'En Preparación'],
+            'es_AR',
+            $buttons
+        );
+
+        $this->assertTrue($sent);
+
+        \Illuminate\Support\Facades\Http::assertSent(function ($request) {
+            $data = $request->data();
+            $components = $data['template']['components'] ?? [];
+
+            $bodyComponent = collect($components)->firstWhere('type', 'body');
+            $buttonComponent = collect($components)->firstWhere('type', 'button');
+
+            return $data['template']['name'] === 'actualizacion_pedido_cliente_v1' &&
+                $data['template']['language']['code'] === 'es_AR' &&
+                count($bodyComponent['parameters']) === 3 &&
+                $bodyComponent['parameters'][0]['text'] === '101' &&
+                $bodyComponent['parameters'][1]['text'] === 'Juan' &&
+                $bodyComponent['parameters'][2]['text'] === 'En Preparación' &&
+                $buttonComponent['sub_type'] === 'url' &&
+                $buttonComponent['index'] === '0' &&
+                $buttonComponent['parameters'][0]['text'] === '101';
+        });
+    }
+
+    /** @test */
+    public function it_converts_v1_template_with_button_to_text_when_using_openwa_driver()
+    {
+        config([
+            'services.whatsapp.driver' => 'openwa',
+            'services.whatsapp.openwa.url' => 'http://localhost:3000',
+        ]);
+
+        \Illuminate\Support\Facades\Http::fake([
+            'http://localhost:3000/send-message' => \Illuminate\Support\Facades\Http::response(['status' => 'success'], 200),
+        ]);
+
+        $buttons = [
+            [
+                'type' => 'url',
+                'index' => '0',
+                'parameter' => '101',
+            ],
+        ];
+
+        $sent = $this->service->sendTemplateMessage(
+            '+54 9 11 1234-5678',
+            'actualizacion_pedido_cliente_v1',
+            ['101', 'Juan', 'En Preparación'],
+            'es_AR',
+            $buttons
+        );
+
+        $this->assertTrue($sent);
+
+        \Illuminate\Support\Facades\Http::assertSent(function ($request) {
+            return $request->url() === 'http://localhost:3000/send-message' &&
+                str_contains($request['content'], 'Actualización de tu pedido #101') &&
+                str_contains($request['content'], 'Hola Juan') &&
+                str_contains($request['content'], 'En Preparación') &&
+                str_contains($request['content'], '/orders/101');
+        });
+    }
+
     // ──────────────────────────────────────────────
     // Helpers
     // ──────────────────────────────────────────────
