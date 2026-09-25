@@ -105,7 +105,7 @@ class AuthenticationTest extends TestCase
             'phone' => '+54 3537 123456',
         ]);
 
-        $response->assertRedirect(route('dashboard'));
+        $response->assertRedirect(route('cook.profile.create'));
         $this->assertDatabaseHas('users', [
             'email' => 'mario@example.com',
             'role' => 'cook',

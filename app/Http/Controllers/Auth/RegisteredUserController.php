@@ -59,19 +59,34 @@ class RegisteredUserController extends Controller
         $user->role = $validated['role'];
         $user->save();
 
-        event(new Registered($user));
+        try {
+            event(new Registered($user));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error en evento Registered al registrar usuario: " . $e->getMessage());
+        }
 
         // Notificar a los administradores
-        $admins = User::where('role', 'admin')->get();
-        if ($admins->count() > 0) {
-            Notification::send($admins, new AdminNewUserNotification($user));
+        try {
+            $admins = User::where('role', 'admin')->get();
+            if ($admins->count() > 0) {
+                Notification::send($admins, new AdminNewUserNotification($user));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error notificando administradores al registrar usuario: " . $e->getMessage());
         }
 
         Auth::login($user);
+        $request->session()->regenerate();
 
-        // Redirect based on role
+        // Redirect based on role directly to the corresponding profile setup
+        if ($user->role === 'cook') {
+            return redirect()->route('cook.profile.create')
+                ->with('info', '¡Bienvenido a Cocinarte! Completa tu perfil de cocina para comenzar a vender.');
+        }
+
         if ($user->role === 'delivery_driver') {
-            return redirect()->route('delivery-driver.dashboard');
+            return redirect()->route('delivery-driver.profile.create')
+                ->with('info', '¡Bienvenido a Cocinarte! Completa tu perfil de repartidor para comenzar.');
         }
 
         return redirect(route('dashboard', absolute: false));

@@ -143,7 +143,15 @@
                             <input id="email" type="email" name="email" value="{{ old('email') }}" required
                                 class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:border-pink-500 focus:ring-2 focus:ring-pink-100 transition @error('email') border-red-500 @enderror">
                             @error('email')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                <div class="mt-2 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 space-y-1">
+                                    <p class="font-semibold">{{ $message }}</p>
+                                    <p class="text-gray-600">
+                                        ¿Ya tienes una cuenta o intentaste registrarte antes? 
+                                        <a href="{{ route('login') }}" class="text-purple-600 font-bold underline hover:text-purple-800">
+                                            Inicia sesión aquí
+                                        </a> para entrar y completar tu perfil de cocina.
+                                    </p>
+                                </div>
                             @enderror
                         </div>
 
@@ -223,13 +231,26 @@
                                 class="w-1/3 border-2 border-gray-200 text-gray-600 px-6 py-4 rounded-xl font-bold hover:bg-gray-50 transition-all">
                                 Volver
                             </button>
-                            <button type="submit"
-                                class="w-2/3 bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-6 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-                                Finalizar Registro
+                            <button type="submit" id="btnSubmitRegister"
+                                class="w-2/3 bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-6 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
+                                <span id="btnSubmitRegisterText">Finalizar Registro</span>
+                                <svg id="btnSubmitRegisterSpinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
                             </button>
                         </div>
                     </div>
                 </form>
+
+                {{-- Overlay de carga durante el registro --}}
+                <div id="registerLoadingOverlay" class="fixed inset-0 bg-black/60 z-50 hidden flex-col items-center justify-center backdrop-blur-sm transition-all duration-300">
+                    <div class="bg-white p-8 rounded-2xl shadow-2xl flex flex-col items-center max-w-sm w-full mx-4 text-center">
+                        <div class="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4"></div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Creando tu cuenta...</h3>
+                        <p class="text-sm text-gray-500">Estamos configurando tu perfil y tus accesos. Por favor no cierres ni recargues esta ventana.</p>
+                    </div>
+                </div>
 
                 @push('scripts')
                 <script>
@@ -247,16 +268,69 @@
                         }
                     }
 
+                    let isSubmittingRegister = false;
+
                     document.getElementById('registerForm').addEventListener('submit', function(e) {
+                        if (isSubmittingRegister) {
+                            e.preventDefault();
+                            return false;
+                        }
+
                         e.preventDefault();
+                        isSubmittingRegister = true;
+
+                        const btn = document.getElementById('btnSubmitRegister');
+                        const btnText = document.getElementById('btnSubmitRegisterText');
+                        const spinner = document.getElementById('btnSubmitRegisterSpinner');
+                        const overlay = document.getElementById('registerLoadingOverlay');
+
+                        if (btn) {
+                            btn.disabled = true;
+                            btn.classList.add('opacity-80', 'cursor-not-allowed');
+                        }
+                        if (btnText) btnText.textContent = 'Procesando...';
+                        if (spinner) spinner.classList.remove('hidden');
+                        if (overlay) {
+                            overlay.classList.remove('hidden');
+                            overlay.classList.add('flex');
+                        }
+
+                        // Timeout de seguridad en caso de red congelada
+                        setTimeout(function() {
+                            if (isSubmittingRegister && !window.submittedSuccessfully) {
+                                isSubmittingRegister = false;
+                                if (btn) {
+                                    btn.disabled = false;
+                                    btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                                }
+                                if (btnText) btnText.textContent = 'Finalizar Registro';
+                                if (spinner) spinner.classList.add('hidden');
+                                if (overlay) {
+                                    overlay.classList.add('hidden');
+                                    overlay.classList.remove('flex');
+                                }
+                            }
+                        }, 20000);
+
                         const form = this;
-                        window.getRecaptchaToken('register').then(token => {
-                            document.getElementById('g-recaptcha-response').value = token;
+                        const finalizeSubmit = (token) => {
+                            window.submittedSuccessfully = true;
+                            if (token) {
+                                document.getElementById('g-recaptcha-response').value = token;
+                            }
                             form.submit();
-                        }).catch(err => {
-                            console.error(err);
-                            form.submit();
-                        });
+                        };
+
+                        if (typeof window.getRecaptchaToken === 'function') {
+                            window.getRecaptchaToken('register').then(token => {
+                                finalizeSubmit(token);
+                            }).catch(err => {
+                                console.error('Error reCAPTCHA:', err);
+                                finalizeSubmit(null);
+                            });
+                        } else {
+                            finalizeSubmit(null);
+                        }
                     });
                 </script>
                 @endpush

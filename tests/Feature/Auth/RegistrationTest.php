@@ -39,4 +39,27 @@ class RegistrationTest extends TestCase
             return $mail->hasTo('info@cocinarte.app');
         });
     }
+
+    public function test_cook_can_register_and_is_redirected_to_profile_create(): void
+    {
+        \Illuminate\Support\Facades\Mail::fake();
+
+        $response = $this->post('/register', [
+            'name' => 'Anttonella Catalano',
+            'email' => 'antocata@example.com',
+            'phone' => '3541217439',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'role' => 'cook',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('cook.profile.create'));
+
+        // Follow redirection to cook profile create
+        $responseCreateProfile = $this->get(route('cook.profile.create'));
+        $responseCreateProfile->assertStatus(200);
+        $responseCreateProfile->assertSee('Únete como Cocinero');
+    }
 }
+

@@ -33,10 +33,18 @@ class AuthenticatedSessionController extends Controller
         }
 
         if ($request->user()->isCook()) {
+            if (!$request->user()->cook) {
+                return redirect()->intended(route('cook.profile.create', absolute: false))
+                    ->with('info', 'Por favor completa los datos de tu cocina para comenzar.');
+            }
             return redirect()->intended(route('cook.dashboard', absolute: false));
         }
 
         if ($request->user()->isDeliveryDriver()) {
+            if (!$request->user()->deliveryDriver) {
+                return redirect()->intended(route('delivery-driver.profile.create', absolute: false))
+                    ->with('info', 'Por favor completa tus datos de repartidor para comenzar.');
+            }
             return redirect()->intended(route('delivery-driver.dashboard', absolute: false));
         }
 
