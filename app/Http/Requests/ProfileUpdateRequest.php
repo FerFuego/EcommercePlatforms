@@ -27,7 +27,7 @@ class ProfileUpdateRequest extends FormRequest
             ],
             'phone' => ['sometimes', 'nullable', 'string', new \App\Rules\PhoneNumber],
             'address' => ['nullable', 'string', 'max:255'],
-            'photo' => ['nullable', 'image', 'max:1024'], // 1MB Max
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], // 2MB Max
         ];
     }
 }

@@ -75,11 +75,11 @@ class DeliveryDriverController extends Controller
     {
         $validated = $request->validate([
             'dni_number' => 'required|string|unique:delivery_drivers,dni_number',
-            'dni_photo' => 'required|image|max:2048',
-            'profile_photo' => 'nullable|image|max:2048',
+            'dni_photo' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'vehicle_type' => 'required|in:bicycle,motorcycle,car',
             'vehicle_plate' => 'required_if:vehicle_type,motorcycle,car|nullable|string',
-            'vehicle_photo' => 'nullable|image|max:2048',
+            'vehicle_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'location_lat' => 'required|numeric|between:-90,90',
             'location_lng' => 'required|numeric|between:-180,180',
             'coverage_radius_km' => 'required|integer|min:1|max:50',
@@ -130,10 +130,10 @@ class DeliveryDriverController extends Controller
         $driver = auth()->user()->deliveryDriver;
 
         $validated = $request->validate([
-            'profile_photo' => 'nullable|image|max:2048',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,webp|max:2048',
             'vehicle_type' => 'required|in:bicycle,motorcycle,car',
             'vehicle_plate' => 'required_if:vehicle_type,motorcycle,car|nullable|string',
-            'vehicle_photo' => 'nullable|image|max:2048',
+            'vehicle_photo' => 'nullable|image|mimes:jpeg,png,webp|max:2048',
             'location_lat' => 'required|numeric|between:-90,90',
             'location_lng' => 'required|numeric|between:-180,180',
             'coverage_radius_km' => 'required|integer|min:1|max:50',

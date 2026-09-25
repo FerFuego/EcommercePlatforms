@@ -56,9 +56,9 @@ class CookDashboardController extends Controller
     {
         $request->validate([
             'bio' => 'required|string|max:1000',
-            'dni_photo' => 'required|image|max:2048',
+            'dni_photo' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'kitchen_photos' => 'required|array|min:3|max:5',
-            'kitchen_photos.*' => 'image|max:2048',
+            'kitchen_photos.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
             'location_lat' => 'nullable|numeric',
             'location_lng' => 'nullable|numeric',
             'address' => 'required|string|max:255',
@@ -129,7 +129,7 @@ class CookDashboardController extends Controller
 
         if ($request->expectsJson()) {
             return response()->json([
-                'success' => true, 
+                'success' => true,
                 'redirect_url' => route('cook.dashboard'),
                 'message' => '¡Perfil creado! Tu solicitud será revisada por un administrador.'
             ]);
@@ -163,7 +163,7 @@ class CookDashboardController extends Controller
         $request->validate([
             'bio' => 'required|string|max:1000',
             'kitchen_photos' => 'nullable|array|max:5',
-            'kitchen_photos.*' => 'image|max:2048',
+            'kitchen_photos.*' => 'image|mimes:jpeg,png,webp|max:2048',
             'coverage_radius_km' => 'required|numeric|min:1|max:50',
             'location_lat' => 'nullable|numeric',
             'location_lng' => 'nullable|numeric',
