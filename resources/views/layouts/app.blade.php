@@ -5,11 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', $globalSettings['site_name'] ?? 'Cocinarte') -
-        {{ $globalSettings['meta_title'] ?? 'Comida Casera' }}
-    </title>
-    <meta name="description" content="{{ $globalSettings['meta_description'] ?? 'La mejor comida casera.' }}">
+    <title>@hasSection('title')@yield('title') | {{ $globalSettings['site_name'] ?? 'Cocinarte' }}@else{{ $globalSettings['site_name'] ?? 'Cocinarte' }} - {{ $globalSettings['meta_title'] ?? 'Comida Casera de Cocineros Locales' }}@endif</title>
+    <meta name="description" content="@yield('meta_description', $globalSettings['meta_description'] ?? 'Descubre cocineros independientes cerca de ti, comida casera auténtica y delivery a domicilio en Cocinarte.')">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
     <meta name="facebook-domain-verification" content="g272z4he3on44wlxw6z3kgt5b51w4u" />
+
+    <!-- Open Graph / Redes Sociales / WhatsApp -->
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:site_name" content="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}">
+    <meta property="og:url" content="@yield('canonical', url()->current())">
+    <meta property="og:title" content="@yield('og_title', View::hasSection('title') ? View::getSection('title') . ' | ' . ($globalSettings['site_name'] ?? 'Cocinarte') : ($globalSettings['site_name'] ?? 'Cocinarte') . ' - ' . ($globalSettings['meta_title'] ?? 'Comida Casera'))">
+    <meta property="og:description" content="@yield('meta_description', $globalSettings['meta_description'] ?? 'Descubre cocineros independientes cerca de ti, comida casera auténtica y delivery a domicilio en Cocinarte.')">
+    <meta property="og:image" content="@yield('og_image', asset('assets/front/logo-8.webp'))">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="@yield('canonical', url()->current())">
+    <meta name="twitter:title" content="@yield('og_title', View::hasSection('title') ? View::getSection('title') . ' | ' . ($globalSettings['site_name'] ?? 'Cocinarte') : ($globalSettings['site_name'] ?? 'Cocinarte') . ' - ' . ($globalSettings['meta_title'] ?? 'Comida Casera'))">
+    <meta name="twitter:description" content="@yield('meta_description', $globalSettings['meta_description'] ?? 'Descubre cocineros independientes cerca de ti, comida casera auténtica y delivery a domicilio en Cocinarte.')">
+    <meta name="twitter:image" content="@yield('og_image', asset('assets/front/logo-8.webp'))">
+
+    @stack('meta')
 
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="/manifest.json">

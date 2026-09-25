@@ -1,2 +1,18 @@
 User-agent: *
-Disallow:
+Disallow: /cart/
+Disallow: /orders/
+Disallow: /checkout
+Disallow: /profile
+Disallow: /profile/
+Disallow: /push-tokens
+Disallow: /dashboard
+Disallow: /admin/
+Disallow: /cook/
+Disallow: /delivery-driver/
+Disallow: /login
+Disallow: /register
+Disallow: /password/
+Disallow: /favorites
+Disallow: /api/
+
+Sitemap: https://cocinarte.com.ar/sitemap.xml

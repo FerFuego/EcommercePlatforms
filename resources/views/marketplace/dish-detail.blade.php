@@ -1,6 +1,20 @@
 @extends('layouts.app')
 
-@section('title', $dish->name . ' — Cocinarte')
+@php
+    $cookName = $dish->cook->user->name ?? 'Cocinero Local';
+    $dishTitle = $dish->name . ' por ' . $cookName . ' ($' . number_format($dish->price, 0, ',', '.') . ')';
+    $dishDesc = !empty($dish->description) 
+        ? \Illuminate\Support\Str::limit(strip_tags($dish->description), 155) 
+        : 'Pide ' . $dish->name . ' recién preparado por ' . $cookName . ' en Cocinarte. Comida casera auténtica con delivery o retiro.';
+    $dishOgImage = $dish->photo_url ? asset('uploads/' . $dish->photo_url) : asset('assets/front/logo-8.webp');
+@endphp
+
+@section('title', $dishTitle)
+@section('meta_description', $dishDesc)
+@section('canonical', route('marketplace.dish.detail', $dish->id))
+@section('og_title', $dishTitle . ' | Cocinarte')
+@section('og_image', $dishOgImage)
+@section('og_type', 'product')
 
 @section('content')
     <div class="container mx-auto px-4 py-12">

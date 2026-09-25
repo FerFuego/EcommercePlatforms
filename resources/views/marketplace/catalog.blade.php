@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Explorar Cocineros')
+@section('title', 'Catálogo de Cocineros Caseros y Platos Artesanales')
+@section('meta_description', 'Explora cocineros caseros independientes cerca de ti. Filtra por cercanía, menú del día, viandas saludables, sin TACC o vegetarianas y haz tu pedido online.')
+@section('canonical', route('marketplace.catalog'))
+@section('og_title', 'Explorar Cocineros Caseros y Menú del Día | Cocinarte')
 
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 py-12">

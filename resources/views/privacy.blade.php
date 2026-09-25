@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title', 'Políticas de Privacidad')
+@section('meta_description', 'Conoce nuestras políticas de privacidad y cómo protegemos y gestionamos tus datos personales en Cocinarte.')
+@section('canonical', route('privacy'))
+
 @section('content')
 <div class="container mx-auto px-4 py-12">
     <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm p-8 md:p-12">

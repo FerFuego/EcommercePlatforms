@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title', 'Términos y Condiciones del Servicio')
+@section('meta_description', 'Lee los términos y condiciones de uso de la plataforma Cocinarte para clientes, cocineros y repartidores.')
+@section('canonical', route('terms'))
+
 @section('content')
 <div class="container mx-auto px-4 py-12">
     <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm p-8 md:p-12">

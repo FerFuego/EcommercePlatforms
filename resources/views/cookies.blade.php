@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title', 'Política de Cookies')
+@section('meta_description', 'Información sobre el uso de cookies y tecnologías de almacenamiento local en Cocinarte.')
+@section('canonical', route('cookies'))
+
 @section('content')
 <div class="container mx-auto px-4 py-12">
     <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm p-8 md:p-12">

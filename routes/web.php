@@ -9,6 +9,7 @@ use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 | Web Routes - Marketplace de Cocinarte
 |--------------------------------------------------------------------------
 */
+
+// SEO & Sitemap
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Landing page pública
 Route::get('/', [MarketplaceController::class, 'index'])->name('home');

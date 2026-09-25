@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Cocinarte - Comida Casera de Cocineros Locales')
+@section('title', 'Comida Casera y Viandas de Cocineros Locales')
+@section('meta_description', 'Pide comida casera recién hecha cerca de ti. Descubre cocineros independientes locales, viandas artesanales y platos únicos con delivery o retiro.')
+@section('canonical', route('home'))
+@section('og_title', 'Cocinarte — Comida Casera y Viandas de Cocineros Locales')
 
 @section('content')
     <!-- Hero Section -->

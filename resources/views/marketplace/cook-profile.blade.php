@@ -1,6 +1,21 @@
 @extends('layouts.app')
 
-@section('title', $cook->user->name)
+@php
+    $cookTitle = $cook->user->name . ' — Cocina Casera y Especialidades';
+    $cookBioClean = !empty($cook->bio) 
+        ? \Illuminate\Support\Str::limit(strip_tags($cook->bio), 155) 
+        : 'Conoce los platos caseros, viandas y especialidades artesanales preparados por ' . $cook->user->name . ' en Cocinarte.';
+    $cookOgImage = $cook->user->profile_photo_path 
+        ? asset('uploads/' . $cook->user->profile_photo_path) 
+        : (is_array($cook->kitchen_photos) && count($cook->kitchen_photos) > 0 ? asset('uploads/' . $cook->kitchen_photos[0]) : asset('assets/front/logo-8.webp'));
+@endphp
+
+@section('title', $cookTitle)
+@section('meta_description', $cookBioClean)
+@section('canonical', route('marketplace.cook.profile', $cook->id))
+@section('og_title', $cookTitle . ' | Cocinarte')
+@section('og_image', $cookOgImage)
+@section('og_type', 'profile')
 
 @section('content')
     <!-- Customization Modal -->
