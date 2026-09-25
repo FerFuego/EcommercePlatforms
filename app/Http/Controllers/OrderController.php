@@ -132,9 +132,6 @@ class OrderController extends Controller
         if (!$cook->is_approved) {
             return 'La cocina aún no ha sido aprobada para recibir pedidos.';
         }
-        if (!$cook->active) {
-            return 'La cocina se encuentra cerrada en este momento.';
-        }
         if ($cook->isSellingBlocked()) {
             return 'El cocinero está temporalmente fuera de servicio (alcanzó el límite de su plan).';
         }
@@ -169,7 +166,9 @@ class OrderController extends Controller
             $item['is_schedulable'] = $dish ? $dish->is_schedulable : true;
         }
 
-        return view('orders.checkout', compact('cart', 'cook', 'subtotal'));
+        $operatingStatus = $cook->getOperatingStatus();
+
+        return view('orders.checkout', compact('cart', 'cook', 'subtotal', 'operatingStatus'));
     }
 
     /**
@@ -206,17 +205,41 @@ class OrderController extends Controller
             return back()->with('error', $error)->withInput();
         }
 
-        // Validar horario si es programado
+        $operatingStatus = $cook->getOperatingStatus();
+
+        // 1. Validar si seleccionó pedido inmediato
+        if ($request->schedule_type === 'immediate') {
+            if (!$operatingStatus['accepts_immediate']) {
+                return back()->with('error', "La cocina no está recibiendo pedidos inmediatos en este momento ({$operatingStatus['label']}). {$operatingStatus['reason']}")->withInput();
+            }
+        }
+
+        // 2. Validar horario si es programado
         if ($request->schedule_type === 'scheduled') {
             $scheduledDateTime = \Carbon\Carbon::parse($request->scheduled_time);
             $timeOnly = $scheduledDateTime->format('H:i:s');
             $dateOnly = $scheduledDateTime->toDateString();
 
+            // Si por cierre la cocina ya no atiende hoy, exigir que la fecha programada sea a partir de mañana
+            if ($operatingStatus['next_available_date'] === 'tomorrow' && $scheduledDateTime->isToday()) {
+                return back()->with('error', "La cocina ya cerró o está cerrando su turno por hoy. Por favor programa tu pedido para mañana o una fecha posterior.")->withInput();
+            }
+
             $opening = $cook->opening_time ?: '00:00:00';
             $closing = $cook->closing_time ?: '23:59:59';
 
-            if ($timeOnly < $opening || $timeOnly > $closing) {
-                return back()->with('error', "El cocinero no trabaja en ese horario. Por favor elige entre {$opening} y {$closing}.")->withInput();
+            $openingFmt = \Carbon\Carbon::parse($opening)->format('H:i');
+            $closingFmt = \Carbon\Carbon::parse($closing)->format('H:i');
+
+            if ($opening <= $closing) {
+                if ($timeOnly < $opening || $timeOnly > $closing) {
+                    return back()->with('error', "El horario de entrega programada debe estar dentro del horario de atención del cocinero ({$openingFmt} a {$closingFmt} hs).")->withInput();
+                }
+            } else {
+                // Horario nocturno que cruza medianoche
+                if ($timeOnly < $opening && $timeOnly > $closing) {
+                    return back()->with('error', "El horario de entrega programada debe estar dentro del horario de atención del cocinero ({$openingFmt} a {$closingFmt} hs).")->withInput();
+                }
             }
 
             // 1. Validar que todos los platos sean programables

@@ -46,6 +46,8 @@ class Cook extends Model
         'is_selling_blocked' => 'boolean',
     ];
 
+    const CLOSING_SOON_MINUTES = 30;
+
     /**
      * Bootstrap model events.
      */
@@ -262,5 +264,142 @@ class Cook extends Model
 
         $this->isSellingBlocked();
         $this->save();
+    }
+
+    /**
+     * Evalúa el estado operativo actual del cocinero respecto a su horario de atención.
+     */
+    public function getOperatingStatus(): array
+    {
+        $openingFormatted = $this->opening_time ? \Carbon\Carbon::parse($this->opening_time)->format('H:i') : null;
+        $closingFormatted = $this->closing_time ? \Carbon\Carbon::parse($this->closing_time)->format('H:i') : null;
+
+        if (!$this->active) {
+            return [
+                'status' => 'closed',
+                'label' => 'Cocina Cerrada',
+                'badge_color' => 'red',
+                'reason' => 'La cocina se encuentra cerrada temporalmente. Puedes realizar pedidos programados para los próximos días.',
+                'accepts_immediate' => false,
+                'next_available_date' => 'tomorrow',
+                'opening_time_formatted' => $openingFormatted,
+                'closing_time_formatted' => $closingFormatted,
+            ];
+        }
+
+        if (!$this->opening_time || !$this->closing_time) {
+            return [
+                'status' => 'open',
+                'label' => 'Abierto ahora',
+                'badge_color' => 'green',
+                'reason' => 'Aceptando pedidos inmediatos y programados.',
+                'accepts_immediate' => true,
+                'next_available_date' => 'today',
+                'opening_time_formatted' => $openingFormatted,
+                'closing_time_formatted' => $closingFormatted,
+            ];
+        }
+
+        $now = now();
+        $nowTime = $now->format('H:i:s');
+        $opening = \Carbon\Carbon::parse($this->opening_time)->format('H:i:s');
+        $closing = \Carbon\Carbon::parse($this->closing_time)->format('H:i:s');
+
+        $closingCarbon = \Carbon\Carbon::createFromTimeString($closing);
+        $cutoffCarbon = (clone $closingCarbon)->subMinutes(self::CLOSING_SOON_MINUTES);
+        $cutoff = $cutoffCarbon->format('H:i:s');
+
+        $isOpen = false;
+        $isClosingSoon = false;
+        $nextDate = 'today';
+
+        if ($opening < $closing) {
+            if ($nowTime >= $opening && $nowTime < $cutoff) {
+                $isOpen = true;
+                $nextDate = 'today';
+            } elseif ($nowTime >= $cutoff && $nowTime <= $closing) {
+                $isOpen = true;
+                $isClosingSoon = true;
+                $nextDate = 'tomorrow';
+            } elseif ($nowTime > $closing) {
+                $isOpen = false;
+                $nextDate = 'tomorrow';
+            } else {
+                $isOpen = false;
+                $nextDate = 'today';
+            }
+        } else {
+            // Horario nocturno que cruza medianoche (ej: 20:00 a 02:00)
+            $isWithinHours = ($nowTime >= $opening || $nowTime <= $closing);
+            if ($isWithinHours) {
+                if ($nowTime >= $cutoff && $nowTime <= $closing) {
+                    $isOpen = true;
+                    $isClosingSoon = true;
+                    $nextDate = 'tomorrow';
+                } else {
+                    $isOpen = true;
+                    $nextDate = 'today';
+                }
+            } else {
+                $isOpen = false;
+                $nextDate = ($nowTime > $closing && $nowTime < $opening) ? 'today' : 'tomorrow';
+            }
+        }
+
+        if ($isClosingSoon) {
+            return [
+                'status' => 'closing_soon',
+                'label' => 'Cierra pronto',
+                'badge_color' => 'amber',
+                'reason' => "La cocina cierra a las {$closingFormatted} hs (en menos de " . self::CLOSING_SOON_MINUTES . " min). Los nuevos pedidos son únicamente programados para el día siguiente.",
+                'accepts_immediate' => false,
+                'next_available_date' => 'tomorrow',
+                'opening_time_formatted' => $openingFormatted,
+                'closing_time_formatted' => $closingFormatted,
+            ];
+        }
+
+        if ($isOpen) {
+            return [
+                'status' => 'open',
+                'label' => 'Abierto ahora',
+                'badge_color' => 'green',
+                'reason' => "Atendiendo hoy hasta las {$closingFormatted} hs.",
+                'accepts_immediate' => true,
+                'next_available_date' => 'today',
+                'opening_time_formatted' => $openingFormatted,
+                'closing_time_formatted' => $closingFormatted,
+            ];
+        }
+
+        $nextMsg = ($nextDate === 'today')
+            ? "Abre hoy a las {$openingFormatted} hs. Puedes realizar tu pedido de forma programada."
+            : "La cocina cerró por hoy y abre mañana a las {$openingFormatted} hs. Los pedidos son únicamente programados para el día siguiente.";
+
+        return [
+            'status' => 'closed',
+            'label' => 'Cocina Cerrada',
+            'badge_color' => 'red',
+            'reason' => $nextMsg,
+            'accepts_immediate' => false,
+            'next_available_date' => $nextDate,
+            'opening_time_formatted' => $openingFormatted,
+            'closing_time_formatted' => $closingFormatted,
+        ];
+    }
+
+    public function isOpenNow(): bool
+    {
+        return $this->getOperatingStatus()['accepts_immediate'];
+    }
+
+    public function isClosingSoon(): bool
+    {
+        return $this->getOperatingStatus()['status'] === 'closing_soon';
+    }
+
+    public function isClosedNow(): bool
+    {
+        return $this->getOperatingStatus()['status'] === 'closed';
     }
 }

@@ -186,4 +186,123 @@ class ScheduledOrderTest extends TestCase
             'event' => 'cook_accepted_scheduled',
         ]);
     }
+
+    /** @test */
+    public function immediate_order_fails_when_kitchen_is_closed_or_outside_hours()
+    {
+        // Forzamos horarios donde ahora esté cerrado (ej: abre a las 02:00:00 y cierra a las 03:00:00)
+        $this->cook->update([
+            'opening_time' => '02:00:00',
+            'closing_time' => '03:00:00',
+        ]);
+
+        $this->actingAs($this->customer)->post(route('cart.add', $this->dish->id), [
+            'quantity' => 1,
+        ]);
+
+        $response = $this->actingAs($this->customer)->post(route('orders.process'), [
+            'delivery_type' => 'pickup',
+            'payment_method' => 'cash',
+            'schedule_type' => 'immediate',
+        ]);
+
+        $response->assertSessionHas('error');
+        $this->assertDatabaseEmpty('orders');
+    }
+
+    /** @test */
+    public function customer_can_place_scheduled_order_even_if_kitchen_is_currently_closed()
+    {
+        // Cocina cerrada en este momento
+        $this->cook->update([
+            'opening_time' => '10:00:00',
+            'closing_time' => '18:00:00',
+        ]);
+        // Viajamos en el tiempo a las 23:00 (cerrado)
+        Carbon::setTestNow(Carbon::today()->setHour(23)->setMinute(0));
+
+        $scheduledTime = Carbon::tomorrow()->setHour(12)->setMinute(0);
+
+        $this->actingAs($this->customer)->post(route('cart.add', $this->dish->id), [
+            'quantity' => 1,
+        ]);
+
+        $response = $this->actingAs($this->customer)->post(route('orders.process'), [
+            'delivery_type' => 'pickup',
+            'payment_method' => 'cash',
+            'schedule_type' => 'scheduled',
+            'scheduled_time' => $scheduledTime->format('Y-m-d H:i:s'),
+        ]);
+
+        $response->assertSessionDoesntHaveErrors();
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('orders', [
+            'customer_id' => $this->customer->id,
+            'cook_id' => $this->cook->id,
+            'scheduled_time' => $scheduledTime->format('Y-m-d H:i:s'),
+        ]);
+
+        Carbon::setTestNow(); // Reset time
+    }
+
+    /** @test */
+    public function scheduled_order_fails_for_today_if_kitchen_already_closed_today()
+    {
+        $this->cook->update([
+            'opening_time' => '10:00:00',
+            'closing_time' => '18:00:00',
+        ]);
+        // Viajamos en el tiempo a las 21:00 (ya cerró hoy)
+        Carbon::setTestNow(Carbon::today()->setHour(21)->setMinute(0));
+
+        // Intenta pedir para hoy mismo
+        $todayScheduledTime = Carbon::today()->setHour(22)->setMinute(0);
+
+        $this->actingAs($this->customer)->post(route('cart.add', $this->dish->id), [
+            'quantity' => 1,
+        ]);
+
+        $response = $this->actingAs($this->customer)->post(route('orders.process'), [
+            'delivery_type' => 'pickup',
+            'payment_method' => 'cash',
+            'schedule_type' => 'scheduled',
+            'scheduled_time' => $todayScheduledTime->format('Y-m-d H:i:s'),
+        ]);
+
+        $response->assertSessionHas('error');
+        $this->assertDatabaseEmpty('orders');
+
+        Carbon::setTestNow(); // Reset time
+    }
+
+    /** @test */
+    public function cook_profile_and_checkout_render_operating_status_notice()
+    {
+        $this->cook->update([
+            'opening_time' => '11:00:00',
+            'closing_time' => '15:00:00',
+        ]);
+        // Simular que son las 22:00 (cocina cerrada)
+        Carbon::setTestNow(Carbon::today()->setHour(22)->setMinute(0));
+
+        // 1. Ver perfil del cocinero
+        $profileResponse = $this->get(route('marketplace.cook.profile', $this->cook->id));
+        $profileResponse->assertStatus(200);
+        $profileResponse->assertSee('Cocina Cerrada');
+        $profileResponse->assertSee('Solo Pedidos Programados');
+
+        // 2. Agregar al carrito y ver Checkout
+        $this->actingAs($this->customer)->post(route('cart.add', $this->dish->id), [
+            'quantity' => 1,
+        ]);
+
+        $checkoutResponse = $this->actingAs($this->customer)->get(route('orders.checkout'));
+        $checkoutResponse->assertStatus(200);
+        $checkoutResponse->assertSee('Este pedido se procesará como Pedido Programado');
+        $checkoutResponse->assertSee('No disponible (cocina fuera de horario)');
+        $checkoutResponse->assertSee('Requerido (cocina fuera de turno)');
+
+        Carbon::setTestNow(); // Reset time
+    }
 }

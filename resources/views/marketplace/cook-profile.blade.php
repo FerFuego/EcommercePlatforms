@@ -198,9 +198,21 @@
                             <span class="ml-1 text-white/80">({{ $cook->rating_count }} reviews)</span>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-6 text-white/90">
+                    @php
+                        $operatingStatus = $cook->getOperatingStatus();
+                    @endphp
+                    <div class="flex flex-wrap items-center gap-4 text-white/90">
                         <span>📍 {{ $cook->coverage_radius_km }} km de cobertura</span>
                         <span>🍽️ {{ $cook->dishes->count() }} platos</span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold shadow-md
+                            {{ $operatingStatus['status'] === 'open' 
+                                ? 'bg-emerald-500/90 text-white' 
+                                : ($operatingStatus['status'] === 'closing_soon' 
+                                    ? 'bg-amber-400 text-amber-950 font-extrabold animate-pulse' 
+                                    : 'bg-red-500/90 text-white') }}">
+                            <span class="mr-1.5">{{ $operatingStatus['status'] === 'open' ? '🟢' : ($operatingStatus['status'] === 'closing_soon' ? '⏳' : '🔴') }}</span>
+                            {{ $operatingStatus['label'] }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -502,7 +514,43 @@
             <!-- Sidebar -->
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-2xl shadow-xl p-6 sticky top-24">
-                    <h3 class="text-2xl font-bold mb-6">Información</h3>
+                    <h3 class="text-2xl font-bold mb-4">Información</h3>
+
+                    <!-- Estado Operativo / Horario de Atención -->
+                    <div class="mb-6 rounded-2xl p-4 border transition-all 
+                        {{ $operatingStatus['status'] === 'open' 
+                            ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' 
+                            : ($operatingStatus['status'] === 'closing_soon' 
+                                ? 'bg-amber-50/90 border-amber-300 text-amber-950' 
+                                : 'bg-rose-50/80 border-rose-200 text-rose-950') }}">
+                        <div class="flex items-center space-x-2.5 mb-2">
+                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-xl text-sm font-bold
+                                {{ $operatingStatus['status'] === 'open' 
+                                    ? 'bg-emerald-500 text-white shadow-sm' 
+                                    : ($operatingStatus['status'] === 'closing_soon' 
+                                        ? 'bg-amber-500 text-white shadow-sm' 
+                                        : 'bg-rose-500 text-white shadow-sm') }}">
+                                {{ $operatingStatus['status'] === 'open' ? '✓' : ($operatingStatus['status'] === 'closing_soon' ? '⏳' : '✕') }}
+                            </span>
+                            <div>
+                                <h4 class="font-bold text-base leading-tight">
+                                    {{ $operatingStatus['label'] }}
+                                </h4>
+                                <span class="text-[11px] font-semibold opacity-75 uppercase tracking-wide">
+                                    {{ $operatingStatus['accepts_immediate'] ? 'Pedidos Inmediatos y Programados' : 'Solo Pedidos Programados' }}
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-xs leading-relaxed mt-2 opacity-90">
+                            {{ $operatingStatus['reason'] }}
+                        </p>
+                        @if(!$operatingStatus['accepts_immediate'])
+                            <div class="mt-3 pt-2.5 border-t border-dashed border-current/20 flex items-center justify-between text-xs font-bold">
+                                <span>📅 Pedidos Programados:</span>
+                                <span class="text-purple-700 bg-white/80 px-2 py-0.5 rounded-lg border border-purple-200">Disponibles</span>
+                            </div>
+                        @endif
+                    </div>
 
                     <div class="space-y-4 mb-6">
                         <!-- <div class="flex items-center text-gray-700">

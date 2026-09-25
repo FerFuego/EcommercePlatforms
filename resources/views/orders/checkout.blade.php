@@ -17,6 +17,31 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Form -->
             <div class="lg:col-span-2">
+                @php
+                    $operatingStatus = $operatingStatus ?? $cook->getOperatingStatus();
+                    $isScheduledOnly = !$operatingStatus['accepts_immediate'];
+                @endphp
+
+                @if($isScheduledOnly)
+                    <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-800 text-white p-6 rounded-2xl shadow-xl border border-purple-400/30 flex items-start space-x-4 mb-6">
+                        <div class="text-3xl p-3 bg-white/10 rounded-2xl flex-shrink-0">📅</div>
+                        <div class="flex-1">
+                            <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider {{ $operatingStatus['status'] === 'closing_soon' ? 'bg-amber-400 text-amber-950 font-extrabold' : 'bg-rose-500 text-white' }}">
+                                    {{ $operatingStatus['label'] }}
+                                </span>
+                                <h3 class="font-bold text-lg text-white">Este pedido se procesará como Pedido Programado</h3>
+                            </div>
+                            <p class="text-purple-100 text-sm leading-relaxed">
+                                {{ $operatingStatus['reason'] }}
+                            </p>
+                            <p class="text-xs text-purple-200 mt-2 font-medium">
+                                ✨ Por favor selecciona abajo en el <strong>Paso 3 ("¿Cuándo lo quieres?")</strong> la fecha y hora en la que deseas recibirlo.
+                            </p>
+                        </div>
+                    </div>
+                @endif
+
                 <form id="orderForm" action="{{ route('orders.process') }}" method="POST" class="space-y-6">
                     @csrf
                     <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
@@ -135,44 +160,53 @@
                         @endif
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <label class="relative cursor-pointer">
-                                <input type="radio" name="schedule_type" value="immediate" checked class="peer sr-only"
+                            <label class="relative {{ $isScheduledOnly ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' }}">
+                                <input type="radio" name="schedule_type" value="immediate" 
+                                    {{ $isScheduledOnly ? 'disabled' : 'checked' }} 
+                                    class="peer sr-only"
                                     onclick="toggleScheduleFields(false)">
                                 <div
                                     class="bg-gray-50 peer-checked:bg-orange-50 border-2 border-gray-200 peer-checked:border-orange-500 rounded-2xl p-4 transition-all">
                                     <h3 class="font-bold text-center">Lo antes posible 🚀</h3>
+                                    @if($isScheduledOnly)
+                                        <p class="text-xs text-rose-600 text-center font-semibold mt-1">No disponible (cocina fuera de horario)</p>
+                                    @endif
                                 </div>
                             </label>
 
                             <label class="relative cursor-pointer {{ $hasNonSchedulable ? 'opacity-50 cursor-not-allowed' : '' }}">
                                 <input type="radio" name="schedule_type" value="scheduled" class="peer sr-only"
+                                    {{ $isScheduledOnly ? 'checked' : '' }}
                                     {{ $hasNonSchedulable ? 'disabled' : '' }}
                                     onclick="toggleScheduleFields(true)">
                                 <div
-                                    class="bg-gray-50 peer-checked:bg-purple-50 border-2 border-gray-200 peer-checked:border-purple-500 rounded-2xl p-4 transition-all">
-                                    <h3 class="font-bold text-center">Programar Pedido 📅</h3>
+                                    class="bg-gray-50 peer-checked:bg-purple-50 border-2 border-gray-200 peer-checked:border-purple-500 rounded-2xl p-4 transition-all {{ $isScheduledOnly ? 'border-purple-500 bg-purple-50' : '' }}">
+                                    <h3 class="font-bold text-center text-purple-900">Programar Pedido 📅</h3>
+                                    @if($isScheduledOnly)
+                                        <p class="text-xs text-purple-700 text-center font-bold mt-1">Requerido (cocina fuera de turno)</p>
+                                    @endif
                                 </div>
                             </label>
                         </div>
 
-                        <div id="scheduleFields" class="hidden animate-fade-in">
+                        <div id="scheduleFields" class="{{ $isScheduledOnly ? '' : 'hidden' }} animate-fade-in">
                             <div class="space-y-4">
-                                <div class="bg-purple-50 rounded-xl p-4 border border-purple-100 flex items-center">
-                                    <span class="text-xl mr-3">💡</span>
-                                    <p class="text-sm text-purple-800">
-                                        El cocinero acepta pedidos programados entre las
-                                        <strong>{{ $cook->opening_time ? \Carbon\Carbon::parse($cook->opening_time)->format('H:i') : '08:00' }}</strong>
-                                        y las
-                                        <strong>{{ $cook->closing_time ? \Carbon\Carbon::parse($cook->closing_time)->format('H:i') : '22:00' }}</strong>.
-                                    </p>
+                                <div class="bg-purple-50 rounded-xl p-4 border border-purple-100 flex items-start">
+                                    <span class="text-xl mr-3 flex-shrink-0">💡</span>
+                                    <div class="text-sm text-purple-900">
+                                        <p class="font-semibold">Horario de atención del cocinero:</p>
+                                        <p>De <strong>{{ $cook->opening_time ? \Carbon\Carbon::parse($cook->opening_time)->format('H:i') : '08:00' }}</strong> a <strong>{{ $cook->closing_time ? \Carbon\Carbon::parse($cook->closing_time)->format('H:i') : '22:00' }} hs</strong>.</p>
+                                        @if($operatingStatus['next_available_date'] === 'tomorrow')
+                                            <p class="mt-1 text-purple-950 font-bold">⚠️ Entregas programadas disponibles a partir de <u>mañana</u>.</p>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Selecciona Fecha y Hora
-                                        *</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Selecciona Fecha y Hora de Entrega/Retiro *</label>
                                     <div class="relative">
                                         <input type="text" name="scheduled_time" id="scheduled_time"
                                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition bg-white"
-                                            placeholder="Click para elegir..." readonly>
+                                            placeholder="Click para elegir fecha y hora..." readonly {{ $isScheduledOnly ? 'required' : '' }}>
                                         <div
                                             class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -257,6 +291,14 @@
                                 <span>Procesando pedido...</span>
                             </span>
                         </button>
+
+                        @if($isScheduledOnly)
+                            <div class="mt-3 text-center">
+                                <span class="inline-flex items-center text-xs font-bold text-purple-800 bg-purple-50 px-3 py-1.5 rounded-full border border-purple-200">
+                                    📅 Pedido Programado: El cocinero preparará tu orden para la fecha y horario elegido
+                                </span>
+                            </div>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -267,7 +309,7 @@
                     <h3 class="text-2xl font-bold mb-6">Resumen del Pedido</h3>
 
                     <!-- Cook Info Mini -->
-                    <div class="flex items-center space-x-3 mb-6 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <div class="flex items-center space-x-3 mb-4 p-3 bg-gray-50 rounded-xl border border-gray-100">
                         @if($cook->user->profile_photo_path)
                             <img src="{{ asset('uploads/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}"
                                 class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm">
@@ -282,6 +324,16 @@
                             <p class="font-semibold text-gray-800">{{ $cook->user->name }}</p>
                         </div>
                     </div>
+
+                    @if($isScheduledOnly)
+                        <div class="mb-5 p-3 bg-purple-50 border border-purple-200 rounded-xl text-xs text-purple-900 flex items-start space-x-2">
+                            <span class="text-base flex-shrink-0">📅</span>
+                            <div>
+                                <span class="font-bold block">Pedido Programado</span>
+                                <span class="text-[11px] text-purple-700 leading-tight block">Cocina fuera de turno inmediato. Tu pedido se preparará fresco para la fecha seleccionada.</span>
+                            </div>
+                        </div>
+                    @endif
 
                     <div class="space-y-4 mb-6">
                         @foreach($cart as $item)
@@ -408,7 +460,13 @@
             document.querySelector('input[value="pickup"]').addEventListener('click', () => toggleDeliveryFields(false));
 
             // Scheduling logic
+            const isScheduledOnly = {{ $isScheduledOnly ? 'true' : 'false' }};
+
             function toggleScheduleFields(show) {
+                if (isScheduledOnly && !show) {
+                    return; // Bloqueado: solo pedidos programados
+                }
+
                 const fields = document.getElementById('scheduleFields');
                 const input = document.getElementById('scheduled_time');
                 if (show) {
@@ -423,16 +481,30 @@
 
             // Flatpickr initialization
             document.addEventListener('DOMContentLoaded', function () {
+                const isNextDateTomorrow = {{ $operatingStatus['next_available_date'] === 'tomorrow' ? 'true' : 'false' }};
+                
+                let minDateValue = "today";
+                if (isNextDateTomorrow) {
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    minDateValue = tomorrow;
+                }
+
                 flatpickr("#scheduled_time", {
                     enableTime: true,
                     dateFormat: "Y-m-d H:i",
-                    minDate: "today",
+                    minDate: minDateValue,
                     time_24hr: true,
                     locale: "es",
                     disableMobile: "true",
                     minTime: "{{ $cook->opening_time ? \Carbon\Carbon::parse($cook->opening_time)->format('H:i') : '08:00' }}",
                     maxTime: "{{ $cook->closing_time ? \Carbon\Carbon::parse($cook->closing_time)->format('H:i') : '22:00' }}",
                 });
+
+                if (isScheduledOnly) {
+                    const input = document.getElementById('scheduled_time');
+                    if (input) input.required = true;
+                }
             });
 
             // Control del loader y prevención de doble submit
