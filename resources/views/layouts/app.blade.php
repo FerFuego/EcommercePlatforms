@@ -99,172 +99,223 @@
 
 <body class="bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 min-h-screen">
 
+    @php
+        $cart = session()->get('cart', []);
+        $cartCount = count($cart);
+        $pendingCount = 0;
+        if (auth()->check()) {
+            $pendingCount = auth()->user()->orders()->whereIn('status', ['awaiting_cook_acceptance', 'preparing'])->count();
+        }
+        $isAuthPage = request()->routeIs('login', 'register', 'password.*', 'verification.*');
+    @endphp
+
     <!-- Navbar -->
-    <nav class="bg-white/90 backdrop-blur-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-4 lg:px-2">
-            <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
-                <div class="flex-shrink-0">
-                    <a href="{{ route('home') }}" class="flex items-center space-x-3">
+    <nav class="bg-white/95 backdrop-blur-lg sticky top-0 z-50 border-b border-gray-100 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-4 lg:px-6">
+            <div class="flex justify-between items-center h-20 gap-2 lg:gap-4">
+                <!-- Menu: Logo + Explorar, Quiero Cocinar -->
+                <div class="flex items-center space-x-3 lg:space-x-6 flex-shrink-0">
+                    <!-- Logo Cocinarte -->
+                    <a href="{{ route('home') }}" class="flex items-center space-x-2 flex-shrink-0">
                         <img src="{{ asset('assets/front/logo-8.webp') }}"
-                            alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}" width="160" height="64"
-                            class="h-16 w-auto" fetchpriority="high">
+                            alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}" width="150" height="60"
+                            class="h-12 md:h-14 w-auto object-contain" fetchpriority="high">
                     </a>
-                </div>
 
-                <!-- Nav Links -->
-                <div class="hidden md:flex items-center space-x-8">
-
-                    @auth
-                        @if(auth()->user()->isCook())
-                            <a href="{{ route('home') }}"
-                                class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
-                                Home
-                            </a>
-                            <a href="{{ route('marketplace.catalog') }}"
-                                class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
-                                Explorar
-                            </a>
-                            <a href="{{ route('cook.dashboard') }}"
-                                class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
-                                Mi Cocina
-                            </a>
-                        @endif
-
-                        @if(auth()->user()->isDeliveryDriver())
-                            <a href="{{ route('delivery-driver.dashboard') }}"
-                                class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-                                🚴 Mi Panel
-                            </a>
-                        @endif
-
-                        @if(auth()->user()->isAdmin())
-                            <a href="{{ route('admin.dashboard') }}"
-                                class="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-                                Admin
-                            </a>
-                        @endif
-
-
-                        @if(auth()->user()->isCustomer())
-                            <a href="{{ route('marketplace.catalog') }}"
-                                class="text-gray-700 hover:text-orange-600 font-medium transition-colors">
-                                Explorar
-                            </a>
-                            <a href="{{ route('orders.my') }}"
-                                class="text-gray-700 hover:text-pink-600 font-medium transition-colors flex items-center">
-                                <span>Mis Pedidos</span>
-                                @php
-                                    $pendingCount = auth()->user()->orders()->whereIn('status', ['awaiting_cook_acceptance', 'preparing'])->count();
-                                @endphp
-                                @if($pendingCount > 0)
-                                    <span
-                                        class="ml-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs rounded-full px-2 py-1">{{ $pendingCount }}</span>
-                                @endif
-                            </a>
-
-                            <a href="{{ route('favorites.index') }}"
-                                class="text-gray-700 hover:text-red-600 font-medium transition-colors">
-                                Favoritos
-                            </a>
-
-                            <a href="{{ route('cart.index') }}"
-                                class="relative text-gray-700 hover:text-orange-600 transition-colors">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                                @php
-                                    $cart = session()->get('cart', []);
-                                @endphp
-                                @if(count($cart) > 0)
-                                    <span
-                                        class="absolute -top-2 -right-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ count($cart) }}</span>
-                                @endif
-                            </a>
-                        @endif
-
-
-                        <!-- User Menu -->
-                        <div class="relative group">
-                            <button class="flex items-center space-x-2 text-gray-700 hover:text-purple-600">
-                                @if (auth()->user()->profile_photo_path)
-                                    <img class="h-10 w-10 rounded-full object-cover border-2 border-purple-200"
-                                        src="{{ asset('uploads/' . auth()->user()->profile_photo_path) }}"
-                                        alt="{{ auth()->user()->name }}" />
-                                @else
-                                    <div
-                                        class="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white font-bold">
-                                        {{ substr(auth()->user()->name, 0, 1) }}
-                                    </div>
-                                @endif
-                            </button>
-                            <div
-                                class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                                <div class="py-2">
-                                    @if(auth()->user()->isAdmin())
-                                        <a href="{{ route('admin.dashboard') }}"
-                                            class="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 font-semibold text-purple-600">
-                                            Panel de Admin
-                                        </a>
-                                    @elseif(auth()->user()->isCook())
-                                        <a href="{{ route('cook.dashboard') }}"
-                                            class="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 font-semibold text-purple-600">
-                                            Panel de Cocinero
-                                        </a>
-                                    @elseif(auth()->user()->isDeliveryDriver())
-                                        <a href="{{ route('delivery-driver.dashboard') }}"
-                                            class="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 font-semibold text-blue-600">Panel
-                                            de Repartidor
-                                        </a>
-                                    @endif
-
-                                    @if(auth()->user()->isCustomer())
-                                        <a href="{{ route('favorites.index') }}"
-                                            class="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50">
-                                            Mis Favoritos
-                                        </a>
-                                    @endif
-
-                                    <a href="{{ route('profile.edit') }}"
-                                        class="block px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50">Mi
-                                        Perfil</a>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit"
-                                            onclick="event.preventDefault(); this.closest('form').submit();"
-                                            class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50">
-                                            Cerrar Sesión
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    @else
+                    <!-- Explorar, Quiero Cocinar -->
+                    <div class="hidden md:flex items-center space-x-4 lg:space-x-6">
                         <a href="{{ route('marketplace.catalog') }}"
-                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
+                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors text-sm lg:text-base whitespace-nowrap">
                             Explorar
                         </a>
-                        <a href="{{ route('register', ['role' => 'cook']) }}"
-                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
-                            Quiero Cocinar
-                        </a>
+                        @if(!auth()->check() || !auth()->user()->isCook())
+                            <a href="{{ route('register', ['role' => 'cook']) }}"
+                                class="text-gray-700 hover:text-purple-600 font-medium transition-colors text-sm lg:text-base whitespace-nowrap">
+                                Quiero Cocinar
+                            </a>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Buscador (solo fuera de login/páginas de autenticación) -->
+                @if(!$isAuthPage)
+                    <div class="hidden md:flex flex-1 max-w-xs lg:max-w-md mx-2">
+                        <form action="{{ route('marketplace.catalog') }}" method="GET" class="relative w-full">
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                placeholder="Buscar cocinero o plato..."
+                                class="w-full px-4 py-2 pr-10 rounded-xl border-2 border-gray-200 focus:border-purple-500 transition text-sm focus:outline-none">
+                            <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600 transition" aria-label="Buscar">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                @endif
+
+                <!-- Acciones (Ingresar, Botón Registro) + Iconos (Carrito, Mi Cocina, Mis Pedidos, Instagram) -->
+                <div class="hidden md:flex items-center space-x-3 lg:space-x-5 flex-shrink-0">
+                    <!-- Ingresar & Botón registro (para usuarios no logueados) -->
+                    @guest
                         <a href="{{ route('login') }}"
-                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
+                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors text-sm lg:text-base whitespace-nowrap">
                             Ingresar
                         </a>
                         <a href="{{ route('register') }}"
-                            class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
+                            class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-4 py-2 lg:px-5 lg:py-2.5 rounded-xl font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all text-xs lg:text-sm whitespace-nowrap">
                             Registrarse
                         </a>
-                    @endauth
+                    @endguest
+
+                    <!-- Iconos -->
+                    <div class="flex items-center space-x-1 lg:space-x-2 text-gray-700">
+                        <!-- Carrito -->
+                        <a href="{{ route('cart.index') }}"
+                            class="relative p-2 text-gray-700 hover:text-orange-600 transition-colors"
+                            title="Carrito de compras" aria-label="Carrito">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <span class="header-cart-badge absolute -top-1 -right-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs font-bold rounded-full w-5 h-5 {{ $cartCount > 0 ? 'flex' : 'hidden' }} items-center justify-center shadow">
+                                <span class="header-cart-count">{{ $cartCount }}</span>
+                            </span>
+                        </a>
+
+                        @auth
+                            <!-- Mi Cocina (si ya se logueó como cocinero) -->
+                            @if(auth()->user()->isCook())
+                                <a href="{{ route('cook.dashboard') }}"
+                                    class="relative p-2 text-gray-700 hover:text-purple-600 transition-colors"
+                                    title="Mi Cocina" aria-label="Mi Cocina">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                            d="M12 4a3.5 3.5 0 00-3.4 2.7A3.5 3.5 0 005 10a3.5 3.5 0 002.5 3.37L7 18h10l-.5-4.63A3.5 3.5 0 0019 10a3.5 3.5 0 00-3.6-3.3A3.5 3.5 0 0012 4zM9 18h6v2H9v-2z" />
+                                    </svg>
+                                </a>
+                            @endif
+
+                            <!-- Mis Pedidos (si ya se logueó como cliente / tiene pedidos) -->
+                            @if(auth()->user()->isCustomer() || auth()->user()->orders()->exists())
+                                <a href="{{ route('orders.my') }}"
+                                    class="relative p-2 text-gray-700 hover:text-pink-600 transition-colors"
+                                    title="Mis Pedidos" aria-label="Mis Pedidos">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                    </svg>
+                                    @if($pendingCount > 0)
+                                        <span class="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow">
+                                            {{ $pendingCount }}
+                                        </span>
+                                    @endif
+                                </a>
+                            @endif
+                        @endauth
+
+                        <!-- Instagram -->
+                        <a href="{{ $globalSettings['instagram_url'] ?? 'https://www.instagram.com/cocinarte.ar' }}"
+                            target="_blank" rel="noopener noreferrer"
+                            class="p-2 text-gray-700 hover:text-pink-600 transition-all transform hover:scale-110"
+                            title="Instagram Cocinarte" aria-label="Instagram">
+                            <svg class="w-6 h-6 fill-currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.13-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            </svg>
+                        </a>
+
+                        @auth
+                            <!-- Menú de Usuario / Dropdown -->
+                            <div class="relative group ml-1">
+                                <button class="flex items-center space-x-2 text-gray-700 hover:text-purple-600 focus:outline-none" aria-label="Menú de usuario">
+                                    @if (auth()->user()->profile_photo_path)
+                                        <img class="h-9 w-9 rounded-full object-cover border-2 border-purple-200"
+                                            src="{{ asset('uploads/' . auth()->user()->profile_photo_path) }}"
+                                            alt="{{ auth()->user()->name }}" />
+                                    @else
+                                        <div class="w-9 h-9 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                            {{ substr(auth()->user()->name, 0, 1) }}
+                                        </div>
+                                    @endif
+                                </button>
+                                <div class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-gray-100">
+                                    <div class="py-2">
+                                        <div class="px-4 py-2 border-b border-gray-100">
+                                            <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->name }}</p>
+                                            <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
+                                        </div>
+                                        @if(auth()->user()->isAdmin())
+                                            <a href="{{ route('admin.dashboard') }}"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 font-semibold text-purple-600">
+                                                🛡️ Panel de Admin
+                                            </a>
+                                        @endif
+                                        @if(auth()->user()->isCook())
+                                            <a href="{{ route('cook.dashboard') }}"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 font-semibold text-purple-600">
+                                                👨‍🍳 Panel de Cocinero
+                                            </a>
+                                        @endif
+                                        @if(auth()->user()->isDeliveryDriver())
+                                            <a href="{{ route('delivery-driver.dashboard') }}"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 font-semibold text-blue-600">
+                                                🚴 Panel de Repartidor
+                                            </a>
+                                        @endif
+                                        @if(auth()->user()->isCustomer())
+                                            <a href="{{ route('favorites.index') }}"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">
+                                                ⭐ Mis Favoritos
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('profile.edit') }}"
+                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                            👤 Mi Perfil
+                                        </a>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit"
+                                                onclick="event.preventDefault(); this.closest('form').submit();"
+                                                class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                                🚪 Cerrar Sesión
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @endauth
+                    </div>
                 </div>
 
-                <!-- Mobile menu button -->
-                <div class="md:hidden">
+                <!-- Mobile Menu & Action Buttons -->
+                <div class="flex items-center space-x-2 md:hidden">
+                    <!-- Mobile Cart Icon -->
+                    <a href="{{ route('cart.index') }}"
+                        class="relative p-2 text-gray-700 hover:text-orange-600 transition-colors"
+                        aria-label="Carrito">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span class="header-cart-badge absolute -top-1 -right-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs font-bold rounded-full w-5 h-5 {{ $cartCount > 0 ? 'flex' : 'hidden' }} items-center justify-center">
+                            <span class="header-cart-count">{{ $cartCount }}</span>
+                        </span>
+                    </a>
+
+                    <!-- Mobile Instagram -->
+                    <a href="{{ $globalSettings['instagram_url'] ?? 'https://www.instagram.com/cocinarte.ar' }}"
+                        target="_blank" rel="noopener noreferrer"
+                        class="p-2 text-gray-700 hover:text-pink-600 transition-colors"
+                        aria-label="Instagram">
+                        <svg class="w-6 h-6 fill-currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.13-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                    </a>
+
+                    <!-- Hamburger Button -->
                     <button id="mobile-menu-button" type="button"
-                        class="text-gray-700 hover:text-purple-600 focus:outline-none">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="text-gray-700 hover:text-purple-600 focus:outline-none p-1.5 rounded-lg"
+                        aria-label="Abrir menú">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -276,89 +327,118 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu"
             class="hidden md:hidden bg-white border-t border-gray-100 shadow-xl overflow-hidden transition-all duration-300">
-            <div class="px-4 pt-2 pb-6 space-y-1">
+            <div class="px-4 pt-3 pb-6 space-y-2">
+                <!-- Buscador Mobile -->
+                @if(!$isAuthPage)
+                    <form action="{{ route('marketplace.catalog') }}" method="GET" class="mb-3">
+                        <div class="relative">
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                placeholder="Buscar cocinero o plato..."
+                                class="w-full px-4 py-2.5 pr-10 rounded-xl border-2 border-gray-200 focus:border-purple-500 transition text-sm focus:outline-none">
+                            <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600" aria-label="Buscar">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                @endif
+
+                <a href="{{ route('marketplace.catalog') }}"
+                    class="block px-4 py-2.5 text-gray-700 hover:bg-purple-50 rounded-xl font-medium transition-colors">
+                    🔍 Explorar
+                </a>
+
+                @if(!auth()->check() || !auth()->user()->isCook())
+                    <a href="{{ route('register', ['role' => 'cook']) }}"
+                        class="block px-4 py-2.5 text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-xl font-medium transition-colors border border-purple-200">
+                        👨‍🍳 Quiero Cocinar
+                    </a>
+                @endif
+
                 @auth
                     @if(auth()->user()->isCook())
                         <a href="{{ route('cook.dashboard') }}"
-                            class="block px-4 py-3 text-gray-700 hover:bg-purple-50 rounded-xl font-medium transition-colors">
+                            class="block px-4 py-2.5 text-gray-700 hover:bg-purple-50 rounded-xl font-medium transition-colors">
                             👨‍🍳 Mi Cocina
                         </a>
                     @endif
 
-                    @if(auth()->user()->isDeliveryDriver())
-                        <a href="{{ route('delivery-driver.dashboard') }}"
-                            class="block px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl font-medium transition-colors">
-                            🚴 Mi Panel
+                    @if(auth()->user()->isCustomer() || auth()->user()->orders()->exists())
+                        <a href="{{ route('orders.my') }}"
+                            class="block px-4 py-2.5 text-gray-700 hover:bg-pink-50 rounded-xl font-medium transition-colors flex items-center justify-between">
+                            <span>📦 Mis Pedidos</span>
+                            @if($pendingCount > 0)
+                                <span class="bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs rounded-full px-2 py-0.5">{{ $pendingCount }}</span>
+                            @endif
+                        </a>
+                    @endif
+
+                    @if(auth()->user()->isCustomer())
+                        <a href="{{ route('favorites.index') }}"
+                            class="block px-4 py-2.5 text-gray-700 hover:bg-orange-50 rounded-xl font-medium transition-colors">
+                            ⭐ Mis Favoritos
                         </a>
                     @endif
 
                     @if(auth()->user()->isAdmin())
                         <a href="{{ route('admin.dashboard') }}"
-                            class="block px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl font-medium transition-colors">
+                            class="block px-4 py-2.5 text-gray-700 hover:bg-purple-50 rounded-xl font-medium transition-colors">
                             🛡️ Admin
                         </a>
                     @endif
 
-                    @if(auth()->user()->isCustomer())
-                        <a href="{{ route('marketplace.catalog') }}"
-                            class="block px-4 py-3 text-gray-700 hover:bg-orange-50 rounded-xl font-medium transition-colors">
-                            🔍 Explorar
-                        </a>
-                        <a href="{{ route('orders.my') }}"
-                            class="block px-4 py-3 text-gray-700 hover:bg-pink-50 rounded-xl font-medium transition-colors flex items-center justify-between">
-                            <span>📦 Mis Pedidos</span>
-                            @if($pendingCount > 0)
-                                <span
-                                    class="bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs rounded-full px-2 py-1">{{ $pendingCount }}</span>
-                            @endif
-                        </a>
-                        <a href="{{ route('favorites.index') }}"
-                            class="block px-4 py-3 text-gray-700 hover:bg-orange-50 rounded-xl font-medium transition-colors">
-                            ⭐ Favoritos
-                        </a>
-                        <a href="{{ route('cart.index') }}"
-                            class="block px-4 py-3 text-gray-700 hover:bg-orange-50 rounded-xl font-medium transition-colors flex items-center justify-between">
-                            <span>🛒 Carrito</span>
-                            @if(count($cart) > 0)
-                                <span
-                                    class="bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ count($cart) }}</span>
-                            @endif
+                    @if(auth()->user()->isDeliveryDriver())
+                        <a href="{{ route('delivery-driver.dashboard') }}"
+                            class="block px-4 py-2.5 text-gray-700 hover:bg-blue-50 rounded-xl font-medium transition-colors">
+                            🚴 Mi Panel
                         </a>
                     @endif
 
+                    <a href="{{ route('cart.index') }}"
+                        class="block px-4 py-2.5 text-gray-700 hover:bg-orange-50 rounded-xl font-medium transition-colors flex items-center justify-between">
+                        <span>🛒 Carrito</span>
+                        @if($cartCount > 0)
+                            <span class="bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ $cartCount }}</span>
+                        @endif
+                    </a>
+
                     <div class="border-t border-gray-100 my-2 pt-2">
                         <a href="{{ route('profile.edit') }}"
-                            class="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl font-medium transition-colors">
+                            class="block px-4 py-2.5 text-gray-700 hover:bg-gray-50 rounded-xl font-medium transition-colors">
                             👤 Mi Perfil
                         </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit"
-                                class="w-full text-left block px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl font-medium transition-colors">
+                                class="w-full text-left block px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-xl font-medium transition-colors">
                                 🚪 Cerrar Sesión
                             </button>
                         </form>
                     </div>
                 @else
-                    <div class="space-y-3 pt-2">
-                        <a href="{{ route('marketplace.catalog') }}"
-                            class="block px-4 py-3 text-center text-gray-700 font-bold hover:bg-gray-50 rounded-xl transition-all">
-                            Explorar
-                        </a>
-                        <a href="{{ route('register', ['role' => 'cook']) }}"
-                            class="block px-4 py-3 text-center text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-xl font-bold transition-all border border-purple-200">
-                            👨‍🍳 Quiero Cocinar
-                        </a>
+                    <div class="space-y-2 pt-2 border-t border-gray-100">
                         <a href="{{ route('login') }}"
-                            class="block px-4 py-3 text-center text-gray-700 font-bold hover:bg-gray-50 rounded-xl transition-all">
+                            class="block px-4 py-2.5 text-center text-gray-700 font-semibold hover:bg-gray-50 rounded-xl transition-all border border-gray-200">
                             Ingresar
                         </a>
                         <a href="{{ route('register') }}"
-                            class="block px-4 py-4 text-center bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white rounded-xl font-bold shadow-lg">
+                            class="block px-4 py-3 text-center bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white rounded-xl font-bold shadow-md">
                             Registrarse
                         </a>
                     </div>
                 @endauth
+
+                <div class="pt-2 border-t border-gray-100">
+                    <a href="{{ $globalSettings['instagram_url'] ?? 'https://www.instagram.com/cocinarte.ar' }}"
+                        target="_blank" rel="noopener noreferrer"
+                        class="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-pink-600 rounded-xl font-medium transition-colors">
+                        <svg class="w-5 h-5 fill-currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.13-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        <span>Seguinos en Instagram</span>
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -556,6 +636,20 @@
                                 floatingCount.textContent = data.cart_count;
                                 floatingBtn.classList.remove('hidden');
                                 floatingBtn.classList.add('flex');
+
+                                // Update header cart badges
+                                document.querySelectorAll('.header-cart-count').forEach(el => {
+                                    el.textContent = data.cart_count;
+                                });
+                                document.querySelectorAll('.header-cart-badge').forEach(el => {
+                                    if (data.cart_count > 0) {
+                                        el.classList.remove('hidden');
+                                        el.classList.add('flex');
+                                    } else {
+                                        el.classList.remove('flex');
+                                        el.classList.add('hidden');
+                                    }
+                                });
 
                                 // Animation
                                 floatingBtn.classList.add('scale-125');
