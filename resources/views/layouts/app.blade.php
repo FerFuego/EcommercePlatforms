@@ -7,7 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@hasSection('title')@yield('title') |
     {{ $globalSettings['site_name'] ?? 'Cocinarte' }}@else{{ $globalSettings['site_name'] ?? 'Cocinarte' }} -
-        {{ $globalSettings['meta_title'] ?? 'Comida Casera de Cocineros Locales' }}@endif</title>
+        {{ $globalSettings['meta_title'] ?? 'Comida Casera de Cocineros Locales' }}@endif
+    </title>
     <meta name="description"
         content="@yield('meta_description', $globalSettings['meta_description'] ?? 'Descubre cocineros independientes cerca de ti, comida casera auténtica y delivery a domicilio en Cocinarte.')">
     <link rel="canonical" href="@yield('canonical', url()->current())">
@@ -241,11 +242,11 @@
                         </div>
                     @else
                         <a href="{{ route('marketplace.catalog') }}"
-                            class="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
                             Explorar
                         </a>
                         <a href="{{ route('register', ['role' => 'cook']) }}"
-                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors flex items-center gap-1.5">
+                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
                             Quiero Cocinar
                         </a>
                         <a href="{{ route('login') }}"
