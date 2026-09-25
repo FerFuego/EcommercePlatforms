@@ -115,7 +115,7 @@ class OrderNotificationTest extends TestCase
 
         $channels = $notification->via($customer);
 
-        $this->assertContains('mail', $channels);
+        $this->assertNotContains('mail', $channels);
         $this->assertContains(\App\Channels\WhatsAppChannel::class, $channels);
         $this->assertContains(\App\Channels\WebPushChannel::class, $channels);
     }

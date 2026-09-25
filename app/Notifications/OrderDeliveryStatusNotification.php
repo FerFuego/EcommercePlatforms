@@ -25,6 +25,11 @@ class OrderDeliveryStatusNotification extends Notification implements ShouldQueu
 
     public function via(object $notifiable): array
     {
+        // No enviar email al cliente (solo WhatsApp y WebPush); mantener correo para cocineros
+        if ($notifiable->id === $this->order->customer_id || ($notifiable->role ?? null) === 'customer') {
+            return [WebPushChannel::class, WhatsAppChannel::class];
+        }
+
         return ['mail', WebPushChannel::class, WhatsAppChannel::class];
     }
 

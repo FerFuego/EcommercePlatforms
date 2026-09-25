@@ -33,7 +33,7 @@ class OrderStatusNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail', WhatsAppChannel::class, WebPushChannel::class];
+        return [WhatsAppChannel::class, WebPushChannel::class];
     }
 
     /**
