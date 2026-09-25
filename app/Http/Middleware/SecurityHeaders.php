@@ -12,11 +12,11 @@ class SecurityHeaders
     {
         $response = $next($request);
 
-        $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
-        $response->headers->set('X-Content-Type-Options', 'nosniff');
+        //$response->headers->set('X-Frame-Options', 'SAMEORIGIN');
+        //$response->headers->set('X-Content-Type-Options', 'nosniff');
         //$response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         // Recomendado pero en navegador no funciona bien la geolocalizacion
-        $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
+        //$response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
 
         // HSTS solo debe enviarse bajo HTTPS (RFC 6797) para evitar problemas en desarrollo local
         if ($request->isSecure()) {
