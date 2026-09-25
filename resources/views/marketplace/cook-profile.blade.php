@@ -559,3 +559,61 @@
         </div>
     </div>
 @endsection
+
+@push('meta')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@graph": [
+    {
+      "@@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@@type": "ListItem",
+          "position": 1,
+          "name": "Inicio",
+          "item": "{{ route('home') }}"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 2,
+          "name": "Catálogo",
+          "item": "{{ route('marketplace.catalog') }}"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 3,
+          "name": "{{ $cook->user->name }}",
+          "item": "{{ route('marketplace.cook.profile', $cook->id) }}"
+        }
+      ]
+    },
+    {
+      "@@type": "Restaurant",
+      "@@id": "{{ route('marketplace.cook.profile', $cook->id) }}#restaurant",
+      "name": "{{ $cook->user->name }}",
+      "url": "{{ route('marketplace.cook.profile', $cook->id) }}",
+      "image": "{{ $cookOgImage }}",
+      "description": "{{ $cookBioClean }}",
+      "priceRange": "$$",
+      "servesCuisine": "Comida Casera"@if($cook->location_lat && $cook->location_lng),
+      "geo": {
+        "@@type": "GeoCoordinates",
+        "latitude": {{ (float) $cook->location_lat }},
+        "longitude": {{ (float) $cook->location_lng }}
+      }@endif
+      @if($cook->rating_count > 0)
+      ,
+      "aggregateRating": {
+        "@@type": "AggregateRating",
+        "ratingValue": "{{ number_format((float) $cook->rating_avg, 1, '.', '') }}",
+        "reviewCount": {{ (int) $cook->rating_count }},
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+      @endif
+    }
+  ]
+}
+</script>
+@endpush

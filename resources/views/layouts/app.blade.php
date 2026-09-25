@@ -46,11 +46,7 @@
     </script>
 
 
-    <!-- Leaflet CSS para mapas -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -102,7 +98,7 @@
                 <!-- Logo -->
                 <div class="flex-shrink-0">
                     <a href="{{ route('home') }}" class="flex items-center space-x-3">
-                        <img src="{{ asset('assets/front/logo-8.webp') }}" alt="Logo" class="h-16 w-100">
+                        <img src="{{ asset('assets/front/logo-8.webp') }}" alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}" width="160" height="64" class="h-16 w-auto" fetchpriority="high">
                     </a>
                 </div>
 
@@ -464,12 +460,7 @@
     <!-- Toast Container -->
     <div id="toast-container" class="fixed top-24 right-8 z-[100] space-y-3 pointer-events-none"></div>
 
-    <!-- Flatpickr JS -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

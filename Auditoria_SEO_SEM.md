@@ -94,20 +94,21 @@ Robots.txt: Actualmente es permisivo (Disallow:  sin restricciones). Debe proteg
 
 
 
-🟡 FASE 2: SEO Técnico y Rich Snippets — 3 a 5 Días
-Implementación de Schema.org (JSON-LD):
-
-Home: Organization + WebSite con buscador interno.
-Cocinero: Restaurant o LocalBusiness con aggregateRating (aprovechando que ya tienes reviews y ratings en la BD).
-Plato: Product / MenuItem con offers y disponibilidad.
-Migas de Pan: BreadcrumbList (Home > Catálogo > Cocinero > Plato).
-Carga Condicional de Assets:
-
-Mover leaflet.css y flatpickr.min.css fuera del <head> global a @push('styles') en las vistas que realmente los utilizan (catalog.blade.php, etc.), mejorando la velocidad de carga en Home y Landing.
-Optimización de Imágenes y CLS:
-
-Convertir las imágenes estáticas del hero a formato .webp liviano.
-Agregar atributos width, height y loading="lazy" a las imágenes por debajo del pliegue (below the fold).
+🟡 FASE 2: SEO Técnico y Rich Snippets — ✅ COMPLETADA
+- [x] **Implementación de Schema.org (JSON-LD):**
+  - **Home (`landing.blade.php`):** Estructura `Organization` y `WebSite` con `potentialAction` (`SearchAction`) apuntando al buscador del catálogo.
+  - **Catálogo (`catalog.blade.php`):** Estructura `BreadcrumbList` (`Inicio > Catálogo`).
+  - **Cocinero (`cook-profile.blade.php`):** Estructura `Restaurant` con `name`, `image`, `description`, `priceRange`, `servesCuisine`, `geo` (coordenadas geográficas) y `aggregateRating` (basado en el rating real y reviews de la BD), más `BreadcrumbList`.
+  - **Plato (`dish-detail.blade.php`):** Estructura `Product` y `MenuItem` con `name`, `image`, `description`, y `offers` (`price`, `priceCurrency: ARS`, disponibilidad `InStock`/`OutOfStock`, vendedor), más `BreadcrumbList`.
+- [x] **Carga Condicional de Assets (CSS y JS):**
+  - Eliminados `leaflet.css` y `flatpickr.min.css` del `<head>` global en `layouts/app.blade.php` (retrasaban el FCP innecesariamente).
+  - Eliminados `leaflet.js` y `flatpickr.js` del pie global.
+  - Mapeados condicionalmente vía `@push('styles')` y `@push('scripts')` exclusivamente donde se utilizan (`orders/checkout.blade.php` para Flatpickr, y vistas de repartidor para Leaflet).
+- [x] **Optimización de Imágenes y Prevención de CLS:**
+  - Logo en Navbar optimizado con atributos explícitos `width="160" height="64"`, `alt` dinámico con el nombre del sitio y `fetchpriority="high"`.
+  - Imágenes del Hero de la Landing optimizadas con `width="240" height="192"`, `loading="lazy"` para imágenes inferiores y textos `alt` contextuales de comida casera.
+- [x] **Tests Automatizados de Cobertura:**
+  - Creado `tests/Feature/SeoMetadataTest.php` validando canonicals, Open Graph, Sitemap XML y Schemas JSON-LD en todas las vistas públicas. Test suite 100% verde (223/223 tests pasando).
 
 
 

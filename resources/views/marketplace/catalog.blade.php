@@ -5,6 +5,11 @@
 @section('canonical', route('marketplace.catalog'))
 @section('og_title', 'Explorar Cocineros Caseros y Menú del Día | Cocinarte')
 
+@push('styles')
+    <!-- Leaflet CSS para mapas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+@endpush
+
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 py-12">
         <div class="container mx-auto px-4">
@@ -175,6 +180,8 @@
     </div>
 
     @push('scripts')
+        <!-- Leaflet JS -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script>
             let map;
             let userMarker;
@@ -670,3 +677,26 @@
         </script>
     @endpush
 @endsection
+
+@push('meta')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@@type": "ListItem",
+      "position": 1,
+      "name": "Inicio",
+      "item": "{{ route('home') }}"
+    },
+    {
+      "@@type": "ListItem",
+      "position": 2,
+      "name": "Catálogo",
+      "item": "{{ route('marketplace.catalog') }}"
+    }
+  ]
+}
+</script>
+@endpush

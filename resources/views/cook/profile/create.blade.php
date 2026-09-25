@@ -2,6 +2,11 @@
 
 @section('title', 'Registrarse como Cocinero')
 
+@push('styles')
+    <!-- Leaflet CSS para mapas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+@endpush
+
 @section('content')
     <div class="container mx-auto px-4 py-12 max-w-4xl">
         <div class="text-center mb-12">
@@ -276,6 +281,8 @@
     </div>
 
     @push('scripts')
+        <!-- Leaflet JS -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script>
             let map, marker;
 

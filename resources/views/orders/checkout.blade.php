@@ -2,6 +2,10 @@
 
 @section('title', 'Checkout')
 
+@push('styles')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+@endpush
+
 @section('content')
     <div class="container mx-auto px-4 py-12">
         <h1 class="text-4xl font-bold mb-8 text-center">
@@ -347,6 +351,8 @@
     </div>
 
     @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
         <script>
             function toggleDeliveryFields(show) {
                 const fields = document.getElementById('deliveryFields');

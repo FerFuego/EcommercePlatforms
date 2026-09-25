@@ -329,3 +329,60 @@
         </script>
     @endpush
 @endsection
+
+@push('meta')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@graph": [
+    {
+      "@@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@@type": "ListItem",
+          "position": 1,
+          "name": "Inicio",
+          "item": "{{ route('home') }}"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 2,
+          "name": "Catálogo",
+          "item": "{{ route('marketplace.catalog') }}"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 3,
+          "name": "{{ $cookName }}",
+          "item": "{{ route('marketplace.cook.profile', $dish->cook->id) }}"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 4,
+          "name": "{{ $dish->name }}",
+          "item": "{{ route('marketplace.dish.detail', $dish->id) }}"
+        }
+      ]
+    },
+    {
+      "@@type": ["Product", "MenuItem"],
+      "@@id": "{{ route('marketplace.dish.detail', $dish->id) }}#dish",
+      "name": "{{ $dish->name }}",
+      "image": "{{ $dishOgImage }}",
+      "description": "{{ $dishDesc }}",
+      "offers": {
+        "@@type": "Offer",
+        "url": "{{ route('marketplace.dish.detail', $dish->id) }}",
+        "priceCurrency": "ARS",
+        "price": "{{ (float) $dish->price }}",
+        "availability": "{{ $dish->hasStock() ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
+        "seller": {
+          "@@type": "Person",
+          "name": "{{ $cookName }}"
+        }
+      }
+    }
+  ]
+}
+</script>
+@endpush

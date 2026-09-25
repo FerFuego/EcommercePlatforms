@@ -254,9 +254,13 @@
                 transform: translateX(100%);
             }
         </style>
+        <!-- Leaflet CSS para mapas -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     @endpush
 
     @push('scripts')
+        <!-- Leaflet JS -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script>
             function deletePhoto(photoPath, elementId) {
                 if (!confirm('¿Estás seguro de querer eliminar esta foto?')) return;
