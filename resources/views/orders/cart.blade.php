@@ -101,7 +101,7 @@
                         Proceder al Pago →
                     </a>
                     
-                    <a href="{{ route('marketplace.catalog') }}" class="block w-full text-center mt-4 bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent hover:text-white transition">
+                    <a href="{{ route('marketplace.catalog') }}" class="block w-full text-center mt-4 bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent hover:text-black transition">
                         ← Seguir comprando
                     </a>
                 </div>
