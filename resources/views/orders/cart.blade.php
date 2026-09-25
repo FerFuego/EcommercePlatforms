@@ -97,11 +97,11 @@
                         </div>
                     </div>
                     
-                    <a href="{{ route('orders.checkout') }}" class="block w-full bg-white text-purple-600 px-6 py-4 rounded-xl font-bold text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">
+                    <a href="{{ route('orders.checkout') }}" class="block w-full bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 text-white px-6 py-4 rounded-xl font-bold text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">
                         Proceder al Pago →
                     </a>
                     
-                    <a href="{{ route('marketplace.catalog') }}" class="block w-full text-center mt-4 text-white/90 hover:text-white transition">
+                    <a href="{{ route('marketplace.catalog') }}" class="block w-full text-center mt-4 bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent hover:text-white transition">
                         ← Seguir comprando
                     </a>
                 </div>
