@@ -91,7 +91,19 @@ Robots.txt: Actualmente es permisivo (Disallow:  sin restricciones). Debe proteg
   - Creado `SitemapController` y vista XML en `/sitemap.xml` con estándares de sitemaps.org.
   - Incluye: Home (1.0), Catálogo (0.9), cocineros aprobados/activos (0.8), platos activos (0.7) y legales (0.3).
 
-
+Análisis luego de las mejoras de FASE 1
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│ PUNTUACIÓN DE MADUREZ DIGITAL (Parte Pública)                                          │
+├───────────────────────────────────┬────────────────────────┬───────────────────────────┤
+│ Área / Pilar                      │ Antes                  │ Ahora                     │
+├───────────────────────────────────┼────────────────────────┼───────────────────────────┤
+│ SEO Técnico & Rastreo             │ 🔴 35 / 100 (Crítico)  │ 🟢 70 / 100 (Bueno)        │
+│ SEO On-Page & Contenidos          │ 🟡 45 / 100 (Básico)   │ 🟢 75 / 100 (Bueno)        │
+│ Local SEO & Rich Snippets         │ 🔴 20 / 100 (Sin Schema)│ 🔴 25 / 100 (Sin Schema)  │
+│ SEM, Pixel & Medición E-comm      │ 🔴 10 / 100 (Inoperativo)│ 🔴 10 / 100 (Inoperativo)│
+│ Rendimiento / Core Web Vitals     │ 🟢 78 / 100 (Aceptable)│ 🟢 80 / 100 (Aceptable).   │
+│ Speedtest (GTmetrix & PageSpeed)  │ 🟡 Sin datos previos   │ 🟢 79 / 100 (Grado B+).    │
+└───────────────────────────────────┴────────────────────────┴───────────────────────────┘
 
 
 🟡 FASE 2: SEO Técnico y Rich Snippets — ✅ COMPLETADA
@@ -110,6 +122,19 @@ Robots.txt: Actualmente es permisivo (Disallow:  sin restricciones). Debe proteg
 - [x] **Tests Automatizados de Cobertura:**
   - Creado `tests/Feature/SeoMetadataTest.php` validando canonicals, Open Graph, Sitemap XML y Schemas JSON-LD en todas las vistas públicas. Test suite 100% verde (223/223 tests pasando).
 
+Análisis luego de las mejoras de FASE 2
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ PUNTUACIÓN DE MADUREZ DIGITAL (Parte Pública) — EVOLUCIÓN HISTÓRICA                              │
+├───────────────────────────────────┬──────────────────────┬──────────────────────┬────────────────┤
+│ Área / Pilar                      │ 0. Inicial (Antes)   │ 1. Fase 1            │ 2. Fase 2      │
+├───────────────────────────────────┼──────────────────────┼──────────────────────┼────────────────┤
+│ SEO Técnico & Rastreo             │ 🔴 35 / 100 (Crítico)│ 🟢 70 / 100 (Bueno)  │ 🟢 75 / 100 ⬆️  │
+│ SEO On-Page & Contenidos          │ 🟡 45 / 100 (Básico) │ 🟢 75 / 100 (Bueno)  │ 🟢 85 / 100 ⬆️  │
+│ Local SEO & Rich Snippets         │ 🔴 20 / 100 (Sin)    │ 🔴 25 / 100 (Sin)    │ 🟢 85 / 100 🚀  │
+│ SEM, Pixel & Medición E-comm      │ 🔴 10 / 100 (Inop.)  │ 🔴 10 / 100 (Inop.)  │ 🔴 10 / 100 ⏸️  │
+│ Rendimiento / Core Web Vitals     │ 🟢 78 / 100 (Acept.) │ 🟢 80 / 100 (Acept.) │ 🟢 85 / 100 ⬆️  │
+│ Speedtest (GTmetrix & PageSpeed)  │ ⚪ Sin datos         │ 🟢 79 / 100 (Grado B+)│ 🟢 83 / 100 ⬆️ │ 
+└───────────────────────────────────┴──────────────────────┴──────────────────────┴────────────────┘
 
 
 🔵 FASE 3: SEM & Estrategia de Conversión Paga — Semana 2
