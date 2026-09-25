@@ -231,6 +231,14 @@
                             </div>
                         </div>
                     @else
+                        <a href="{{ route('marketplace.catalog') }}"
+                            class="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+                            Explorar
+                        </a>
+                        <a href="{{ route('register', ['role' => 'cook']) }}"
+                            class="text-gray-700 hover:text-purple-600 font-medium transition-colors flex items-center gap-1.5">
+                            <span>👨‍🍳</span> Quiero Cocinar
+                        </a>
                         <a href="{{ route('login') }}"
                             class="text-gray-700 hover:text-purple-600 font-medium transition-colors">
                             Ingresar
@@ -327,6 +335,10 @@
                             class="block px-4 py-3 text-center text-gray-700 font-bold hover:bg-gray-50 rounded-xl transition-all">
                             Explorar
                         </a>
+                        <a href="{{ route('register', ['role' => 'cook']) }}"
+                            class="block px-4 py-3 text-center text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-xl font-bold transition-all border border-purple-200">
+                            👨‍🍳 Quiero Cocinar
+                        </a>
                         <a href="{{ route('login') }}"
                             class="block px-4 py-3 text-center text-gray-700 font-bold hover:bg-gray-50 rounded-xl transition-all">
                             Ingresar
@@ -393,17 +405,17 @@
                 <div>
                     <h4 class="font-semibold mb-4">Para Cocineros</h4>
                     <ul class="space-y-2 text-gray-300">
-                        <li><a href="{{ route('register') }}" class="hover:text-pink-400 transition">Registrarse</a>
+                        <li><a href="{{ route('register', ['role' => 'cook']) }}" class="hover:text-pink-400 transition">Registrarse como Cocinero</a>
                         </li>
-                        <li><a href="#" class="hover:text-pink-400 transition">Beneficios</a></li>
+                        <li><a href="{{ route('home') }}#cooks" class="hover:text-pink-400 transition">Beneficios</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-semibold mb-4">Para Repartidores</h4>
                     <ul class="space-y-2 text-gray-300">
-                        <li><a href="{{ route('register') }}" class="hover:text-pink-400 transition">Registrarse</a>
+                        <li><a href="{{ route('register', ['role' => 'delivery_driver']) }}" class="hover:text-pink-400 transition">Registrarse como Repartidor</a>
                         </li>
-                        <li><a href="#" class="hover:text-pink-400 transition">Beneficios</a></li>
+                        <li><a href="{{ route('home') }}#drivers" class="hover:text-pink-400 transition">Beneficios</a></li>
                     </ul>
                 </div>
                 <div>

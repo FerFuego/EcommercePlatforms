@@ -125,7 +125,7 @@
             <!-- Register Link -->
             <p class="text-center mt-6 text-gray-600">
                 ¿No tienes una cuenta?
-                <a href="{{ route('register') }}" class="text-purple-600 hover:text-purple-800 font-semibold">
+                <a href="{{ route('register', request()->only(['role', 'tipo'])) }}" class="text-purple-600 hover:text-purple-800 font-semibold">
                     Regístrate aquí
                 </a>
             </p>

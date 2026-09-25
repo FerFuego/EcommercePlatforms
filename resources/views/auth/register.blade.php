@@ -3,12 +3,36 @@
 @section('title', 'Crear Cuenta')
 
 @section('content')
+    @php
+        $rawRole = old('role', request()->query('role', request()->query('tipo')));
+        $roleMap = [
+            'cook' => 'cook',
+            'cocinero' => 'cook',
+            'chef' => 'cook',
+            'delivery_driver' => 'delivery_driver',
+            'repartidor' => 'delivery_driver',
+            'driver' => 'delivery_driver',
+            'customer' => 'customer',
+            'cliente' => 'customer',
+            'comer' => 'customer',
+        ];
+        $initialRole = $roleMap[strtolower((string) $rawRole)] ?? (in_array($rawRole, ['customer', 'cook', 'delivery_driver']) ? $rawRole : '');
+    @endphp
+
     <div class="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 flex items-center justify-center py-12 px-4"
         x-data="{
                         step: {{ $errors->has('name') || $errors->has('email') || $errors->has('phone') ? 2 : ($errors->has('password') ? 3 : 1) }},
-                        role: '{{ old('role', 'customer') }}',
-                        nextStep() { if(this.step < 3) this.step++ },
-                        prevStep() { if(this.step > 1) this.step-- }
+                        role: '{{ $initialRole }}',
+                        roleError: false,
+                        nextStep() { 
+                            if (this.step === 1 && !this.role) {
+                                this.roleError = true;
+                                return;
+                            }
+                            this.roleError = false;
+                            if(this.step < 3) this.step++;
+                        },
+                        prevStep() { if(this.step > 1) this.step--; }
                     }">
         <div class="max-w-md w-full">
             <!-- Logo/Header -->
@@ -56,18 +80,39 @@
                     <div x-show="step === 1" x-transition:enter="transition ease-out duration-300"
                         x-transition:enter-start="opacity-0 transform translate-x-8"
                         x-transition:enter-end="opacity-100 transform translate-x-0">
-                        <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">¿Cómo quieres usar Cocinarte?</h3>
-                        <div class="grid grid-cols-1 gap-4 mb-8">
-                            <label class="relative cursor-pointer group">
-                                <input type="radio" name="role" value="customer" x-model="role" class="peer sr-only">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1 text-center">¿Cómo quieres usar Cocinarte?</h3>
+                        <p class="text-sm text-gray-500 mb-6 text-center">Selecciona una opción para configurar tu cuenta</p>
+
+                        <!-- Banner si ya viene con un rol preseleccionado -->
+                        <div x-show="role === 'cook'" x-cloak class="mb-5 p-3.5 bg-purple-50 border border-purple-200 rounded-xl text-xs text-purple-800 flex items-center gap-2.5">
+                            <span class="text-xl">👨‍🍳</span>
+                            <div>
+                                <p class="font-bold">Registro de Cocinero</p>
+                                <p class="text-purple-600">Crearás tu cuenta para ofrecer y vender tus platos caseros.</p>
+                            </div>
+                        </div>
+
+                        <div x-show="role === 'delivery_driver'" x-cloak class="mb-5 p-3.5 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-800 flex items-center gap-2.5">
+                            <span class="text-xl">🚴</span>
+                            <div>
+                                <p class="font-bold">Registro de Repartidor</p>
+                                <p class="text-blue-600">Crearás tu cuenta para realizar entregas en tu zona.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 mb-6">
+                            <!-- Opción 1: Cliente -->
+                            <label class="relative cursor-pointer group block">
+                                <input type="radio" name="role" value="customer" x-model="role" @change="roleError = false" class="peer sr-only">
                                 <div
-                                    class="border-2 border-gray-100 rounded-2xl p-5 peer-checked:border-orange-500 peer-checked:bg-orange-50 group-hover:border-orange-200 transition-all flex items-center space-x-4">
+                                    class="border-2 rounded-2xl p-5 transition-all flex items-center space-x-4"
+                                    :class="role === 'customer' ? 'border-orange-500 bg-orange-50/70 ring-2 ring-orange-200 shadow-sm' : 'border-gray-100 hover:border-orange-200 hover:bg-gray-50/50'">
                                     <div class="text-4xl">🍽️</div>
-                                    <div>
+                                    <div class="flex-1">
                                         <p class="font-bold text-gray-800">Quiero Comer</p>
                                         <p class="text-sm text-gray-500">Descubre sabores caseros cerca de ti</p>
                                     </div>
-                                    <div class="ml-auto opacity-0 peer-checked:opacity-100 text-orange-500">
+                                    <div class="ml-auto text-orange-500 transition-opacity" :class="role === 'customer' ? 'opacity-100' : 'opacity-0'">
                                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -77,16 +122,21 @@
                                 </div>
                             </label>
 
-                            <label class="relative cursor-pointer group">
-                                <input type="radio" name="role" value="cook" x-model="role" class="peer sr-only">
+                            <!-- Opción 2: Cocinero -->
+                            <label class="relative cursor-pointer group block">
+                                <input type="radio" name="role" value="cook" x-model="role" @change="roleError = false" class="peer sr-only">
                                 <div
-                                    class="border-2 border-gray-100 rounded-2xl p-5 peer-checked:border-purple-500 peer-checked:bg-purple-50 group-hover:border-purple-200 transition-all flex items-center space-x-4">
+                                    class="border-2 rounded-2xl p-5 transition-all flex items-center space-x-4"
+                                    :class="role === 'cook' ? 'border-purple-500 bg-purple-50/80 ring-2 ring-purple-200 shadow-sm' : 'border-gray-100 hover:border-purple-200 hover:bg-gray-50/50'">
                                     <div class="text-4xl">👨‍🍳</div>
-                                    <div>
-                                        <p class="font-bold text-gray-800">Quiero Cocinar</p>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2">
+                                            <p class="font-bold text-gray-800">Quiero Cocinar</p>
+                                            <span class="text-[11px] bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded-full">Cocinero</span>
+                                        </div>
                                         <p class="text-sm text-gray-500">Vende tus platos y genera ingresos</p>
                                     </div>
-                                    <div class="ml-auto opacity-0 peer-checked:opacity-100 text-purple-500">
+                                    <div class="ml-auto text-purple-500 transition-opacity" :class="role === 'cook' ? 'opacity-100' : 'opacity-0'">
                                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -96,16 +146,21 @@
                                 </div>
                             </label>
 
-                            <label class="relative cursor-pointer group">
-                                <input type="radio" name="role" value="delivery_driver" x-model="role" class="peer sr-only">
+                            <!-- Opción 3: Repartidor -->
+                            <label class="relative cursor-pointer group block">
+                                <input type="radio" name="role" value="delivery_driver" x-model="role" @change="roleError = false" class="peer sr-only">
                                 <div
-                                    class="border-2 border-gray-100 rounded-2xl p-5 peer-checked:border-blue-500 peer-checked:bg-blue-50 group-hover:border-blue-200 transition-all flex items-center space-x-4">
+                                    class="border-2 rounded-2xl p-5 transition-all flex items-center space-x-4"
+                                    :class="role === 'delivery_driver' ? 'border-blue-500 bg-blue-50/80 ring-2 ring-blue-200 shadow-sm' : 'border-gray-100 hover:border-blue-200 hover:bg-gray-50/50'">
                                     <div class="text-4xl">🚴</div>
-                                    <div>
-                                        <p class="font-bold text-gray-800">Quiero Repartir</p>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2">
+                                            <p class="font-bold text-gray-800">Quiero Repartir</p>
+                                            <span class="text-[11px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">Repartidor</span>
+                                        </div>
                                         <p class="text-sm text-gray-500">Entrega pedidos en tu vehículo</p>
                                     </div>
-                                    <div class="ml-auto opacity-0 peer-checked:opacity-100 text-blue-500">
+                                    <div class="ml-auto text-blue-500 transition-opacity" :class="role === 'delivery_driver' ? 'opacity-100' : 'opacity-0'">
                                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -115,6 +170,15 @@
                                 </div>
                             </label>
                         </div>
+
+                        <!-- Error si no seleccionó ningún rol -->
+                        <div x-show="roleError" x-cloak class="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-600 flex items-center gap-2">
+                            <svg class="w-4 h-4 shrink-0 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Por favor selecciona cómo quieres usar Cocinarte para continuar.</span>
+                        </div>
+
                         <button type="button" @click="nextStep"
                             class="w-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-6 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
                             Continuar
@@ -125,7 +189,17 @@
                     <div x-show="step === 2" x-cloak x-transition:enter="transition ease-out duration-300"
                         x-transition:enter-start="opacity-0 transform translate-x-8"
                         x-transition:enter-end="opacity-100 transform translate-x-0">
-                        <h3 class="text-xl font-bold text-gray-800 mb-6">Tus datos personales</h3>
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold text-gray-800">Tus datos personales</h3>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1"
+                                :class="{
+                                    'bg-orange-100 text-orange-700': role === 'customer',
+                                    'bg-purple-100 text-purple-700': role === 'cook',
+                                    'bg-blue-100 text-blue-700': role === 'delivery_driver'
+                                }"
+                                x-text="role === 'cook' ? '👨‍🍳 Cocinero' : (role === 'delivery_driver' ? '🚴 Repartidor' : '🍽️ Cliente')">
+                            </span>
+                        </div>
 
                         <!-- Name -->
                         <div class="mb-4">
@@ -187,7 +261,17 @@
                     <div x-show="step === 3" x-cloak x-transition:enter="transition ease-out duration-300"
                         x-transition:enter-start="opacity-0 transform translate-x-8"
                         x-transition:enter-end="opacity-100 transform translate-x-0">
-                        <h3 class="text-xl font-bold text-gray-800 mb-6">Seguridad de la cuenta</h3>
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold text-gray-800">Seguridad de la cuenta</h3>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1"
+                                :class="{
+                                    'bg-orange-100 text-orange-700': role === 'customer',
+                                    'bg-purple-100 text-purple-700': role === 'cook',
+                                    'bg-blue-100 text-blue-700': role === 'delivery_driver'
+                                }"
+                                x-text="role === 'cook' ? '👨‍🍳 Cocinero' : (role === 'delivery_driver' ? '🚴 Repartidor' : '🍽️ Cliente')">
+                            </span>
+                        </div>
 
                         <div class="mb-4">
                             <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Contraseña</label>

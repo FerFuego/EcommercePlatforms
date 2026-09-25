@@ -27,7 +27,7 @@
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="{{ route('register') }}"
+                        <a href="{{ route('register', ['role' => 'cook']) }}"
                             class="bg-white border-2 border-orange-500 text-orange-600 px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-purple-50 transition-all inline-flex items-center justify-center">
                             Soy Cocinero
                         </a>
@@ -187,7 +187,7 @@
     </div>
 
     <!-- For Cooks Section -->
-    <div class="py-20 bg-gradient-to-br from-purple-100 via-pink-100 to-orange-100">
+    <div id="cooks" class="py-20 bg-gradient-to-br from-purple-100 via-pink-100 to-orange-100">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
@@ -249,7 +249,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('cook.profile.create') }}"
+                    <a href="{{ auth()->check() ? (auth()->user()->isCook() ? route('cook.dashboard') : route('cook.profile.create')) : route('register', ['role' => 'cook']) }}"
                         class="group bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all inline-flex items-center justify-center">
                         Comenzar Ahora
                         <svg class="ml-2 w-6 h-6 transition-transform group-hover:translate-x-2" fill="none"
@@ -297,7 +297,7 @@
     </div>
 
     <!-- For Drivers Section -->
-    <div class="py-20 bg-gradient-to-br from-purple-100 via-pink-100 to-orange-100">
+    <div id="drivers" class="py-20 bg-gradient-to-br from-purple-100 via-pink-100 to-orange-100">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="relative order-2 lg:order-1">
@@ -376,7 +376,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('register') }}"
+                    <a href="{{ auth()->check() ? (auth()->user()->isDeliveryDriver() ? route('delivery-driver.dashboard') : route('delivery-driver.profile.create')) : route('register', ['role' => 'delivery_driver']) }}"
                         class="group bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all inline-flex items-center justify-center">
                         ¡Quiero Empezar!
                         <svg class="ml-2 w-6 h-6 transition-transform group-hover:translate-x-2" fill="none"

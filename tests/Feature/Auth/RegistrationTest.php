@@ -61,5 +61,40 @@ class RegistrationTest extends TestCase
         $responseCreateProfile->assertStatus(200);
         $responseCreateProfile->assertSee('Únete como Cocinero');
     }
+
+    public function test_registration_screen_preselects_cook_role_when_param_provided(): void
+    {
+        $response = $this->get(route('register', ['role' => 'cook']));
+
+        $response->assertStatus(200);
+        $response->assertSee("role: 'cook'", false);
+        $response->assertSee('Registro de Cocinero');
+    }
+
+    public function test_registration_screen_preselects_cook_role_with_spanish_alias(): void
+    {
+        $response = $this->get('/register?tipo=cocinero');
+
+        $response->assertStatus(200);
+        $response->assertSee("role: 'cook'", false);
+        $response->assertSee('Registro de Cocinero');
+    }
+
+    public function test_registration_screen_preselects_delivery_driver_role(): void
+    {
+        $response = $this->get(route('register', ['role' => 'delivery_driver']));
+
+        $response->assertStatus(200);
+        $response->assertSee("role: 'delivery_driver'", false);
+        $response->assertSee('Registro de Repartidor');
+    }
+
+    public function test_registration_screen_defaults_to_empty_role_when_no_param(): void
+    {
+        $response = $this->get(route('register'));
+
+        $response->assertStatus(200);
+        $response->assertSee("role: ''", false);
+    }
 }
 
