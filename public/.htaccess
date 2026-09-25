@@ -23,3 +23,24 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+<IfModule mod_headers.c>
+    # 1. Ocultar que usas PHP (evita fingerprinting)
+    Header unset X-Powered-By
+    Header always unset X-Powered-By
+
+    # 2. Prevenir Clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # 3. Prevenir MIME-sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # 4. Proteger privacidad de URLs en redirecciones
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # 5. Restringir APIs del navegador (Permitiendo geolocalización para tu propio sitio)
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
+
+    # 6. Forzar HTTPS estricto (HSTS) - Condicionado a que la conexión sea HTTPS
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=%{HTTPS} == 'on'"
+</IfModule>
