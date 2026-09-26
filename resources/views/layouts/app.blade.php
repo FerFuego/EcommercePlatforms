@@ -120,14 +120,14 @@
                     <a href="{{ route('home') }}"
                         class="flex items-center space-x-2 transition-transform hover:scale-[1.02]">
                         <img src="{{ asset('assets/front/logo-8.webp') }}"
-                            alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}" width="180" height="60"
+                            alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}" width="240" height="60"
                             fetchpriority="high">
                     </a>
                 </div>
 
                 <!-- Buscador (solo fuera de login/páginas de autenticación) -->
 
-                <div class="hidden md:flex flex-1 max-w-md lg:max-w-l xl:max-w-l mx-2 lg:mx-4">
+                <div class="hidden md:flex flex-1 max-w-lg lg:max-w-lg xl:max-w-lg mx-2 lg:mx-4">
                     <!-- Explorar, Quiero Cocinar -->
                     <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
                         <a href="{{ route('marketplace.catalog') }}"
@@ -136,7 +136,7 @@
                         </a>
                         @if(!auth()->check() || !auth()->user()->isCook())
                             <a href="{{ route('register', ['role' => 'cook']) }}"
-                                class="px-3 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:text-purple-600 hover:bg-purple-50/70 transition-all whitespace-nowrap">
+                                class="px-3 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:text-orange-600 hover:bg-orange-50/70 transition-all whitespace-nowrap">
                                 Quiero Cocinar
                             </a>
                         @endif
@@ -149,10 +149,10 @@
                                     placeholder="Buscar cocinero o plato..."
                                     class="w-full py-2.5 pl-2 pr-11 bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none border-0">
                                 <button type="submit"
-                                    class="w-12 h-8 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white flex items-center justify-center shadow-sm hover:shadow transition-all transform hover:scale-105 active:scale-95"
+                                    class="w-10 h-8 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white flex items-center justify-center shadow-sm hover:shadow transition-all transform hover:scale-105 active:scale-95"
                                     aria-label="Buscar">
                                     <svg class="w-4 h-4 text-gray-400 group-hover:text-orange-500 transition-colors"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        fill="none" stroke="#fff" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
