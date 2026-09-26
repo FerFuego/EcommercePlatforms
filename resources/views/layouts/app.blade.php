@@ -110,7 +110,7 @@
     @endphp
 
     <!-- Navbar -->
-    <nav class="bg-white/95 backdrop-blur-lg sticky top-0 z-50 border-b border-gray-100 shadow-sm">
+    <nav class="bg-white backdrop-blur-lg sticky top-0 z-50 border-b border-gray-100 shadow-sm">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20 gap-3 lg:gap-6">
 
@@ -145,22 +145,16 @@
                         <form action="{{ route('marketplace.catalog') }}" method="GET" class="w-full">
                             <div
                                 class="relative flex items-center w-full bg-gray-50/90 hover:bg-gray-100/90 focus-within:bg-white rounded-full border border-gray-200/90 focus-within:border-orange-500 focus-within:ring-4 focus-within:ring-orange-500/10 shadow-sm hover:shadow transition-all duration-200">
-                                <div class="pl-4 pr-1 text-gray-400 flex items-center pointer-events-none">
-                                    <svg class="w-4 h-4 text-gray-400 group-hover:text-orange-500 transition-colors"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                    </svg>
-                                </div>
                                 <input type="text" name="search" value="{{ request('search') }}"
                                     placeholder="Buscar cocinero o plato..."
                                     class="w-full py-2.5 pl-2 pr-11 bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none border-0">
                                 <button type="submit"
-                                    class="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white flex items-center justify-center shadow-sm hover:shadow transition-all transform hover:scale-105 active:scale-95"
+                                    class="w-12 h-8 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white flex items-center justify-center shadow-sm hover:shadow transition-all transform hover:scale-105 active:scale-95"
                                     aria-label="Buscar">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    <svg class="w-4 h-4 text-gray-400 group-hover:text-orange-500 transition-colors"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                 </button>
                             </div>
