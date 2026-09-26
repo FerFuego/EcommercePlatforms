@@ -114,7 +114,7 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20 gap-3 lg:gap-6">
 
-                <!-- Menu: Logo + Explorar, Quiero Cocinar -->
+                <!--  Logo  -->
                 <div class="flex items-center space-x-3 lg:space-x-6 flex-shrink-0">
                     <!-- Logo Cocinarte -->
                     <a href="{{ route('home') }}"
@@ -123,7 +123,11 @@
                             alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}" width="180" height="60"
                             fetchpriority="high">
                     </a>
+                </div>
 
+                <!-- Buscador (solo fuera de login/páginas de autenticación) -->
+
+                <div class="hidden md:flex flex-1 max-w-md lg:max-w-l xl:max-w-l mx-2 lg:mx-4">
                     <!-- Explorar, Quiero Cocinar -->
                     <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
                         <a href="{{ route('marketplace.catalog') }}"
@@ -137,11 +141,7 @@
                             </a>
                         @endif
                     </div>
-                </div>
-
-                <!-- Buscador (solo fuera de login/páginas de autenticación) -->
-                @if(!$isAuthPage)
-                    <div class="hidden md:flex flex-1 max-w-md lg:max-w-lg xl:max-w-xl mx-2 lg:mx-4">
+                    @if(!$isAuthPage)
                         <form action="{{ route('marketplace.catalog') }}" method="GET" class="w-full">
                             <div
                                 class="relative flex items-center w-full bg-gray-50/90 hover:bg-gray-100/90 focus-within:bg-white rounded-full border border-gray-200/90 focus-within:border-orange-500 focus-within:ring-4 focus-within:ring-orange-500/10 shadow-sm hover:shadow transition-all duration-200">
@@ -165,8 +165,8 @@
                                 </button>
                             </div>
                         </form>
-                    </div>
-                @endif
+                    @endif
+                </div>
 
                 <!-- Acciones (Ingresar, Botón Registro) + Iconos (Carrito, Mi Cocina, Mis Pedidos, Instagram) -->
                 <div class="hidden md:flex items-center space-x-2.5 lg:space-x-3.5 flex-shrink-0">
