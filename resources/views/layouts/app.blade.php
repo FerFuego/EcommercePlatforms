@@ -156,7 +156,7 @@
                                     placeholder="Buscar cocinero o plato..."
                                     class="w-full py-2.5 pl-2 pr-11 bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none border-0">
                                 <button type="submit"
-                                    class="absolute right-1.5 w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white flex items-center justify-center shadow-sm hover:shadow transition-all transform hover:scale-105 active:scale-95"
+                                    class="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white flex items-center justify-center shadow-sm hover:shadow transition-all transform hover:scale-105 active:scale-95"
                                     aria-label="Buscar">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
