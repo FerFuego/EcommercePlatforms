@@ -572,30 +572,46 @@
                 const infoRow = document.getElementById('dni_info_row');
                 const sizeLabel = document.getElementById('dni_file_size');
 
+                // Asignar inmediatamente el archivo para asegurar que nunca esté vacío
+                currentDniFile = rawFile;
+
                 // Mostrar estado optimizando
                 if (sizeLabel) sizeLabel.innerText = '⌛ Optimizando foto...';
-                if (infoRow) infoRow.classList.remove('hidden');
-                if (infoRow) infoRow.classList.add('flex');
+                if (infoRow) {
+                    infoRow.classList.remove('hidden');
+                    infoRow.classList.add('flex');
+                }
+
+                // Mostrar preview inmediato
+                try {
+                    preview.src = URL.createObjectURL(rawFile);
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    badge.classList.remove('hidden');
+                } catch(e) {}
 
                 try {
                     const compressed = await compressImage(rawFile, 1600, 1600, 0.82);
                     currentDniFile = compressed;
 
-                    // Actualizar input del formulario con DataTransfer
-                    const dt = new DataTransfer();
-                    dt.items.add(compressed);
-                    document.getElementById('dni_photo').files = dt.files;
+                    try {
+                        preview.src = URL.createObjectURL(compressed);
+                    } catch(e) {}
 
-                    // Mostrar preview
-                    const objUrl = URL.createObjectURL(compressed);
-                    preview.src = objUrl;
-                    preview.classList.remove('hidden');
-                    placeholder.classList.add('hidden');
-                    badge.classList.remove('hidden');
-                    sizeLabel.innerText = `Foto lista (${formatBytes(compressed.size)} - optimizada)`;
+                    // Intentar actualizar input del formulario con DataTransfer si el navegador lo soporta
+                    try {
+                        const dt = new DataTransfer();
+                        dt.items.add(compressed);
+                        document.getElementById('dni_photo').files = dt.files;
+                    } catch(dtErr) {
+                        // DataTransfer no siempre está disponible o writable en navegadores móviles (iOS Safari). No interrumpe.
+                    }
+
+                    if (sizeLabel) sizeLabel.innerText = `Foto lista (${formatBytes(compressed.size)} - optimizada)`;
                 } catch (e) {
-                    console.error('Error procesando DNI:', e);
-                    alert('Hubo un problema al procesar la imagen del DNI. Intenta nuevamente.');
+                    console.warn('Error comprimiendo DNI, manteniendo archivo original:', e);
+                    currentDniFile = rawFile;
+                    if (sizeLabel) sizeLabel.innerText = `Foto lista (${formatBytes(rawFile.size)})`;
                 } finally {
                     input.value = ''; // Permite volver a seleccionar el mismo archivo si es necesario
                 }
@@ -603,8 +619,13 @@
 
             function removeDNI() {
                 currentDniFile = null;
-                const dt = new DataTransfer();
-                document.getElementById('dni_photo').files = dt.files;
+                try {
+                    const dt = new DataTransfer();
+                    document.getElementById('dni_photo').files = dt.files;
+                } catch(e) {}
+                try {
+                    document.getElementById('dni_photo').value = '';
+                } catch(e) {}
 
                 const preview = document.getElementById('dni_preview');
                 const placeholder = document.getElementById('dni_placeholder');
@@ -666,9 +687,13 @@
             }
 
             function syncKitchenInput() {
-                const dt = new DataTransfer();
-                selectedKitchenFiles.forEach(f => dt.items.add(f));
-                document.getElementById('kitchen_photos').files = dt.files;
+                try {
+                    const dt = new DataTransfer();
+                    selectedKitchenFiles.forEach(f => dt.items.add(f));
+                    document.getElementById('kitchen_photos').files = dt.files;
+                } catch(e) {
+                    // DataTransfer es opcional; la inyección explícita en FormData garantiza la subida
+                }
             }
 
             function removeKitchenPhotoAt(index) {
@@ -743,13 +768,14 @@
                 e.preventDefault();
 
                 const dniInput = document.getElementById('dni_photo');
-                if (!dniInput.files || !dniInput.files.length) {
+                const hasDni = currentDniFile || (dniInput && dniInput.files && dniInput.files.length > 0);
+                if (!hasDni) {
                     alert('⚠️ Por favor toma o selecciona la foto de tu DNI.');
                     window.scrollTo({ top: document.getElementById('dni_dropzone').offsetTop - 120, behavior: 'smooth' });
                     return;
                 }
-                if (selectedKitchenFiles.length < 3) {
-                    alert(`⚠️ Debes agregar al menos 3 fotos de tu cocina (actualmente tienes ${selectedKitchenFiles.length}).`);
+                if (!selectedKitchenFiles || selectedKitchenFiles.length < 3) {
+                    alert(`⚠️ Debes agregar al menos 3 fotos de tu cocina (actualmente tienes ${selectedKitchenFiles ? selectedKitchenFiles.length : 0}).`);
                     window.scrollTo({ top: document.getElementById('kitchen_count_badge').offsetTop - 120, behavior: 'smooth' });
                     return;
                 }
@@ -764,7 +790,7 @@
                     }
                 }
 
-                // Sincronizar inputs nativos
+                // Sincronizar inputs nativos si el navegador lo permite
                 syncKitchenInput();
 
                 // Mostrar overlay de progreso
@@ -774,6 +800,17 @@
                 progressText.innerText = 'Subiendo solicitud y fotos... 10%';
 
                 const formData = new FormData(form);
+
+                // Inyección explícita garantizada en FormData (elimina dependencia de DataTransfer en mobile)
+                const dniToSend = currentDniFile || (dniInput && dniInput.files && dniInput.files[0]);
+                if (dniToSend) {
+                    formData.set('dni_photo', dniToSend, dniToSend.name || 'dni.jpg');
+                }
+
+                formData.delete('kitchen_photos[]');
+                selectedKitchenFiles.forEach((file, idx) => {
+                    formData.append('kitchen_photos[]', file, file.name || `cocina_${idx + 1}.jpg`);
+                });
 
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', form.action, true);

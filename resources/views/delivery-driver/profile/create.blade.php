@@ -491,6 +491,13 @@
             }
 
             // ==========================================
+            // VARIABLES GLOBALES DE ARCHIVOS
+            // ==========================================
+            let currentDriverDniFile = null;
+            let currentProfilePhotoFile = null;
+            let currentVehiclePhotoFile = null;
+
+            // ==========================================
             // MANEJO DNI
             // ==========================================
             function triggerDriverDniCamera() {
@@ -513,32 +520,58 @@
                 const infoRow = document.getElementById('dni_info_row');
                 const sizeLabel = document.getElementById('dni_file_size');
 
+                // Asignar inmediatamente para asegurar que nunca esté vacío
+                currentDriverDniFile = rawFile;
+
                 if (sizeLabel) sizeLabel.innerText = '⌛ Optimizando foto...';
-                if (infoRow) infoRow.classList.remove('hidden');
-                if (infoRow) infoRow.classList.add('flex');
+                if (infoRow) {
+                    infoRow.classList.remove('hidden');
+                    infoRow.classList.add('flex');
+                }
 
+                // Preview inmediato
                 try {
-                    const compressed = await compressImage(rawFile, 1600, 1600, 0.82);
-                    const dt = new DataTransfer();
-                    dt.items.add(compressed);
-                    document.getElementById('dni_photo').files = dt.files;
-
-                    preview.src = URL.createObjectURL(compressed);
+                    preview.src = URL.createObjectURL(rawFile);
                     preview.classList.remove('hidden');
                     placeholder.classList.add('hidden');
                     badge.classList.remove('hidden');
-                    sizeLabel.innerText = `Foto lista (${formatBytes(compressed.size)} - optimizada)`;
+                } catch(e) {}
+
+                try {
+                    const compressed = await compressImage(rawFile, 1600, 1600, 0.82);
+                    currentDriverDniFile = compressed;
+
+                    try {
+                        preview.src = URL.createObjectURL(compressed);
+                    } catch(e) {}
+
+                    try {
+                        const dt = new DataTransfer();
+                        dt.items.add(compressed);
+                        document.getElementById('dni_photo').files = dt.files;
+                    } catch(dtErr) {
+                        // DataTransfer opcional en navegadores móviles
+                    }
+
+                    if (sizeLabel) sizeLabel.innerText = `Foto lista (${formatBytes(compressed.size)} - optimizada)`;
                 } catch (e) {
-                    console.error('Error procesando DNI:', e);
-                    alert('Error al procesar la foto de DNI.');
+                    console.warn('Error optimizando DNI, se conserva original:', e);
+                    currentDriverDniFile = rawFile;
+                    if (sizeLabel) sizeLabel.innerText = `Foto lista (${formatBytes(rawFile.size)})`;
                 } finally {
                     input.value = '';
                 }
             }
 
             function removeDriverDni() {
-                const dt = new DataTransfer();
-                document.getElementById('dni_photo').files = dt.files;
+                currentDriverDniFile = null;
+                try {
+                    const dt = new DataTransfer();
+                    document.getElementById('dni_photo').files = dt.files;
+                } catch(e) {}
+                try {
+                    document.getElementById('dni_photo').value = '';
+                } catch(e) {}
 
                 const preview = document.getElementById('dni_preview');
                 const placeholder = document.getElementById('dni_placeholder');
@@ -575,30 +608,50 @@
                 const btnRemove = document.getElementById('btn_remove_profile');
                 const sizeLabel = document.getElementById('profile_file_size');
 
+                currentProfilePhotoFile = rawFile;
+
                 if (sizeLabel) sizeLabel.innerText = '⌛ Optimizando selfie...';
 
                 try {
-                    const compressed = await compressImage(rawFile, 1200, 1200, 0.82);
-                    const dt = new DataTransfer();
-                    dt.items.add(compressed);
-                    document.getElementById('profile_photo').files = dt.files;
-
-                    preview.src = URL.createObjectURL(compressed);
+                    preview.src = URL.createObjectURL(rawFile);
                     preview.classList.remove('hidden');
                     placeholder.classList.add('hidden');
                     if (btnRemove) btnRemove.classList.remove('hidden');
-                    sizeLabel.innerText = `Selfie lista (${formatBytes(compressed.size)})`;
+                } catch(e) {}
+
+                try {
+                    const compressed = await compressImage(rawFile, 1200, 1200, 0.82);
+                    currentProfilePhotoFile = compressed;
+
+                    try {
+                        preview.src = URL.createObjectURL(compressed);
+                    } catch(e) {}
+
+                    try {
+                        const dt = new DataTransfer();
+                        dt.items.add(compressed);
+                        document.getElementById('profile_photo').files = dt.files;
+                    } catch(e) {}
+
+                    if (sizeLabel) sizeLabel.innerText = `Selfie lista (${formatBytes(compressed.size)})`;
                 } catch (e) {
-                    console.error('Error procesando selfie:', e);
-                    alert('Error al procesar la foto de perfil.');
+                    console.warn('Error optimizando selfie, se conserva original:', e);
+                    currentProfilePhotoFile = rawFile;
+                    if (sizeLabel) sizeLabel.innerText = `Selfie lista (${formatBytes(rawFile.size)})`;
                 } finally {
                     input.value = '';
                 }
             }
 
             function removeProfilePhoto() {
-                const dt = new DataTransfer();
-                document.getElementById('profile_photo').files = dt.files;
+                currentProfilePhotoFile = null;
+                try {
+                    const dt = new DataTransfer();
+                    document.getElementById('profile_photo').files = dt.files;
+                } catch(e) {}
+                try {
+                    document.getElementById('profile_photo').value = '';
+                } catch(e) {}
 
                 const preview = document.getElementById('profile_photo_preview');
                 const placeholder = document.getElementById('profile_photo_placeholder');
@@ -635,32 +688,54 @@
                 const infoRow = document.getElementById('vehicle_info_row');
                 const sizeLabel = document.getElementById('vehicle_file_size');
 
+                currentVehiclePhotoFile = rawFile;
+
                 if (sizeLabel) sizeLabel.innerText = '⌛ Optimizando foto...';
-                if (infoRow) infoRow.classList.remove('hidden');
-                if (infoRow) infoRow.classList.add('flex');
+                if (infoRow) {
+                    infoRow.classList.remove('hidden');
+                    infoRow.classList.add('flex');
+                }
 
                 try {
-                    const compressed = await compressImage(rawFile, 1600, 1600, 0.82);
-                    const dt = new DataTransfer();
-                    dt.items.add(compressed);
-                    document.getElementById('vehicle_photo').files = dt.files;
-
-                    preview.src = URL.createObjectURL(compressed);
+                    preview.src = URL.createObjectURL(rawFile);
                     preview.classList.remove('hidden');
                     placeholder.classList.add('hidden');
                     badge.classList.remove('hidden');
-                    sizeLabel.innerText = `Foto lista (${formatBytes(compressed.size)})`;
+                } catch(e) {}
+
+                try {
+                    const compressed = await compressImage(rawFile, 1600, 1600, 0.82);
+                    currentVehiclePhotoFile = compressed;
+
+                    try {
+                        preview.src = URL.createObjectURL(compressed);
+                    } catch(e) {}
+
+                    try {
+                        const dt = new DataTransfer();
+                        dt.items.add(compressed);
+                        document.getElementById('vehicle_photo').files = dt.files;
+                    } catch(e) {}
+
+                    if (sizeLabel) sizeLabel.innerText = `Foto lista (${formatBytes(compressed.size)})`;
                 } catch (e) {
-                    console.error('Error procesando foto de vehículo:', e);
-                    alert('Error al procesar la foto del vehículo.');
+                    console.warn('Error optimizando foto vehículo:', e);
+                    currentVehiclePhotoFile = rawFile;
+                    if (sizeLabel) sizeLabel.innerText = `Foto lista (${formatBytes(rawFile.size)})`;
                 } finally {
                     input.value = '';
                 }
             }
 
             function removeVehiclePhoto() {
-                const dt = new DataTransfer();
-                document.getElementById('vehicle_photo').files = dt.files;
+                currentVehiclePhotoFile = null;
+                try {
+                    const dt = new DataTransfer();
+                    document.getElementById('vehicle_photo').files = dt.files;
+                } catch(e) {}
+                try {
+                    document.getElementById('vehicle_photo').value = '';
+                } catch(e) {}
 
                 const preview = document.getElementById('vehicle_preview');
                 const placeholder = document.getElementById('vehicle_placeholder');
@@ -792,7 +867,8 @@
                     e.preventDefault();
 
                     const dniInput = document.getElementById('dni_photo');
-                    if (!dniInput.files || !dniInput.files.length) {
+                    const hasDni = currentDriverDniFile || (dniInput && dniInput.files && dniInput.files.length > 0);
+                    if (!hasDni) {
                         alert('⚠️ Por favor toma o selecciona la foto de tu DNI.');
                         window.scrollTo({ top: document.getElementById('dni_dropzone').offsetTop - 120, behavior: 'smooth' });
                         return;
@@ -804,6 +880,18 @@
                     progressText.innerText = 'Subiendo solicitud y fotos... 10%';
 
                     const formData = new FormData(form);
+
+                    // Inyección explícita garantizada en FormData (100% compatible con móviles)
+                    const dniToSend = currentDriverDniFile || (dniInput && dniInput.files && dniInput.files[0]);
+                    if (dniToSend) {
+                        formData.set('dni_photo', dniToSend, dniToSend.name || 'dni.jpg');
+                    }
+                    if (currentProfilePhotoFile) {
+                        formData.set('profile_photo', currentProfilePhotoFile, currentProfilePhotoFile.name || 'perfil.jpg');
+                    }
+                    if (currentVehiclePhotoFile) {
+                        formData.set('vehicle_photo', currentVehiclePhotoFile, currentVehiclePhotoFile.name || 'vehiculo.jpg');
+                    }
 
                     const xhr = new XMLHttpRequest();
                     xhr.open('POST', form.action, true);
