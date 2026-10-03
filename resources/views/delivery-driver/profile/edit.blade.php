@@ -58,14 +58,30 @@
                         @method('PUT')
 
                         <!-- Profile Photo -->
-                        <div class="mb-6">
+                        <div class="mb-6 p-4 bg-slate-50/80 rounded-2xl border border-gray-200">
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Foto de Perfil</label>
-                            @if($driver->profile_photo)
-                                <img src="{{ asset('uploads/' . $driver->profile_photo) }}" alt="Profile"
-                                    class="w-32 h-32 object-cover rounded-full mb-3">
-                            @endif
-                            <input type="file" name="profile_photo" accept="image/*"
-                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 transition">
+                            <div class="flex items-center gap-4 mb-3">
+                                <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-blue-400 bg-gray-100 shrink-0">
+                                    <img id="edit_profile_preview" src="{{ $driver->profile_photo ? asset('uploads/' . $driver->profile_photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) }}" alt="Profile"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button type="button" onclick="document.getElementById('profile_camera_edit').click()"
+                                            class="py-2 px-3 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow hover:bg-indigo-700 active:scale-95 transition">
+                                            🤳 Tomar Selfie
+                                        </button>
+                                        <button type="button" onclick="document.getElementById('profile_gallery_edit').click()"
+                                            class="py-2 px-3 bg-white border border-gray-300 text-gray-700 rounded-xl text-xs font-semibold hover:bg-gray-50 active:scale-95 transition">
+                                            📁 Galería
+                                        </button>
+                                    </div>
+                                    <span id="profile_edit_size" class="text-[11px] text-gray-500 mt-1 block"></span>
+                                </div>
+                            </div>
+                            <input id="profile_camera_edit" type="file" class="hidden" accept="image/*" capture="user" onchange="handleEditProfilePhoto(this)">
+                            <input id="profile_gallery_edit" type="file" class="hidden" accept="image/*" onchange="handleEditProfilePhoto(this)">
+                            <input id="profile_photo" name="profile_photo" type="file" class="hidden" accept="image/*">
                             @error('profile_photo')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -101,14 +117,32 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="mt-4">
+                            <div class="mt-4 p-4 bg-slate-50/80 rounded-2xl border border-gray-200">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Foto del Vehículo</label>
-                                @if($driver->vehicle_photo)
-                                    <img src="{{ asset('uploads/' . $driver->vehicle_photo) }}" alt="Vehicle"
-                                        class="w-48 h-32 object-cover rounded-lg mb-3">
-                                @endif
-                                <input type="file" name="vehicle_photo" accept="image/*"
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 transition">
+                                <div class="flex items-center gap-4 mb-3">
+                                    @if($driver->vehicle_photo)
+                                        <img id="edit_vehicle_preview" src="{{ asset('uploads/' . $driver->vehicle_photo) }}" alt="Vehicle"
+                                            class="w-24 h-20 object-cover rounded-xl border-2 border-blue-400 shrink-0">
+                                    @else
+                                        <img id="edit_vehicle_preview" class="hidden w-24 h-20 object-cover rounded-xl border-2 border-blue-400 shrink-0">
+                                    @endif
+                                    <div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <button type="button" onclick="document.getElementById('vehicle_camera_edit').click()"
+                                                class="py-2 px-3 bg-cyan-600 text-white rounded-xl text-xs font-bold shadow hover:bg-cyan-700 active:scale-95 transition">
+                                                📸 Usar Cámara
+                                            </button>
+                                            <button type="button" onclick="document.getElementById('vehicle_gallery_edit').click()"
+                                                class="py-2 px-3 bg-white border border-gray-300 text-gray-700 rounded-xl text-xs font-semibold hover:bg-gray-50 active:scale-95 transition">
+                                                📁 Galería
+                                            </button>
+                                        </div>
+                                        <span id="vehicle_edit_size" class="text-[11px] text-gray-500 mt-1 block"></span>
+                                    </div>
+                                </div>
+                                <input id="vehicle_camera_edit" type="file" class="hidden" accept="image/*" capture="environment" onchange="handleEditVehiclePhoto(this)">
+                                <input id="vehicle_gallery_edit" type="file" class="hidden" accept="image/*" onchange="handleEditVehiclePhoto(this)">
+                                <input id="vehicle_photo" name="vehicle_photo" type="file" class="hidden" accept="image/*">
                                 @error('vehicle_photo')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -225,6 +259,102 @@
                     });
                 } else {
                     alert('Tu navegador no soporta geolocalización');
+                }
+            }
+
+            // ==========================================
+            // COMPRESIÓN E IMÁGENES
+            // ==========================================
+            function formatBytes(bytes) {
+                if (!bytes || bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+            }
+
+            async function compressDriverEditImage(file, maxWidth = 1600, maxHeight = 1600, quality = 0.82) {
+                if (!file || !file.type.startsWith('image/')) return file;
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            let width = img.naturalWidth || img.width;
+                            let height = img.naturalHeight || img.height;
+                            if (width > height) {
+                                if (width > maxWidth) {
+                                    height = Math.round((height * maxWidth) / width);
+                                    width = maxWidth;
+                                }
+                            } else {
+                                if (height > maxHeight) {
+                                    width = Math.round((width * maxHeight) / height);
+                                    height = maxHeight;
+                                }
+                            }
+                            const canvas = document.createElement('canvas');
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            canvas.toBlob((blob) => {
+                                if (blob) {
+                                    const cleanName = (file.name || 'foto').replace(/\.[^/.]+$/, "") + ".jpg";
+                                    resolve(new File([blob], cleanName, { type: 'image/jpeg', lastModified: Date.now() }));
+                                } else {
+                                    resolve(file);
+                                }
+                            }, 'image/jpeg', quality);
+                        };
+                        img.onerror = () => resolve(file);
+                        img.src = e.target.result;
+                    };
+                    reader.onerror = () => resolve(file);
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            async function handleEditProfilePhoto(input) {
+                if (!input.files || !input.files[0]) return;
+                const file = input.files[0];
+                const preview = document.getElementById('edit_profile_preview');
+                const sizeLabel = document.getElementById('profile_edit_size');
+                if (sizeLabel) sizeLabel.innerText = '⌛ Optimizando...';
+
+                try {
+                    const compressed = await compressDriverEditImage(file, 1200, 1200, 0.82);
+                    const dt = new DataTransfer();
+                    dt.items.add(compressed);
+                    document.getElementById('profile_photo').files = dt.files;
+                    preview.src = URL.createObjectURL(compressed);
+                    if (sizeLabel) sizeLabel.innerText = `Listo (${formatBytes(compressed.size)})`;
+                } catch(e) {
+                    console.error('Error optimizando foto de perfil:', e);
+                } finally {
+                    input.value = '';
+                }
+            }
+
+            async function handleEditVehiclePhoto(input) {
+                if (!input.files || !input.files[0]) return;
+                const file = input.files[0];
+                const preview = document.getElementById('edit_vehicle_preview');
+                const sizeLabel = document.getElementById('vehicle_edit_size');
+                if (sizeLabel) sizeLabel.innerText = '⌛ Optimizando...';
+
+                try {
+                    const compressed = await compressDriverEditImage(file, 1600, 1600, 0.82);
+                    const dt = new DataTransfer();
+                    dt.items.add(compressed);
+                    document.getElementById('vehicle_photo').files = dt.files;
+                    preview.src = URL.createObjectURL(compressed);
+                    preview.classList.remove('hidden');
+                    if (sizeLabel) sizeLabel.innerText = `Listo (${formatBytes(compressed.size)})`;
+                } catch(e) {
+                    console.error('Error optimizando foto de vehículo:', e);
+                } finally {
+                    input.value = '';
                 }
             }
         </script>

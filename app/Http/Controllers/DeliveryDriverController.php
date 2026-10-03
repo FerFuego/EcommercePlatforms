@@ -104,6 +104,14 @@ class DeliveryDriverController extends Controller
 
         DeliveryDriver::create($validated);
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'redirect_url' => route('delivery-driver.dashboard'),
+                'message' => 'Perfil creado exitosamente. Está pendiente de aprobación por el administrador.'
+            ]);
+        }
+
         return redirect()->route('delivery-driver.dashboard')
             ->with('success', 'Perfil creado exitosamente. Está pendiente de aprobación por el administrador.');
     }

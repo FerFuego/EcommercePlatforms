@@ -203,25 +203,36 @@
 
                 <!-- Upload New -->
                 <div class="border-t border-gray-100 pt-6">
-                    <label class="block text-sm font-semibold text-gray-700 mb-3">Agregar Nuevas Fotos</label>
-                    <div class="flex items-center justify-center w-full">
-                        <label for="kitchen_photos"
-                            class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer bg-gray-50 hover:bg-purple-50 transition-all">
-                            <div class="flex flex-col items-center justify-center">
-                                <svg class="w-8 h-8 mb-2 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
-                                <p class="text-sm text-gray-500">Click para subir fotos adicionales</p>
-                            </div>
-                            <input id="kitchen_photos" name="kitchen_photos[]" type="file" class="hidden" accept="image/*"
-                                multiple>
-                        </label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Agregar Nuevas Fotos</label>
+                    <p class="text-xs text-gray-500 mb-3">Toma fotos directamente con la cámara de tu celular o selecciónalas de la galería.</p>
+
+                    <!-- Botones mobile -->
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <button type="button" onclick="document.getElementById('kitchen_camera_edit').click()"
+                            class="flex items-center justify-center gap-2 py-3 px-3 bg-gradient-to-r from-orange-500 to-purple-600 text-white rounded-xl font-bold shadow text-xs sm:text-sm active:scale-95 transition">
+                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>📸 Usar Cámara</span>
+                        </button>
+
+                        <button type="button" onclick="document.getElementById('kitchen_gallery_edit').click()"
+                            class="flex items-center justify-center gap-2 py-3 px-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 text-xs sm:text-sm active:scale-95 transition">
+                            <svg class="w-4 h-4 text-gray-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>📁 De la Galería</span>
+                        </button>
                     </div>
 
+                    <!-- Inputs ocultos -->
+                    <input id="kitchen_camera_edit" type="file" class="hidden" accept="image/*" capture="environment" onchange="handleEditKitchenFiles(this)">
+                    <input id="kitchen_gallery_edit" type="file" class="hidden" accept="image/*" multiple onchange="handleEditKitchenFiles(this)">
+                    <input id="kitchen_photos" name="kitchen_photos[]" type="file" class="hidden" accept="image/*" multiple>
+
                     <!-- Image Preview Container -->
-                    <div id="preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 hidden">
+                    <div id="preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 hidden">
                         <!-- Previews will be injected here -->
                     </div>
                 </div>
@@ -287,35 +298,107 @@
                     });
             }
 
-            // Image Preview Logic
-            document.getElementById('kitchen_photos').addEventListener('change', function (e) {
-                const container = document.getElementById('preview-container');
-                container.innerHTML = ''; // Clear previous previews
+            // Image Preview & Compression Logic for Edit
+            let editKitchenFiles = [];
 
-                if (this.files && this.files.length > 0) {
-                    container.classList.remove('hidden');
-
-                    Array.from(this.files).forEach(file => {
-                        if (file.type.startsWith('image/')) {
-                            const reader = new FileReader();
-                            reader.onload = function (e) {
-                                const div = document.createElement('div');
-                                div.className = 'relative group animate-fade-in';
-                                div.innerHTML = `
-                                                                                                                    <img src="${e.target.result}" class="w-full h-32 object-cover rounded-xl shadow-md border-2 border-purple-100">
-                                                                                                                    <div class="absolute top-2 right-2">
-                                                                                                                        <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">Nuevo</span>
-                                                                                                                    </div>
-                                                                                                                `;
-                                container.appendChild(div);
+            async function compressEditImage(file, maxWidth = 1600, maxHeight = 1600, quality = 0.82) {
+                if (!file || !file.type.startsWith('image/')) return file;
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            let width = img.naturalWidth || img.width;
+                            let height = img.naturalHeight || img.height;
+                            if (width > height) {
+                                if (width > maxWidth) {
+                                    height = Math.round((height * maxWidth) / width);
+                                    width = maxWidth;
+                                }
+                            } else {
+                                if (height > maxHeight) {
+                                    width = Math.round((width * maxHeight) / height);
+                                    height = maxHeight;
+                                }
                             }
-                            reader.readAsDataURL(file);
-                        }
+                            const canvas = document.createElement('canvas');
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            canvas.toBlob((blob) => {
+                                if (blob) {
+                                    const cleanName = (file.name || 'foto').replace(/\.[^/.]+$/, "") + ".jpg";
+                                    resolve(new File([blob], cleanName, { type: 'image/jpeg', lastModified: Date.now() }));
+                                } else {
+                                    resolve(file);
+                                }
+                            }, 'image/jpeg', quality);
+                        };
+                        img.onerror = () => resolve(file);
+                        img.src = e.target.result;
+                    };
+                    reader.onerror = () => resolve(file);
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            async function handleEditKitchenFiles(input) {
+                if (!input.files || input.files.length === 0) return;
+
+                const files = Array.from(input.files);
+                for (const file of files) {
+                    try {
+                        const compressed = await compressEditImage(file);
+                        editKitchenFiles.push(compressed);
+                    } catch (err) {
+                        editKitchenFiles.push(file);
+                    }
+                }
+
+                input.value = '';
+                syncEditKitchenInput();
+                renderEditKitchenPreviews();
+            }
+
+            function syncEditKitchenInput() {
+                const dt = new DataTransfer();
+                editKitchenFiles.forEach(f => dt.items.add(f));
+                document.getElementById('kitchen_photos').files = dt.files;
+            }
+
+            function removeEditKitchenPhoto(index) {
+                editKitchenFiles.splice(index, 1);
+                syncEditKitchenInput();
+                renderEditKitchenPreviews();
+            }
+
+            function renderEditKitchenPreviews() {
+                const container = document.getElementById('preview-container');
+                container.innerHTML = '';
+
+                if (editKitchenFiles.length > 0) {
+                    container.classList.remove('hidden');
+                    editKitchenFiles.forEach((file, idx) => {
+                        const div = document.createElement('div');
+                        div.className = 'relative group rounded-xl overflow-hidden shadow-md border-2 border-purple-100 aspect-square';
+                        div.innerHTML = `
+                            <img src="${URL.createObjectURL(file)}" class="w-full h-full object-cover">
+                            <div class="absolute top-2 left-2">
+                                <span class="bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">Nueva</span>
+                            </div>
+                            <button type="button" onclick="removeEditKitchenPhoto(${idx})"
+                                class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full shadow transition"
+                                title="Quitar foto">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        `;
+                        container.appendChild(div);
                     });
                 } else {
                     container.classList.add('hidden');
                 }
-            });
+            }
 
             // Map Logic
             let map, marker;

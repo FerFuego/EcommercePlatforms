@@ -163,63 +163,129 @@
             </div>
 
             <!-- Documents -->
-            <div class="bg-white rounded-2xl shadow-lg p-8">
+            <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
                 <h2 class="text-2xl font-bold mb-6 flex items-center">
                     <span
-                        class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white mr-3">3</span>
+                        class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white mr-3 shadow-md">3</span>
                     Documentación
                 </h2>
 
-                <div class="space-y-6">
+                <div class="space-y-8">
                     <!-- DNI Photo -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">Foto de DNI/Documento *</label>
-                        <div class="flex flex-col items-center justify-center w-full">
-                            <label for="dni_photo" id="dni_label"
-                                class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer bg-gradient-to-br from-gray-50 to-blue-50 hover:from-blue-50 hover:to-indigo-50 transition-all overflow-hidden relative">
-                                <div id="dni_placeholder" class="flex flex-col items-center justify-center">
-                                    <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
-                                        </path>
-                                    </svg>
-                                    <p class="text-sm text-gray-500"><span class="font-semibold">Subir DNI</span></p>
-                                </div>
-                                <img id="dni_preview" class="hidden absolute inset-0 w-full h-full object-cover" />
-                                <input id="dni_photo" name="dni_photo" type="file" class="hidden" accept="image/jpeg, image/png, image/webp, image/jpg" onchange="previewDNI(this)">
-                            </label>
-                            <button type="button" id="remove_dni_btn" class="hidden mt-2 text-sm text-red-500 font-semibold hover:text-red-700" onclick="removeDNI()">Eliminar imagen</button>
+                    <div class="bg-slate-50/80 p-5 sm:p-6 rounded-2xl border-2 border-gray-100 hover:border-blue-200 transition-colors">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                            <div>
+                                <label class="block text-base font-bold text-gray-800">Foto de tu DNI / Documento *</label>
+                                <p class="text-xs text-gray-500">Toma una foto nítida de tu documento de identidad de frente</p>
+                            </div>
+                            <span id="dni_status_badge" class="hidden text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 w-fit">
+                                ✓ Foto lista
+                            </span>
                         </div>
+
+                        <!-- Botones directos de captura mobile -->
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <button type="button" onclick="triggerDniCamera()"
+                                class="flex items-center justify-center gap-2 py-3 px-3 sm:px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold shadow hover:shadow-md active:scale-95 transition text-xs sm:text-sm">
+                                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span>📸 Usar Cámara</span>
+                            </button>
+
+                            <button type="button" onclick="triggerDniGallery()"
+                                class="flex items-center justify-center gap-2 py-3 px-3 sm:px-4 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 active:scale-95 transition text-xs sm:text-sm">
+                                <svg class="w-5 h-5 text-gray-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span>📁 Elegir de Galería</span>
+                            </button>
+                        </div>
+
+                        <!-- Dropzone & Preview -->
+                        <div id="dni_dropzone" onclick="triggerDniCamera()"
+                            class="flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer bg-white hover:bg-blue-50/30 transition-all overflow-hidden relative">
+                            <div id="dni_placeholder" class="flex flex-col items-center justify-center p-4 text-center">
+                                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-2">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-semibold text-gray-700">Toca aquí para abrir la cámara o seleccionar foto</p>
+                                <p class="text-xs text-gray-400 mt-1">Formato JPG, PNG o WEBP (se optimizará al instante)</p>
+                            </div>
+                            <img id="dni_preview" class="hidden absolute inset-0 w-full h-full object-contain bg-slate-900/5 p-2" alt="DNI Preview" />
+                        </div>
+
+                        <!-- Información y Botón Eliminar -->
+                        <div id="dni_info_row" class="hidden items-center justify-between mt-3 pt-2 border-t border-gray-200">
+                            <span id="dni_file_size" class="text-xs text-gray-500 font-medium"></span>
+                            <button type="button" class="text-xs text-red-600 font-bold hover:text-red-800 flex items-center gap-1" onclick="removeDNI()">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                Eliminar foto
+                            </button>
+                        </div>
+
+                        <!-- Inputs nativos ocultos -->
+                        <input id="dni_photo_camera" type="file" class="hidden" accept="image/*" capture="environment" onchange="handleDniInput(this)">
+                        <input id="dni_photo_gallery" type="file" class="hidden" accept="image/*" onchange="handleDniInput(this)">
+                        <input id="dni_photo" name="dni_photo" type="file" class="hidden" accept="image/*">
+
                         @error('dni_photo')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Kitchen Photos -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">Fotos de tu Cocina * (mínimo
-                            3)</label>
-                        <div class="flex flex-col w-full">
-                            <label for="kitchen_photos"
-                                class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer bg-gradient-to-br from-gray-50 to-purple-50 hover:from-purple-50 hover:to-pink-50 transition-all mb-4">
-                                <div class="flex flex-col items-center justify-center">
-                                    <svg class="w-8 h-8 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
-                                    <p class="text-sm text-gray-500"><span class="font-semibold">Añadir Fotos</span></p>
-                                    <p class="text-xs text-gray-400 mt-1">PNG, JPG (MAX. 2MB cada una)</p>
-                                </div>
-                                <input id="kitchen_photos" name="kitchen_photos[]" type="file" class="hidden" accept="image/jpeg, image/png, image/webp, image/jpg" multiple onchange="previewKitchenPhotos(this)">
-                            </label>
-                            <!-- Contenedor para previsualizar múltiples imágenes -->
-                            <div id="kitchen_preview_container" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
+                    <div class="bg-slate-50/80 p-5 sm:p-6 rounded-2xl border-2 border-gray-100 hover:border-purple-200 transition-colors">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                            <div>
+                                <label class="block text-base font-bold text-gray-800">Fotos de tu Cocina * (mínimo 3, máximo 5)</label>
+                                <p class="text-xs text-gray-500">Muestra tu espacio de preparación, utensilios y limpieza</p>
+                            </div>
+                            <span id="kitchen_count_badge" class="inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-full bg-amber-100 text-amber-800 w-fit">
+                                ⚠️ 0 de 3 fotos mínimas
+                            </span>
                         </div>
+
+                        <!-- Botones de Acción Mobile -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <button type="button" onclick="triggerKitchenCamera()" id="btn_kitchen_camera"
+                                class="flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white rounded-xl font-bold shadow hover:shadow-md active:scale-95 transition text-sm">
+                                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span>📸 Tomar Foto con Cámara</span>
+                            </button>
+
+                            <button type="button" onclick="triggerKitchenGallery()" id="btn_kitchen_gallery"
+                                class="flex items-center justify-center gap-2 py-3 px-4 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 active:scale-95 transition text-sm">
+                                <svg class="w-5 h-5 text-gray-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span>📁 Subir de la Galería</span>
+                            </button>
+                        </div>
+
+                        <!-- Tips para Mobile -->
+                        <div class="bg-purple-50/80 border border-purple-100 text-purple-900 text-xs p-3 rounded-xl mb-4 flex items-center gap-2">
+                            <span class="text-base shrink-0">💡</span>
+                            <span><strong>Consejo mobile:</strong> Toca <strong>"Tomar Foto con Cámara"</strong> para capturar una foto tras otra en segundos hasta completar las 3 requeridas.</span>
+                        </div>
+
+                        <!-- Previsualizaciones de fotos de cocina -->
+                        <div id="kitchen_preview_container" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-2"></div>
+
+                        <!-- Inputs nativos ocultos -->
+                        <input id="kitchen_camera_input" type="file" class="hidden" accept="image/*" capture="environment" onchange="handleKitchenInput(this)">
+                        <input id="kitchen_gallery_input" type="file" class="hidden" accept="image/*" multiple onchange="handleKitchenInput(this)">
+                        <input id="kitchen_photos" name="kitchen_photos[]" type="file" class="hidden" accept="image/*" multiple>
+
                         @error('kitchen_photos')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                         @enderror
-                        <p class="text-xs text-gray-500 mt-2">Fotos claras de tu espacio de cocina, utensilios, y lugar de
-                            trabajo</p>
                     </div>
                 </div>
             </div>
@@ -417,105 +483,34 @@
                 }
             });
 
-            // --- Previsualización DNI ---
-            function previewDNI(input) {
-                const preview = document.getElementById('dni_preview');
-                const placeholder = document.getElementById('dni_placeholder');
-                const removeBtn = document.getElementById('remove_dni_btn');
-                
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        preview.classList.remove('hidden');
-                        placeholder.classList.add('hidden');
-                        removeBtn.classList.remove('hidden');
-                    }
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
+            // ==========================================
+            // MANEJO DE IMÁGENES MOBILE (CÁMARA / GALERÍA)
+            // ==========================================
 
-            function removeDNI() {
-                const input = document.getElementById('dni_photo');
-                const preview = document.getElementById('dni_preview');
-                const placeholder = document.getElementById('dni_placeholder');
-                const removeBtn = document.getElementById('remove_dni_btn');
-                
-                input.value = "";
-                preview.src = "";
-                preview.classList.add('hidden');
-                placeholder.classList.remove('hidden');
-                removeBtn.classList.add('hidden');
-            }
-
-            // --- Previsualización Fotos de Cocina ---
+            let currentDniFile = null;
             let selectedKitchenFiles = [];
 
-            function previewKitchenPhotos(input) {
-                const container = document.getElementById('kitchen_preview_container');
-                
-                if (input.files) {
-                    Array.from(input.files).forEach((file, index) => {
-                        // Agregar al array global
-                        selectedKitchenFiles.push(file);
-                        
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const div = document.createElement('div');
-                            div.className = 'relative rounded-xl overflow-hidden shadow-sm border border-gray-200 aspect-square group';
-                            div.innerHTML = `
-                                <img src="${e.target.result}" class="w-full h-full object-cover" />
-                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button type="button" class="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition" onclick="removeKitchenPhoto(this, '${file.name}')">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                    </button>
-                                </div>
-                            `;
-                            container.appendChild(div);
-                        }
-                        reader.readAsDataURL(file);
-                    });
-                    
-                    updateKitchenInput();
+            // Utilidad para formatear tamaño de archivos
+            function formatBytes(bytes) {
+                if (!bytes || bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+            }
+
+            // Utilidad para comprimir imágenes en el cliente (evita errores de tamaño y acelera la carga)
+            async function compressImage(file, maxWidth = 1600, maxHeight = 1600, quality = 0.82) {
+                if (!file || !file.type.startsWith('image/')) {
+                    return file;
                 }
-            }
-
-            function removeKitchenPhoto(btn, fileName) {
-                // Remover del DOM
-                btn.closest('.relative').remove();
-                
-                // Remover del array
-                selectedKitchenFiles = selectedKitchenFiles.filter(file => file.name !== fileName);
-                
-                // Actualizar input
-                updateKitchenInput();
-            }
-
-            function updateKitchenInput() {
-                const input = document.getElementById('kitchen_photos');
-                const dataTransfer = new DataTransfer();
-                selectedKitchenFiles.forEach(file => {
-                    dataTransfer.items.add(file);
-                });
-                input.files = dataTransfer.files;
-            }
-
-            // --- Utilidad para comprimir imágenes en el cliente ---
-            async function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.8) {
                 return new Promise((resolve) => {
-                    if (!file.type.startsWith('image/')) {
-                        resolve(file);
-                        return;
-                    }
                     const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = event => {
+                    reader.onload = (event) => {
                         const img = new Image();
-                        img.src = event.target.result;
                         img.onload = () => {
-                            const canvas = document.createElement('canvas');
-                            let width = img.width;
-                            let height = img.height;
+                            let width = img.naturalWidth || img.width;
+                            let height = img.naturalHeight || img.height;
 
                             if (width > height) {
                                 if (width > maxWidth) {
@@ -529,15 +524,16 @@
                                 }
                             }
 
+                            const canvas = document.createElement('canvas');
                             canvas.width = width;
                             canvas.height = height;
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(img, 0, 0, width, height);
-                            
-                            canvas.toBlob(blob => {
+
+                            canvas.toBlob((blob) => {
                                 if (blob) {
-                                    const newName = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
-                                    const compressedFile = new File([blob], newName, {
+                                    const cleanName = (file.name || 'foto').replace(/\.[^/.]+$/, "") + ".jpg";
+                                    const compressedFile = new File([blob], cleanName, {
                                         type: 'image/jpeg',
                                         lastModified: Date.now()
                                     });
@@ -548,9 +544,193 @@
                             }, 'image/jpeg', quality);
                         };
                         img.onerror = () => resolve(file);
+                        img.src = event.target.result;
                     };
                     reader.onerror = () => resolve(file);
+                    reader.readAsDataURL(file);
                 });
+            }
+
+            // --- MANEJO DNI ---
+            function triggerDniCamera() {
+                const camInput = document.getElementById('dni_photo_camera');
+                if (camInput) camInput.click();
+            }
+
+            function triggerDniGallery() {
+                const galInput = document.getElementById('dni_photo_gallery');
+                if (galInput) galInput.click();
+            }
+
+            async function handleDniInput(input) {
+                if (!input.files || !input.files[0]) return;
+                const rawFile = input.files[0];
+
+                const preview = document.getElementById('dni_preview');
+                const placeholder = document.getElementById('dni_placeholder');
+                const badge = document.getElementById('dni_status_badge');
+                const infoRow = document.getElementById('dni_info_row');
+                const sizeLabel = document.getElementById('dni_file_size');
+
+                // Mostrar estado optimizando
+                if (sizeLabel) sizeLabel.innerText = '⌛ Optimizando foto...';
+                if (infoRow) infoRow.classList.remove('hidden');
+                if (infoRow) infoRow.classList.add('flex');
+
+                try {
+                    const compressed = await compressImage(rawFile, 1600, 1600, 0.82);
+                    currentDniFile = compressed;
+
+                    // Actualizar input del formulario con DataTransfer
+                    const dt = new DataTransfer();
+                    dt.items.add(compressed);
+                    document.getElementById('dni_photo').files = dt.files;
+
+                    // Mostrar preview
+                    const objUrl = URL.createObjectURL(compressed);
+                    preview.src = objUrl;
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    badge.classList.remove('hidden');
+                    sizeLabel.innerText = `Foto lista (${formatBytes(compressed.size)} - optimizada)`;
+                } catch (e) {
+                    console.error('Error procesando DNI:', e);
+                    alert('Hubo un problema al procesar la imagen del DNI. Intenta nuevamente.');
+                } finally {
+                    input.value = ''; // Permite volver a seleccionar el mismo archivo si es necesario
+                }
+            }
+
+            function removeDNI() {
+                currentDniFile = null;
+                const dt = new DataTransfer();
+                document.getElementById('dni_photo').files = dt.files;
+
+                const preview = document.getElementById('dni_preview');
+                const placeholder = document.getElementById('dni_placeholder');
+                const badge = document.getElementById('dni_status_badge');
+                const infoRow = document.getElementById('dni_info_row');
+
+                preview.src = '';
+                preview.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                badge.classList.add('hidden');
+                infoRow.classList.add('hidden');
+                infoRow.classList.remove('flex');
+            }
+
+            // --- MANEJO FOTOS DE COCINA (Mínimo 3, Máximo 5) ---
+            function triggerKitchenCamera() {
+                if (selectedKitchenFiles.length >= 5) {
+                    alert('Has alcanzado el límite máximo de 5 fotos de cocina.');
+                    return;
+                }
+                const camInput = document.getElementById('kitchen_camera_input');
+                if (camInput) camInput.click();
+            }
+
+            function triggerKitchenGallery() {
+                if (selectedKitchenFiles.length >= 5) {
+                    alert('Has alcanzado el límite máximo de 5 fotos de cocina.');
+                    return;
+                }
+                const galInput = document.getElementById('kitchen_gallery_input');
+                if (galInput) galInput.click();
+            }
+
+            async function handleKitchenInput(input) {
+                if (!input.files || input.files.length === 0) return;
+
+                const badge = document.getElementById('kitchen_count_badge');
+                const originalBadgeText = badge.innerHTML;
+                badge.innerHTML = '⌛ Optimizando imágenes...';
+
+                const files = Array.from(input.files);
+                for (const file of files) {
+                    if (selectedKitchenFiles.length >= 5) {
+                        alert('Se pueden agregar un máximo de 5 fotos.');
+                        break;
+                    }
+                    try {
+                        const compressed = await compressImage(file, 1600, 1600, 0.82);
+                        selectedKitchenFiles.push(compressed);
+                    } catch (err) {
+                        console.error('Error comprimiendo foto:', err);
+                        selectedKitchenFiles.push(file);
+                    }
+                }
+
+                input.value = ''; // Permite reutilizar la cámara o galería inmediatamente
+                syncKitchenInput();
+                renderKitchenPreviews();
+            }
+
+            function syncKitchenInput() {
+                const dt = new DataTransfer();
+                selectedKitchenFiles.forEach(f => dt.items.add(f));
+                document.getElementById('kitchen_photos').files = dt.files;
+            }
+
+            function removeKitchenPhotoAt(index) {
+                selectedKitchenFiles.splice(index, 1);
+                syncKitchenInput();
+                renderKitchenPreviews();
+            }
+
+            function renderKitchenPreviews() {
+                const container = document.getElementById('kitchen_preview_container');
+                const badge = document.getElementById('kitchen_count_badge');
+                const btnCamera = document.getElementById('btn_kitchen_camera');
+                const btnGallery = document.getElementById('btn_kitchen_gallery');
+
+                container.innerHTML = '';
+
+                selectedKitchenFiles.forEach((file, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'relative rounded-2xl overflow-hidden shadow-sm border border-gray-200 aspect-square group bg-gray-100';
+
+                    const objUrl = URL.createObjectURL(file);
+                    card.innerHTML = `
+                        <img src="${objUrl}" class="w-full h-full object-cover" alt="Cocina ${idx + 1}" />
+                        <div class="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[11px] font-bold px-2 py-0.5 rounded-full">
+                            Foto ${idx + 1}
+                        </div>
+                        <button type="button" onclick="removeKitchenPhotoAt(${idx})"
+                            class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-full shadow-lg transition active:scale-90"
+                            title="Eliminar foto">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                        <div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-xs text-white text-[10px] text-center font-medium py-0.5 rounded-md truncate px-1">
+                            ${formatBytes(file.size)}
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                // Actualizar contador y estado del badge
+                const count = selectedKitchenFiles.length;
+                if (count === 0) {
+                    badge.className = 'inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-full bg-amber-100 text-amber-800 w-fit';
+                    badge.innerHTML = '⚠️ 0 de 3 fotos mínimas';
+                } else if (count < 3) {
+                    badge.className = 'inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-full bg-amber-100 text-amber-800 w-fit';
+                    badge.innerHTML = `⚠️ ${count} de 3 fotos (faltan ${3 - count})`;
+                } else if (count < 5) {
+                    badge.className = 'inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 w-fit';
+                    badge.innerHTML = `✓ ${count} fotos listas (mínimo cumplido)`;
+                } else {
+                    badge.className = 'inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-full bg-purple-100 text-purple-800 w-fit';
+                    badge.innerHTML = `🎉 5 de 5 fotos (máximo alcanzado)`;
+                }
+
+                // Deshabilitar botones si se llegó al máximo de 5
+                if (count >= 5) {
+                    if (btnCamera) btnCamera.classList.add('opacity-50', 'cursor-not-allowed');
+                    if (btnGallery) btnGallery.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    if (btnCamera) btnCamera.classList.remove('opacity-50', 'cursor-not-allowed');
+                    if (btnGallery) btnGallery.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
             }
 
             // --- Envío del Formulario con Barra de Progreso ---
@@ -561,18 +741,19 @@
 
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                
+
                 const dniInput = document.getElementById('dni_photo');
-                // Validaciones básicas en cliente
-                if (!dniInput.files.length) {
-                    alert('Por favor, selecciona una foto de DNI.');
+                if (!dniInput.files || !dniInput.files.length) {
+                    alert('⚠️ Por favor toma o selecciona la foto de tu DNI.');
+                    window.scrollTo({ top: document.getElementById('dni_dropzone').offsetTop - 120, behavior: 'smooth' });
                     return;
                 }
                 if (selectedKitchenFiles.length < 3) {
-                    alert('Por favor, sube al menos 3 fotos de tu cocina.');
+                    alert(`⚠️ Debes agregar al menos 3 fotos de tu cocina (actualmente tienes ${selectedKitchenFiles.length}).`);
+                    window.scrollTo({ top: document.getElementById('kitchen_count_badge').offsetTop - 120, behavior: 'smooth' });
                     return;
                 }
-                
+
                 // Si latitud o longitud están vacías, geolocalizar la dirección ingresada antes de enviar
                 const latVal = document.getElementById('location_lat').value;
                 const lngVal = document.getElementById('location_lng').value;
@@ -583,48 +764,33 @@
                     }
                 }
 
-                // Mostrar overlay
+                // Sincronizar inputs nativos
+                syncKitchenInput();
+
+                // Mostrar overlay de progreso
                 overlay.classList.remove('hidden');
                 overlay.classList.add('flex');
-                
+                progressBar.style.width = '10%';
+                progressText.innerText = 'Subiendo solicitud y fotos... 10%';
+
                 const formData = new FormData(form);
-                
-                // Comprimir DNI
-                progressText.innerText = 'Preparando imágenes...';
-                try {
-                    const compressedDNI = await compressImage(dniInput.files[0]);
-                    formData.set('dni_photo', compressedDNI);
-                } catch(err) {
-                    console.error('Error comprimiendo DNI', err);
-                }
-                
-                // Comprimir Kitchen Photos
-                formData.delete('kitchen_photos[]');
-                for (let i = 0; i < selectedKitchenFiles.length; i++) {
-                    try {
-                        const compressedPhoto = await compressImage(selectedKitchenFiles[i]);
-                        formData.append('kitchen_photos[]', compressedPhoto);
-                    } catch(err) {
-                        console.error('Error comprimiendo kitchen photo', err);
-                        formData.append('kitchen_photos[]', selectedKitchenFiles[i]);
-                    }
-                }
-                
+
                 const xhr = new XMLHttpRequest();
-                
                 xhr.open('POST', form.action, true);
                 xhr.setRequestHeader('Accept', 'application/json');
-                
+
                 xhr.upload.onprogress = function(event) {
                     if (event.lengthComputable) {
                         const percentComplete = Math.round((event.loaded / event.total) * 100);
                         progressBar.style.width = percentComplete + '%';
-                        progressText.innerText = 'Subiendo: ' + percentComplete + '%';
+                        progressText.innerText = `Subiendo fotos y datos: ${percentComplete}%`;
                     }
                 };
-                
+
                 xhr.onload = function() {
                     if (xhr.status >= 200 && xhr.status < 300) {
+                        progressBar.style.width = '100%';
+                        progressText.innerText = '¡Completado con éxito!';
                         try {
                             const response = JSON.parse(xhr.responseText);
                             if (response.redirect_url) {
@@ -636,33 +802,31 @@
                             window.location.href = "{{ route('cook.dashboard') }}";
                         }
                     } else if (xhr.status === 422) {
-                        // Errores de validación
                         overlay.classList.add('hidden');
                         overlay.classList.remove('flex');
                         try {
                             const response = JSON.parse(xhr.responseText);
                             let errors = '';
                             for (let field in response.errors) {
-                                errors += response.errors[field][0] + '\n';
+                                errors += `• ${response.errors[field][0]}\n`;
                             }
-                            alert('Errores de validación:\n' + errors);
+                            alert('Corrige los siguientes errores en el formulario:\n\n' + errors);
                         } catch (e) {
                             alert('Errores de validación en los datos ingresados. Por favor revisa el formulario.');
                         }
                     } else {
-                        // Otro error
                         overlay.classList.add('hidden');
                         overlay.classList.remove('flex');
-                        alert('Ocurrió un error inesperado al subir los archivos.');
+                        alert('Ocurrió un error al enviar el formulario. Por favor verifica tu conexión y vuelve a intentarlo.');
                     }
                 };
-                
+
                 xhr.onerror = function() {
                     overlay.classList.add('hidden');
                     overlay.classList.remove('flex');
-                    alert('Error de red al intentar enviar el formulario.');
+                    alert('Error de red al intentar enviar el formulario. Por favor verifica tu conexión.');
                 };
-                
+
                 xhr.send(formData);
             });
         </script>
