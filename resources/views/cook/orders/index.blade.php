@@ -16,30 +16,26 @@
             </div>
 
             <!-- Filter Tabs -->
-            <div class="flex items-center space-x-2.5 overflow-x-auto pb-3 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
+            <div class="flex items-center space-x-2.5 overflow-x-auto pb-3 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden"
+                style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
                 <a href="{{ route('cook.orders.index') }}"
                     class="inline-flex items-center gap-1.5 px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0 {{ !request('status') ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md shadow-purple-500/25 scale-[1.02]' : 'bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-50 border border-gray-200 shadow-sm' }}">
-                    <span>📋</span>
                     <span>Todos</span>
                 </a>
                 <a href="{{ route('cook.orders.index', ['status' => 'awaiting_cook_acceptance']) }}"
                     class="inline-flex items-center gap-1.5 px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0 {{ request('status') == 'awaiting_cook_acceptance' ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-orange-500/25 scale-[1.02]' : 'bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-50 border border-gray-200 shadow-sm' }}">
-                    <span>⏳</span>
                     <span>Pendientes</span>
                 </a>
                 <a href="{{ route('cook.orders.index', ['status' => 'preparing']) }}"
                     class="inline-flex items-center gap-1.5 px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0 {{ request('status') == 'preparing' ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/25 scale-[1.02]' : 'bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-50 border border-gray-200 shadow-sm' }}">
-                    <span>👨‍🍳</span>
                     <span>En Preparación</span>
                 </a>
                 <a href="{{ route('cook.orders.index', ['status' => 'scheduled']) }}"
                     class="inline-flex items-center gap-1.5 px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0 {{ request('status') == 'scheduled' ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-md shadow-indigo-500/25 scale-[1.02]' : 'bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-50 border border-gray-200 shadow-sm' }}">
-                    <span>📅</span>
                     <span>Programados</span>
                 </a>
                 <a href="{{ route('cook.orders.index', ['status' => 'delivered']) }}"
                     class="inline-flex items-center gap-1.5 px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0 {{ request('status') == 'delivered' ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/25 scale-[1.02]' : 'bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-50 border border-gray-200 shadow-sm' }}">
-                    <span>✅</span>
                     <span>Completados</span>
                 </a>
             </div>
@@ -70,7 +66,7 @@
                                                 </span>
                                             @else
                                                                     <span class="px-3 py-1 rounded-full text-xs font-bold
-                                                                                                                                    {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
+                                                                                                                                                                        {{ $order->status == 'delivered' ? 'bg-green-100 text-green-800' :
                                                     ($order->status == 'rejected_by_cook' ? 'bg-red-100 text-red-800' :
                                                         ($order->status == 'awaiting_cook_acceptance' ? 'bg-yellow-100 text-yellow-800' :
                                                             ($order->status == 'scheduled' ? 'bg-purple-100 text-purple-800' :
@@ -177,7 +173,7 @@
                                                     </div>
                                                     <span
                                                         class="text-xs px-2 py-1 rounded-full font-semibold
-                                                                                                                                                                                                                                                                                                                                        {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                                                                                                                                                                                                                                                                                                                                                {{ $order->deliveryAssignment->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
                                                         {{ match ($order->deliveryAssignment->status) {
                                         'assigned' => 'Asignado',
                                         'picked_up' => 'Recogido',
