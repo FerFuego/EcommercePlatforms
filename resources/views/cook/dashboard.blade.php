@@ -3,15 +3,15 @@
 @section('title', 'Dashboard - Cocinero')
 
 @section('content')
-    <div class="container mx-auto px-4 py-12">
+    <div class="container mx-auto px-4 py-6 sm:py-12">
         <!-- Header -->
-        <div class="mb-8">
-            <h1 class="text-4xl font-bold mb-2">
+        <div class="mb-4 sm:mb-8">
+            <h1 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2">
                 <span class="bg-gradient-to-r from-orange-600 via-orange-600 to-purple-600 bg-clip-text text-transparent">
                     ¡Hola, {{ auth()->user()->name }}!
                 </span>
             </h1>
-            <p class="text-gray-600 text-lg">Aquí está el resumen de tu cocina</p>
+            <p class="text-gray-600 text-sm sm:text-lg">Aquí está el resumen de tu cocina</p>
         </div>
 
         @if(auth()->user()->is_suspended)
@@ -63,38 +63,38 @@
 
         <!-- Stats Cards -->
         <div
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none filter grayscale' : '' }}">
+            class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8 {{ auth()->user()->is_suspended ? 'opacity-50 pointer-events-none filter grayscale' : '' }}">
 
-            <div class="bg-white rounded-2xl shadow-xl p-6 border-b-4 border-orange-500">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-gray-500 font-semibold uppercase text-xs tracking-wider">Pendientes</span>
-                    <span class="p-2 bg-orange-100 rounded-lg text-orange-600">⏰</span>
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-xl p-3 sm:p-6 border-b-4 border-orange-500 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1 sm:mb-2">
+                    <span class="text-gray-500 font-semibold uppercase text-[11px] sm:text-xs tracking-wider">Pendientes</span>
+                    <span class="p-1 sm:p-2 bg-orange-100 rounded-lg text-orange-600 text-xs sm:text-base leading-none">⏰</span>
                 </div>
-                <div class="text-3xl font-bold text-gray-800">{{ $pendingOrders }}</div>
+                <div class="text-2xl sm:text-3xl font-bold text-gray-800">{{ $pendingOrders }}</div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-xl p-6 border-b-4 border-purple-500">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-gray-500 font-semibold uppercase text-xs tracking-wider">Programados</span>
-                    <span class="p-2 bg-purple-100 rounded-lg text-purple-600">📅</span>
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-xl p-3 sm:p-6 border-b-4 border-purple-500 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1 sm:mb-2">
+                    <span class="text-gray-500 font-semibold uppercase text-[11px] sm:text-xs tracking-wider">Programados</span>
+                    <span class="p-1 sm:p-2 bg-purple-100 rounded-lg text-purple-600 text-xs sm:text-base leading-none">📅</span>
                 </div>
-                <div class="text-3xl font-bold text-gray-800">{{ $scheduledOrders }}</div>
+                <div class="text-2xl sm:text-3xl font-bold text-gray-800">{{ $scheduledOrders }}</div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-xl p-6 border-b-4 border-blue-500">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-gray-500 font-semibold uppercase text-xs tracking-wider">Hoy</span>
-                    <span class="p-2 bg-blue-100 rounded-lg text-blue-600">📈</span>
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-xl p-3 sm:p-6 border-b-4 border-blue-500 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1 sm:mb-2">
+                    <span class="text-gray-500 font-semibold uppercase text-[11px] sm:text-xs tracking-wider">Hoy</span>
+                    <span class="p-1 sm:p-2 bg-blue-100 rounded-lg text-blue-600 text-xs sm:text-base leading-none">📈</span>
                 </div>
-                <div class="text-3xl font-bold text-gray-800">{{ $todayOrders }}</div>
+                <div class="text-2xl sm:text-3xl font-bold text-gray-800">{{ $todayOrders }}</div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-xl p-6 border-b-4 border-green-500">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-gray-500 font-semibold uppercase text-xs tracking-wider">Ventas Totales</span>
-                    <span class="p-2 bg-green-100 rounded-lg text-green-600">💰</span>
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-xl p-3 sm:p-6 border-b-4 border-green-500 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1 sm:mb-2">
+                    <span class="text-gray-500 font-semibold uppercase text-[11px] sm:text-xs tracking-wider">Ventas Totales</span>
+                    <span class="p-1 sm:p-2 bg-green-100 rounded-lg text-green-600 text-xs sm:text-base leading-none">💰</span>
                 </div>
-                <div class="text-3xl font-bold text-gray-800">${{ number_format($totalRevenue, 0) }}</div>
+                <div class="text-xl sm:text-3xl font-bold text-gray-800 truncate" title="${{ number_format($totalRevenue, 0) }}">${{ number_format($totalRevenue, 0) }}</div>
             </div>
         </div>
 
