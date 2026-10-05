@@ -3,38 +3,38 @@
 @section('title', 'Pedidos - Cocinero')
 
 @section('content')
-    <div class="container mx-auto px-4 py-12">
-        <div class="flex items-center justify-between mb-8">
+    <div class="container mx-auto px-4 py-6 sm:py-12">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 sm:mb-8">
             <div>
-                <h1 class="text-4xl font-bold mb-2">
+                <h1 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2">
                     <span
                         class="bg-gradient-to-r from-orange-600 via-orange-600 to-purple-600 bg-clip-text text-transparent">
                         Pedidos Recibidos
                     </span>
                 </h1>
-                <p class="text-gray-600">Gestiona los pedidos de tus clientes</p>
+                <p class="text-gray-600 text-sm sm:text-base">Gestiona los pedidos de tus clientes</p>
             </div>
 
             <!-- Filter Tabs -->
-            <div class="flex space-x-2 mb-6 overflow-x-auto pb-2">
+            <div class="flex space-x-2 overflow-x-auto pb-2 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0">
                 <a href="{{ route('cook.orders.index') }}"
-                    class="px-6 py-3 rounded-xl font-semibold transition {{ !request('status') ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
+                    class="px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition {{ !request('status') ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 shadow-sm' }}">
                     Todos
                 </a>
                 <a href="{{ route('cook.orders.index', ['status' => 'awaiting_cook_acceptance']) }}"
-                    class="px-6 py-3 rounded-xl font-semibold transition {{ request('status') == 'awaiting_cook_acceptance' ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
+                    class="px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition {{ request('status') == 'awaiting_cook_acceptance' ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 shadow-sm' }}">
                     Pendientes
                 </a>
                 <a href="{{ route('cook.orders.index', ['status' => 'preparing']) }}"
-                    class="px-6 py-3 rounded-xl font-semibold transition {{ request('status') == 'preparing' ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
+                    class="px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition {{ request('status') == 'preparing' ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 shadow-sm' }}">
                     En Preparación
                 </a>
                 <a href="{{ route('cook.orders.index', ['status' => 'scheduled']) }}"
-                    class="px-6 py-3 rounded-xl font-semibold transition {{ request('status') == 'scheduled' ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
+                    class="px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition {{ request('status') == 'scheduled' ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 shadow-sm' }}">
                     Programados
                 </a>
                 <a href="{{ route('cook.orders.index', ['status' => 'delivered']) }}"
-                    class="px-6 py-3 rounded-xl font-semibold transition {{ request('status') == 'delivered' ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
+                    class="px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition {{ request('status') == 'delivered' ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 shadow-sm' }}">
                     Completados
                 </a>
             </div>
