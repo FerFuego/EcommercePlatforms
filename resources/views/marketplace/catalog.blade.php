@@ -11,31 +11,31 @@
 @endpush
 
 @section('content')
-    <div class="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 py-12">
+    <div class="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 py-6 sm:py-12">
         <div class="container mx-auto px-4">
             <!-- Header -->
-            <div class="mb-8 text-center">
-                <h1 class="text-5xl font-bold mb-4">
+            <div class="mb-6 sm:mb-8 text-center">
+                <h1 class="text-2xl sm:text-5xl font-bold mb-2 sm:mb-4">
                     <span class="bg-gradient-to-r from-orange-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
                         Encuentra Cocineros Cerca de Ti
                     </span>
                 </h1>
-                <p class="text-gray-600 text-lg">Comida casera auténtica en tu zona</p>
+                <p class="text-gray-600 text-sm sm:text-lg">Comida casera auténtica en tu zona</p>
             </div>
 
             <!-- Location Search Bar -->
-            <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
-                <div class="flex flex-col md:flex-row gap-4 items-center">
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-xl p-4 sm:p-6 mb-6 sm:mb-8">
+                <div class="flex flex-col md:flex-row gap-3 sm:gap-4 items-stretch md:items-end">
                     <div class="flex-1">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Tu Ubicación</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Tu Ubicación</label>
                         <input type="text" id="locationSearch"
-                            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition"
+                            class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 text-xs sm:text-base transition"
                             placeholder="Ingresa tu dirección o usa ubicación actual">
                     </div>
                     <div class="w-full md:w-48">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Radio (km)</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Radio (km)</label>
                         <select id="radiusSelect"
-                            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition">
+                            class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 text-xs sm:text-base transition">
                             <option value="1" {{ $radius == 1 ? 'selected' : '' }}>1 km</option>
                             <option value="2" {{ $radius == 2 ? 'selected' : '' }}>2 km</option>
                             <option value="5" {{ $radius == 5 ? 'selected' : '' }}>5 km</option>
@@ -48,10 +48,9 @@
                         </select>
                     </div>
                     <div class="w-full md:w-auto">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">&nbsp;</label>
                         <button id="useCurrentLocation"
-                            class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all w-full flex items-center justify-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl font-semibold shadow-md hover:shadow-xl transform hover:-translate-y-0.5 active:scale-95 transition-all w-full flex items-center justify-center text-xs sm:text-base">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
                                 </path>
@@ -64,10 +63,10 @@
                 </div>
 
                 <!-- Current Location Display -->
-                <div id="currentLocationDisplay" class="mt-4 hidden">
+                <div id="currentLocationDisplay" class="mt-3 sm:mt-4 hidden">
                     <div
-                        class="flex items-center text-sm text-gray-600 bg-gradient-to-r from-green-50 to-emerald-50 p-3 rounded-lg">
-                        <svg class="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        class="flex items-center text-xs sm:text-sm text-gray-600 bg-gradient-to-r from-green-50 to-emerald-50 p-2.5 sm:p-3 rounded-lg">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-600 mr-2 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd"
                                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                 clip-rule="evenodd"></path>
@@ -78,24 +77,24 @@
             </div>
 
             <!-- Map Container -->
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
-                <div id="map" class="h-[500px] w-full"></div>
-                <div class="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100">
-                    <div class="flex items-center space-x-4">
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-xl overflow-hidden mb-6 sm:mb-8">
+                <div id="map" class="h-[280px] sm:h-[400px] md:h-[500px] w-full"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-100">
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs sm:text-sm">
                         <div class="flex items-center">
-                            <div class="w-4 h-4 bg-orange-500 rounded-full mr-2 shadow"></div>
-                            <span class="text-sm text-gray-600">Cocineros Disponibles</span>
+                            <div class="w-3.5 h-3.5 sm:w-4 sm:h-4 bg-orange-500 rounded-full mr-1.5 sm:mr-2 shadow"></div>
+                            <span class="text-gray-600">Cocineros Disponibles</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="w-4 h-4 bg-blue-500 rounded-full mr-2 shadow"></div>
-                            <span class="text-sm text-gray-600">Tu Ubicación</span>
+                            <div class="w-3.5 h-3.5 sm:w-4 sm:h-4 bg-blue-500 rounded-full mr-1.5 sm:mr-2 shadow"></div>
+                            <span class="text-gray-600">Tu Ubicación</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="w-4 h-4 border-2 border-purple-400 rounded-full mr-2"></div>
-                            <span class="text-sm text-gray-600">Radio de Cobertura</span>
+                            <div class="w-3.5 h-3.5 sm:w-4 sm:h-4 border-2 border-purple-400 rounded-full mr-1.5 sm:mr-2"></div>
+                            <span class="text-gray-600">Radio de Cobertura</span>
                         </div>
                     </div>
-                    <span class="text-sm font-semibold text-gray-700">
+                    <span class="text-xs sm:text-sm font-semibold text-gray-700">
                         <span id="cookCount">{{ count($cooks) }}</span> cocineros encontrados
                     </span>
                 </div>
@@ -104,23 +103,23 @@
             <!-- Filters -->
             <!-- Filters Form -->
             <form id="filterForm" action="{{ route('marketplace.catalog') }}" method="GET"
-                class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
                 <input type="hidden" name="lat" id="latInput" value="{{ $lat }}">
                 <input type="hidden" name="lng" id="lngInput" value="{{ $lng }}">
                 <input type="hidden" name="radius" id="radiusInput" value="{{ $radius }}">
 
-                <h3 class="font-bold text-lg mb-4 text-gray-800">Filtros</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <h3 class="font-bold text-base sm:text-lg mb-3 sm:mb-4 text-gray-800">Filtros</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Buscar</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Buscar</label>
                         <input type="text" name="search" value="{{ request('search') }}"
                             placeholder="Buscar cocinero o plato..."
-                            class="w-full px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-purple-500 transition">
+                            class="w-full px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl border-2 border-gray-200 focus:border-purple-500 text-xs sm:text-sm transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Dieta</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Dieta</label>
                         <select name="diet"
-                            class="w-full px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-purple-500 transition">
+                            class="w-full px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl border-2 border-gray-200 focus:border-purple-500 text-xs sm:text-sm transition">
                             <option value="">Todas</option>
                             <option value="vegetarian" {{ request('diet') == 'vegetarian' ? 'selected' : '' }}>Vegetariana
                             </option>
@@ -132,14 +131,14 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Precio Máximo</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Precio Máximo</label>
                         <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="$0"
-                            class="w-full px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-purple-500 transition">
+                            class="w-full px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl border-2 border-gray-200 focus:border-purple-500 text-xs sm:text-sm transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Ordenar Por</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Ordenar Por</label>
                         <select name="sort"
-                            class="w-full px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-purple-500 transition">
+                            class="w-full px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl border-2 border-gray-200 focus:border-purple-500 text-xs sm:text-sm transition">
                             <option value="distance" {{ request('sort') == 'distance' ? 'selected' : '' }}>Distancia</option>
                             <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Calificación</option>
                             <option value="price" {{ request('sort') == 'price' ? 'selected' : '' }}>Precio (Menor a Mayor)
