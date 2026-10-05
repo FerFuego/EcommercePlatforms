@@ -137,80 +137,82 @@
     </script>
     @endpush
 
-    <div class="container mx-auto px-4 py-12">
+    <div class="container mx-auto px-4 py-4 sm:py-12">
         <!-- Cover Header -->
         <div
-            class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 rounded-2xl p-12 mb-8 relative overflow-hidden">
-            <div class="absolute inset-0 opacity-20">
+            class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 rounded-2xl sm:rounded-3xl p-5 sm:p-10 mb-4 sm:mb-8 relative overflow-hidden shadow-lg">
+            <div class="absolute inset-0 opacity-20 pointer-events-none">
                 <div class="absolute top-0 right-0 w-96 h-96 bg-white rounded-full filter blur-3xl"></div>
                 <div class="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full filter blur-3xl"></div>
             </div>
 
-            <div class="relative z-10 flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-8">
+            <!-- Favorite Heart Icon (top right) -->
+            @auth
+                @if(auth()->user()->isCustomer())
+                    <button onclick="toggleFavorite(event, {{ $cook->id }})" 
+                        id="fav-btn-{{ $cook->id }}"
+                        class="absolute top-3 right-3 sm:top-6 sm:right-6 p-2 rounded-full bg-white/20 hover:bg-white/40 transition-all backdrop-blur-sm z-20 group">
+                        <svg id="heart-icon-{{ $cook->id }}" class="w-5 h-5 sm:w-6 sm:h-6 transition-colors {{ auth()->user()->isFavorite($cook->id) ? 'text-red-500 fill-current' : 'text-white fill-none group-hover:text-red-200' }}" 
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                        </svg>
+                    </button>
+                @endif
+            @endauth
+
+            <div class="relative z-10 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-4 sm:gap-6">
                 @if($cook->user->profile_photo_path)
                     <img src="{{ asset('uploads/' . $cook->user->profile_photo_path) }}" alt="{{ $cook->user->name }}"
-                        class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-2xl">
+                        class="w-20 h-20 sm:w-32 sm:h-32 rounded-full object-cover border-3 sm:border-4 border-white shadow-xl shrink-0">
                 @else
-                    <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-6xl shadow-2xl">
+                    <div class="w-20 h-20 sm:w-32 sm:h-32 bg-white rounded-full flex items-center justify-center text-3xl sm:text-6xl shadow-xl shrink-0">
                         👨‍🍳
                     </div>
                 @endif
-                <div class="text-white">
-                    <div class="flex items-center gap-4 mb-2">
-                        <h1 class="text-4xl font-bold">{{ $cook->user->name }}</h1>
+                <div class="text-white flex-1 min-w-0">
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-1.5 sm:mb-2">
+                        <h1 class="text-2xl sm:text-4xl font-bold leading-tight">{{ $cook->user->name }}</h1>
                         @if($cook->hasFeature('premium_badge'))
-                            <div class="bg-yellow-400 text-yellow-900 text-sm font-bold px-3 py-1 rounded-full shadow-md flex items-center">
-                                <svg class="w-4 h-4 mr-1 fill-current" viewBox="0 0 20 20">
+                            <div class="bg-yellow-400 text-yellow-900 text-[10px] sm:text-sm font-bold px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-md flex items-center shrink-0">
+                                <svg class="w-3.5 h-3.5 mr-1 fill-current" viewBox="0 0 20 20">
                                     <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                                 </svg>
                                 Premium
                             </div>
                         @endif
-                        @auth
-                            @if(auth()->user()->isCustomer())
-                                <button onclick="toggleFavorite(event, {{ $cook->id }})" 
-                                    id="fav-btn-{{ $cook->id }}"
-                                    class="p-2 rounded-full bg-white/20 hover:bg-white/40 transition-all backdrop-blur-sm group">
-                                    <svg id="heart-icon-{{ $cook->id }}" class="w-6 h-6 transition-colors {{ auth()->user()->isFavorite($cook->id) ? 'text-red-500 fill-current' : 'text-white fill-none group-hover:text-red-200' }}" 
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                                    </svg>
-                                </button>
-                            @endif
-                        @endauth
                     </div>
-                    <div class="flex items-center space-x-4 mb-3">
+                    <div class="flex items-center justify-center md:justify-start space-x-2 sm:space-x-4 mb-2 sm:mb-3">
                         <div class="flex items-center">
                             @for($i = 0; $i < 5; $i++)
                                 @if($i < floor($cook->rating_avg))
-                                    <svg class="w-6 h-6 text-yellow-300 fill-current" viewBox="0 0 20 20">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300 fill-current" viewBox="0 0 20 20">
                                         <path
                                             d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                                     </svg>
                                 @else
-                                    <svg class="w-6 h-6 text-white/50 fill-current" viewBox="0 0 20 20">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white/50 fill-current" viewBox="0 0 20 20">
                                         <path
                                             d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                                     </svg>
                                 @endif
                             @endfor
-                            <span class="ml-2 text-xl font-bold">{{ number_format($cook->rating_avg, 1) }}</span>
-                            <span class="ml-1 text-white/80">({{ $cook->rating_count }} reviews)</span>
+                            <span class="ml-1.5 text-base sm:text-xl font-bold">{{ number_format($cook->rating_avg, 1) }}</span>
+                            <span class="ml-1 text-xs sm:text-sm text-white/80">({{ $cook->rating_count }} reviews)</span>
                         </div>
                     </div>
                     @php
                         $operatingStatus = $cook->getOperatingStatus();
                     @endphp
-                    <div class="flex flex-wrap items-center gap-4 text-white/90">
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 sm:gap-4 text-xs sm:text-sm text-white/90">
                         <span>📍 {{ $cook->coverage_radius_km }} km de cobertura</span>
                         <span>🍽️ {{ $cook->dishes->count() }} platos</span>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold shadow-md
+                        <span class="inline-flex items-center px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-md
                             {{ $operatingStatus['status'] === 'open' 
                                 ? 'bg-emerald-500/90 text-white' 
                                 : ($operatingStatus['status'] === 'closing_soon' 
                                     ? 'bg-amber-400 text-amber-950 font-extrabold animate-pulse' 
                                     : 'bg-red-500/90 text-white') }}">
-                            <span class="mr-1.5">{{ $operatingStatus['status'] === 'open' ? '🟢' : ($operatingStatus['status'] === 'closing_soon' ? '⏳' : '🔴') }}</span>
+                            <span class="mr-1">{{ $operatingStatus['status'] === 'open' ? '🟢' : ($operatingStatus['status'] === 'closing_soon' ? '⏳' : '🔴') }}</span>
                             {{ $operatingStatus['label'] }}
                         </span>
                     </div>
@@ -218,44 +220,44 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
             <!-- Main Content -->
-            <div class="lg:col-span-2 space-y-8">
+            <div class="lg:col-span-2 space-y-4 sm:space-y-8">
                 <!-- Bio -->
-                <div class="bg-white rounded-2xl shadow-lg p-8">
+                <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg p-4 sm:p-8">
                     <h2
-                        class="text-2xl font-bold mb-4 bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+                        class="text-lg sm:text-2xl font-bold mb-2 sm:mb-4 bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
                         Sobre {{ $cook->user->name }}
                     </h2>
-                    <p class="text-gray-700 leading-relaxed">{{ $cook->bio }}</p>
+                    <p class="text-xs sm:text-base text-gray-700 leading-relaxed">{{ $cook->bio }}</p>
                 </div>
 
                 <!-- Menu -->
                 <div class="">
-                    <h2 class="text-2xl font-bold mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-6">
                         Menú Disponible
                     </h2>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-6">
                         @forelse($cook->dishes as $dish)
                             <div
-                                class="group bg-gradient-to-br from-gray-50 to-pink-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                                class="group bg-gradient-to-br from-gray-50 to-pink-50 rounded-xl sm:rounded-2xl overflow-hidden shadow-md sm:shadow-lg hover:shadow-2xl transition-all">
                                 @if($dish->photo_url)
                                     <img src="{{ asset('uploads/' . $dish->photo_url) }}" alt="{{ $dish->name }}"
-                                        class="w-full h-48 object-cover group-hover:scale-110 transition-transform">
+                                        class="w-full h-36 sm:h-48 object-cover group-hover:scale-105 transition-transform">
                                 @else
                                     <div
-                                        class="w-full h-48 bg-gradient-to-br from-orange-300 to-pink-400 flex items-center justify-center text-6xl">
+                                        class="w-full h-36 sm:h-48 bg-gradient-to-br from-orange-300 to-pink-400 flex items-center justify-center text-4xl sm:text-6xl">
                                         🍲
                                     </div>
                                 @endif
 
-                                <div class="p-6">
-                                    <h3 class="text-xl font-bold text-gray-800">{{ $dish->name }}</h3>
-                                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $dish->description }}</p>
+                                <div class="p-3.5 sm:p-6">
+                                    <h3 class="text-base sm:text-xl font-bold text-gray-800">{{ $dish->name }}</h3>
+                                    <p class="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-4 line-clamp-2">{{ $dish->description }}</p>
                                     <div class="flex justify-between items-start mb-2">
                                         @if(!empty($dish->available_days))
-                                            <span class="text-[10px] px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full font-bold uppercase tracking-wider">
+                                            <span class="text-[9px] sm:text-[10px] px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full font-bold uppercase tracking-wider">
                                                 @php
                                                     $days = [
                                                         1 => 'Lun', 2 => 'Mar', 3 => 'Mié', 4 => 'Jue',
@@ -266,27 +268,27 @@
                                                 @endphp
                                             </span>
                                         @else
-                                            <span class="text-[10px] px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-bold uppercase tracking-wider">
+                                            <span class="text-[9px] sm:text-[10px] px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-bold uppercase tracking-wider">
                                                 Todos los días
                                             </span>
                                         @endif
                                     </div>
-                                    <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center justify-between mb-2.5 sm:mb-4">
                                         <span
-                                            class="text-2xl font-bold text-pink-600">${{ number_format($dish->price, 0) }}</span>
+                                            class="text-xl sm:text-2xl font-bold text-pink-600">${{ number_format($dish->price, 0) }}</span>
                                         <div class="text-right">
                                             @if($dish->available_stock > 0)
                                                 @if($dish->isLowStock())
-                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 animate-pulse">
+                                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-red-100 text-red-800 animate-pulse">
                                                         🔥 ¡Solo quedan {{ $dish->available_stock }}!
                                                     </span>
                                                 @else
-                                                    <span class="text-sm text-gray-500">
+                                                    <span class="text-xs sm:text-sm text-gray-500">
                                                         ✅ {{ $dish->available_stock }} disponibles
                                                     </span>
                                                 @endif
                                             @else
-                                                <span class="text-sm text-red-500 font-bold">
+                                                <span class="text-xs sm:text-sm text-red-500 font-bold">
                                                     ❌ Agotado
                                                 </span>
                                             @endif
@@ -294,9 +296,9 @@
                                     </div>
 
                                     @if($dish->diet_tags && count($dish->diet_tags) > 0)
-                                        <div class="flex flex-wrap gap-2 mb-4">
+                                        <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                                             @foreach($dish->diet_tags as $tag)
-                                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full font-semibold">
+                                                <span class="px-2 py-0.5 bg-green-100 text-green-800 text-[10px] sm:text-xs rounded-full font-semibold">
                                                     {{ ucfirst($tag) }}
                                                 </span>
                                             @endforeach
@@ -311,8 +313,8 @@
                                                 @else
                                                     onclick="showLoginModal()"
                                                 @endauth
-                                                class="w-full flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center">
-                                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                class="w-full flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-3.5 py-2.5 sm:px-4 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-xl active:scale-95 transition-all flex items-center justify-center">
+                                                <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                                                 </svg>
                                                 Personalizar y Ordenar
@@ -324,16 +326,16 @@
                                                     <div class="flex items-center space-x-2">
                                                         <input type="number" name="quantity" value="1" min="1"
                                                             max="{{ $dish->available_stock }}"
-                                                            class="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-purple-500">
+                                                            class="w-16 px-2.5 py-2 text-xs sm:text-sm border-2 border-gray-200 rounded-xl focus:border-purple-500">
                                                         <button type="submit"
-                                                            class="flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
+                                                            class="flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-xl active:scale-95 transition-all">
                                                             Ordenar
                                                         </button>
                                                     </div>
                                                 </form>
                                             @else
                                                 <button type="button" onclick="showLoginModal()"
-                                                    class="w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
+                                                    class="w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-xl active:scale-95 transition-all">
                                                     Ordenar
                                                 </button>
                                             @endauth
@@ -342,9 +344,9 @@
                                 </div>
                             </div>
                         @empty
-                            <div class="col-span-2 text-center py-12">
-                                <div class="text-6xl mb-4">🍽️</div>
-                                <p class="text-gray-500">Aún no hay platos disponibles</p>
+                            <div class="col-span-2 text-center py-8 sm:py-12">
+                                <div class="text-4xl sm:text-6xl mb-3 sm:mb-4">🍽️</div>
+                                <p class="text-gray-500 text-sm sm:text-base">Aún no hay platos disponibles</p>
                             </div>
                         @endforelse
                     </div>
@@ -352,17 +354,17 @@
 
                  <!-- Kitchen Photos -->
                 @if($cook->kitchen_photos && count($cook->kitchen_photos) > 0)
-                    <div class="bg-white rounded-2xl shadow-lg p-8">
-                        <h2 class="text-2xl font-bold mb-6">Mi Cocina</h2>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="gallery">
+                    <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg p-4 sm:p-8">
+                        <h2 class="text-lg sm:text-2xl font-bold mb-3 sm:mb-6">Mi Cocina</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4" id="gallery">
                             @foreach($cook->kitchen_photos as $index => $photo)
                                 <div class="relative group cursor-pointer overflow-hidden rounded-xl"
                                     onclick="openLightbox({{ $index }})">
                                     <img src="{{ asset('uploads/' . $photo) }}" alt="Cocina"
-                                        class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                                        class="w-full h-32 sm:h-48 object-cover transition-transform duration-500 group-hover:scale-110">
                                     <div
                                         class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                                        <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 transition-all duration-300"
+                                        <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 transition-all duration-300"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
@@ -460,51 +462,51 @@
                 @endif
 
                 <!-- Reviews -->
-                <div class="bg-white rounded-2xl shadow-lg p-8">
-                    <h2 class="text-2xl font-bold mb-6">Reseñas</h2>
+                <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg p-4 sm:p-8">
+                    <h2 class="text-lg sm:text-2xl font-bold mb-3 sm:mb-6">Reseñas</h2>
 
-                    <div class="space-y-6">
+                    <div class="space-y-4 sm:space-y-6">
                         @forelse($cook->reviews->take(5) as $review)
-                            <div class="border-b border-gray-100 pb-6 last:border-0">
-                                <div class="flex items-start space-x-4">
+                            <div class="border-b border-gray-100 pb-4 sm:pb-6 last:border-0">
+                                <div class="flex items-start space-x-3 sm:space-x-4">
                                     @if($review->customer->profile_photo_path)
                                         <img src="{{ asset('uploads/' . $review->customer->profile_photo_path) }}"
                                             alt="{{ $review->customer->name }}"
-                                            class="w-12 h-12 rounded-full object-cover border-2 border-purple-100">
+                                            class="w-9 h-9 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-purple-100 shrink-0">
                                     @else
                                         <div
-                                            class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white font-bold">
+                                            class="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white text-xs sm:text-base font-bold shrink-0">
                                             {{ substr($review->customer->name, 0, 1) }}
                                         </div>
                                     @endif
-                                    <div class="flex-1">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <h4 class="font-bold text-gray-800">{{ $review->customer->name }}</h4>
-                                            <div class="flex items-center">
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between mb-1 sm:mb-2">
+                                            <h4 class="font-bold text-xs sm:text-base text-gray-800 truncate">{{ $review->customer->name }}</h4>
+                                            <div class="flex items-center shrink-0 ml-2">
                                                 @for($i = 0; $i < $review->rating; $i++)
-                                                    <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
                                                         <path
                                                             d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                                                     </svg>
                                                 @endfor
                                             </div>
                                         </div>
-                                        <p class="text-gray-600 text-sm">{{ $review->comment }}</p>
-                                        <p class="text-xs text-gray-400 mt-2">{{ $review->created_at->diffForHumans() }}</p>
+                                        <p class="text-gray-600 text-xs sm:text-sm leading-relaxed">{{ $review->comment }}</p>
+                                        <p class="text-[10px] sm:text-xs text-gray-400 mt-1 sm:mt-2">{{ $review->created_at->diffForHumans() }}</p>
                                     </div>
                                 </div>
                             </div>
                         @empty
-                            <div class="text-center py-8">
-                                <div class="text-5xl mb-3">⭐</div>
-                                <p class="text-gray-500">Aún no hay reseñas</p>
+                            <div class="text-center py-6 sm:py-8">
+                                <div class="text-4xl sm:text-5xl mb-2 sm:mb-3">⭐</div>
+                                <p class="text-gray-500 text-xs sm:text-sm">Aún no hay reseñas</p>
                             </div>
                         @endforelse
                     </div>
 
                     @if($cook->reviews->count() > 5)
                         <a href="{{ route('reviews.cook', $cook->id) }}"
-                            class="block text-center mt-6 text-purple-600 font-semibold hover:text-pink-600 transition">
+                            class="block text-center mt-4 sm:mt-6 text-purple-600 font-semibold hover:text-pink-600 text-xs sm:text-sm transition">
                             Ver Todas las Reseñas →
                         </a>
                     @endif
@@ -513,18 +515,18 @@
 
             <!-- Sidebar -->
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-2xl shadow-xl p-6 sticky top-24">
-                    <h3 class="text-2xl font-bold mb-4">Información</h3>
+                <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-xl p-4 sm:p-6 sticky top-24">
+                    <h3 class="text-lg sm:text-2xl font-bold mb-3 sm:mb-4">Información</h3>
 
                     <!-- Estado Operativo / Horario de Atención -->
-                    <div class="mb-6 rounded-2xl p-4 border transition-all 
+                    <div class="mb-4 sm:mb-6 rounded-xl sm:rounded-2xl p-3 sm:p-4 border transition-all 
                         {{ $operatingStatus['status'] === 'open' 
                             ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' 
                             : ($operatingStatus['status'] === 'closing_soon' 
                                 ? 'bg-amber-50/90 border-amber-300 text-amber-950' 
                                 : 'bg-rose-50/80 border-rose-200 text-rose-950') }}">
-                        <div class="flex items-center space-x-2.5 mb-2">
-                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-xl text-sm font-bold
+                        <div class="flex items-center space-x-2 sm:space-x-2.5 mb-1.5 sm:mb-2">
+                            <span class="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-xl text-xs sm:text-sm font-bold shrink-0
                                 {{ $operatingStatus['status'] === 'open' 
                                     ? 'bg-emerald-500 text-white shadow-sm' 
                                     : ($operatingStatus['status'] === 'closing_soon' 
@@ -533,73 +535,57 @@
                                 {{ $operatingStatus['status'] === 'open' ? '✓' : ($operatingStatus['status'] === 'closing_soon' ? '⏳' : '✕') }}
                             </span>
                             <div>
-                                <h4 class="font-bold text-base leading-tight">
+                                <h4 class="font-bold text-sm sm:text-base leading-tight">
                                     {{ $operatingStatus['label'] }}
                                 </h4>
-                                <span class="text-[11px] font-semibold opacity-75 uppercase tracking-wide">
+                                <span class="text-[10px] sm:text-[11px] font-semibold opacity-75 uppercase tracking-wide">
                                     {{ $operatingStatus['accepts_immediate'] ? 'Pedidos Inmediatos y Programados' : 'Solo Pedidos Programados' }}
                                 </span>
                             </div>
                         </div>
-                        <p class="text-xs leading-relaxed mt-2 opacity-90">
+                        <p class="text-[11px] sm:text-xs leading-relaxed mt-1 sm:mt-2 opacity-90">
                             {{ $operatingStatus['reason'] }}
                         </p>
                         @if(!$operatingStatus['accepts_immediate'])
-                            <div class="mt-3 pt-2.5 border-t border-dashed border-current/20 flex items-center justify-between text-xs font-bold">
+                            <div class="mt-2.5 pt-2 border-t border-dashed border-current/20 flex items-center justify-between text-[11px] sm:text-xs font-bold">
                                 <span>📅 Pedidos Programados:</span>
                                 <span class="text-purple-700 bg-white/80 px-2 py-0.5 rounded-lg border border-purple-200">Disponibles</span>
                             </div>
                         @endif
                     </div>
 
-                    <div class="space-y-4 mb-6">
-                        <!-- <div class="flex items-center text-gray-700">
-                            <svg class="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                            {{ $cook->user->email }}
-                        </div> -->
-                        <!-- @if($cook->user->phone)
-                            <div class="flex items-center text-gray-700">
-                                <svg class="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                </svg>
-                                {{ $cook->user->phone }}
-                            </div>
-                        @endif -->
+                    <div class="space-y-2.5 sm:space-y-4 mb-4 sm:mb-6 text-xs sm:text-sm">
                         <div class="flex items-center text-gray-700">
-                            <svg class="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-purple-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
-                            {{ $cook->user->address }}
+                            <span class="truncate">{{ $cook->user->address }}</span>
                         </div>
 
                         @if($cook->opening_time && $cook->closing_time)
                             <div class="flex items-center text-gray-700">
-                                <svg class="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-purple-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <span class="font-semibold mr-1">Horario:</span>
-                                {{ \Carbon\Carbon::parse($cook->opening_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($cook->closing_time)->format('H:i') }}
+                                <span>{{ \Carbon\Carbon::parse($cook->opening_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($cook->closing_time)->format('H:i') }}</span>
                             </div>
                         @endif
                     </div>
 
-                    <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl p-4 mb-6">
-                        <p class="text-sm text-gray-700">
+                    <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 text-xs sm:text-sm">
+                        <p class="text-gray-700 leading-snug">
                             <span class="font-semibold">⏱️ Tiempo de preparación:</span>
-                            Aproximadamente {{ number_format($cook->dishes->avg('preparation_time_minutes') ?? 30, 0) }} minutos
+                            Aprox. {{ number_format($cook->dishes->avg('preparation_time_minutes') ?? 30, 0) }} minutos
                         </p>
                     </div>
 
                     <a href="{{ route('marketplace.catalog') }}"
-                        class="block w-full bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-3 rounded-xl font-semibold text-center shadow-lg hover:shadow-xl transition-all">
+                        class="block w-full bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl font-semibold text-xs sm:text-sm text-center shadow-md hover:shadow-xl active:scale-95 transition-all">
                         ← Volver al Catálogo
                     </a>
                 </div>

@@ -112,7 +112,7 @@
     <!-- Navbar -->
     <nav class="bg-white backdrop-blur-lg sticky top-0 z-50 border-b border-gray-100 shadow-sm">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20 gap-3 lg:gap-6">
+            <div class="flex justify-between items-center h-16 sm:h-20 gap-3 lg:gap-6">
 
                 <!--  Logo  -->
                 <div class="flex items-center space-x-3 lg:space-x-6 flex-shrink-0">
@@ -120,7 +120,9 @@
                     <a href="{{ route('home') }}"
                         class="flex items-center space-x-2 transition-transform hover:scale-[1.02]">
                         <img src="{{ asset('assets/front/logo-8.webp') }}"
-                            alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}" width="240" height="60"
+                            alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
+                            class="h-8 sm:h-12 w-auto object-contain"
+                            width="240" height="60"
                             fetchpriority="high">
                     </a>
                 </div>
