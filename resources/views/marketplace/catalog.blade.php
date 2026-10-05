@@ -8,6 +8,23 @@
 @push('styles')
     <!-- Leaflet CSS para mapas -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            width: 100% !important;
+            height: 300px !important;
+            z-index: 10;
+        }
+        @media (min-width: 640px) {
+            #map {
+                height: 400px !important;
+            }
+        }
+        @media (min-width: 768px) {
+            #map {
+                height: 500px !important;
+            }
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -78,7 +95,7 @@
 
             <!-- Map Container -->
             <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-xl overflow-hidden mb-6 sm:mb-8">
-                <div id="map" class="h-[280px] sm:h-[400px] md:h-[500px] w-full"></div>
+                <div id="map" class="w-full" style="min-height: 280px;"></div>
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-100">
                     <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs sm:text-sm">
                         <div class="flex items-center">
@@ -201,6 +218,10 @@
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
+
+                setTimeout(() => {
+                    if (map) map.invalidateSize();
+                }, 200);
 
                 // Add cooks to map (Using mapCooks variable which contains ALL matching cooks, not just paginated ones)
                 @foreach($mapCooks as $cook)
