@@ -121,7 +121,7 @@
                         class="flex items-center space-x-2 transition-transform hover:scale-[1.02]">
                         <img src="{{ asset('assets/front/logo-8.webp') }}"
                             alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
-                            class="h-8 sm:h-12 w-auto object-contain"
+                            class="h-7 sm:h-10 md:h-12 w-auto object-contain"
                             width="240" height="60"
                             fetchpriority="high">
                     </a>
@@ -521,7 +521,7 @@
             <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <div class="col-span-2 mr-20 pr-2">
                     <a href="{{ route('home') }}" class="flex items-center space-x-3">
-                        <img src="{{ asset('assets/front/logo-w.webp') }}" alt="Cocinarte Logo" class="h-16 w-100 mb-2">
+                        <img src="{{ asset('assets/front/logo-w.webp') }}" alt="Cocinarte Logo" class="h-10 sm:h-14 w-auto mb-2 object-contain">
                     </a>
                     <p class="text-gray-300">Conectando cocineros caseros con comensales que buscan autenticidad y
                         sabor.</p>
@@ -799,7 +799,7 @@
             <div class="p-8 text-center">
                 <!-- Logo -->
                 <div class="mb-6 flex justify-center">
-                    <img src="{{ asset('assets/front/logo-8.webp') }}" alt="Cocinarte" class="h-20 w-auto">
+                    <img src="{{ asset('assets/front/logo-8.webp') }}" alt="Cocinarte" class="h-12 sm:h-16 w-auto object-contain">
                 </div>
 
                 <h3 class="text-2xl font-bold text-gray-800 mb-2">¡Casi listo para ordenar!</h3>

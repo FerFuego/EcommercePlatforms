@@ -173,8 +173,8 @@
                     <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-1.5 sm:mb-2">
                         <h1 class="text-2xl sm:text-4xl font-bold leading-tight">{{ $cook->user->name }}</h1>
                         @if($cook->hasFeature('premium_badge'))
-                            <div class="bg-yellow-400 text-yellow-900 text-[10px] sm:text-sm font-bold px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-md flex items-center shrink-0">
-                                <svg class="w-3.5 h-3.5 mr-1 fill-current" viewBox="0 0 20 20">
+                            <div class="bg-yellow-400 text-yellow-900 text-xs sm:text-sm font-bold px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-md flex items-center shrink-0">
+                                <svg class="w-4 h-4 mr-1 fill-current shrink-0" viewBox="0 0 20 20">
                                     <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                                 </svg>
                                 Premium
@@ -238,7 +238,7 @@
                         Menú Disponible
                     </h2>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         @forelse($cook->dishes as $dish)
                             <div
                                 class="group bg-gradient-to-br from-gray-50 to-pink-50 rounded-xl sm:rounded-2xl overflow-hidden shadow-md sm:shadow-lg hover:shadow-2xl transition-all">
@@ -252,7 +252,7 @@
                                     </div>
                                 @endif
 
-                                <div class="p-3.5 sm:p-6">
+                                <div class="p-4 sm:p-6">
                                     <h3 class="text-base sm:text-xl font-bold text-gray-800">{{ $dish->name }}</h3>
                                     <p class="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-4 line-clamp-2">{{ $dish->description }}</p>
                                     <div class="flex justify-between items-start mb-2">
@@ -313,7 +313,7 @@
                                                 @else
                                                     onclick="showLoginModal()"
                                                 @endauth
-                                                class="w-full flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-3.5 py-2.5 sm:px-4 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-xl active:scale-95 transition-all flex items-center justify-center">
+                                                class="w-full flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-xl active:scale-95 transition-all flex items-center justify-center">
                                                 <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                                                 </svg>
@@ -328,14 +328,14 @@
                                                             max="{{ $dish->available_stock }}"
                                                             class="w-16 px-2.5 py-2 text-xs sm:text-sm border-2 border-gray-200 rounded-xl focus:border-purple-500">
                                                         <button type="submit"
-                                                            class="flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-xl active:scale-95 transition-all">
+                                                            class="flex-1 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-xl active:scale-95 transition-all">
                                                             Ordenar
                                                         </button>
                                                     </div>
                                                 </form>
                                             @else
                                                 <button type="button" onclick="showLoginModal()"
-                                                    class="w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-xl active:scale-95 transition-all">
+                                                    class="w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-xl active:scale-95 transition-all">
                                                     Ordenar
                                                 </button>
                                             @endauth
@@ -462,29 +462,29 @@
                 @endif
 
                 <!-- Reviews -->
-                <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg p-4 sm:p-8">
-                    <h2 class="text-lg sm:text-2xl font-bold mb-3 sm:mb-6">Reseñas</h2>
+                <div class="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg p-5 sm:p-8">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Reseñas</h2>
 
-                    <div class="space-y-4 sm:space-y-6">
+                    <div class="space-y-6">
                         @forelse($cook->reviews->take(5) as $review)
-                            <div class="border-b border-gray-100 pb-4 sm:pb-6 last:border-0">
+                            <div class="border-b border-gray-100 pb-5 sm:pb-6 last:border-0 last:pb-0">
                                 <div class="flex items-start space-x-3 sm:space-x-4">
-                                    @if($review->customer->profile_photo_path)
+                                    @if($review->customer && $review->customer->profile_photo_path)
                                         <img src="{{ asset('uploads/' . $review->customer->profile_photo_path) }}"
-                                            alt="{{ $review->customer->name }}"
-                                            class="w-9 h-9 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-purple-100 shrink-0">
+                                            alt="{{ $review->customer->name ?? 'Usuario' }}"
+                                            class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-purple-100 shrink-0">
                                     @else
                                         <div
-                                            class="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white text-xs sm:text-base font-bold shrink-0">
-                                            {{ substr($review->customer->name, 0, 1) }}
+                                            class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white text-sm sm:text-base font-bold shrink-0">
+                                            {{ substr($review->customer->name ?? 'U', 0, 1) }}
                                         </div>
                                     @endif
                                     <div class="flex-1 min-w-0">
-                                        <div class="flex items-center justify-between mb-1 sm:mb-2">
-                                            <h4 class="font-bold text-xs sm:text-base text-gray-800 truncate">{{ $review->customer->name }}</h4>
-                                            <div class="flex items-center shrink-0 ml-2">
+                                        <div class="flex items-center justify-between mb-1.5 sm:mb-2">
+                                            <h4 class="font-bold text-sm sm:text-base text-gray-800 truncate">{{ $review->customer->name ?? 'Usuario' }}</h4>
+                                            <div class="flex items-center space-x-0.5 shrink-0 ml-2">
                                                 @for($i = 0; $i < $review->rating; $i++)
-                                                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                                    <svg class="w-4 h-4 text-yellow-400 fill-current shrink-0" viewBox="0 0 20 20">
                                                         <path
                                                             d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                                                     </svg>
@@ -492,21 +492,21 @@
                                             </div>
                                         </div>
                                         <p class="text-gray-600 text-xs sm:text-sm leading-relaxed">{{ $review->comment }}</p>
-                                        <p class="text-[10px] sm:text-xs text-gray-400 mt-1 sm:mt-2">{{ $review->created_at->diffForHumans() }}</p>
+                                        <p class="text-[11px] sm:text-xs text-gray-400 mt-1 sm:mt-2">{{ $review->created_at->diffForHumans() }}</p>
                                     </div>
                                 </div>
                             </div>
                         @empty
                             <div class="text-center py-6 sm:py-8">
                                 <div class="text-4xl sm:text-5xl mb-2 sm:mb-3">⭐</div>
-                                <p class="text-gray-500 text-xs sm:text-sm">Aún no hay reseñas</p>
+                                <p class="text-gray-500 text-sm">Aún no hay reseñas</p>
                             </div>
                         @endforelse
                     </div>
 
                     @if($cook->reviews->count() > 5)
                         <a href="{{ route('reviews.cook', $cook->id) }}"
-                            class="block text-center mt-4 sm:mt-6 text-purple-600 font-semibold hover:text-pink-600 text-xs sm:text-sm transition">
+                            class="block text-center mt-5 sm:mt-6 text-purple-600 font-semibold hover:text-pink-600 text-sm transition">
                             Ver Todas las Reseñas →
                         </a>
                     @endif
