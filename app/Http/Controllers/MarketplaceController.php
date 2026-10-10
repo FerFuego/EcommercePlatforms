@@ -13,13 +13,30 @@ class MarketplaceController extends Controller
      */
     public function index()
     {
-        $reviews = \App\Models\Review::with(['customer', 'cook.user'])
-            ->where('rating', '>=', 4)
-            ->latest()
-            ->take(9)
-            ->get();
+        $reviews = collect();
+        $dbCooks = collect();
 
-        return view('marketplace.landing', compact('reviews'));
+        try {
+            $reviews = \App\Models\Review::with(['customer', 'cook.user'])
+                ->where('rating', '>=', 4)
+                ->latest()
+                ->take(9)
+                ->get();
+
+            $dbCooks = \App\Models\Cook::with(['user', 'dishes' => function ($q) {
+                    $q->where('is_available', true)->take(3);
+                }])
+                ->where('is_approved', true)
+                ->where('active', true)
+                ->withCount('reviews')
+                ->withAvg('reviews', 'rating')
+                ->take(8)
+                ->get();
+        } catch (\Throwable $e) {
+            // Silently fallback if DB is not reached during local setup
+        }
+
+        return view('marketplace.landing', compact('reviews', 'dbCooks'));
     }
 
     /**
