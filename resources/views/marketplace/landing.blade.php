@@ -423,8 +423,8 @@
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
 
-                        <!-- Lado Izquierdo: Foto Grande de Cocina -->
-                        <div class="lg:col-span-6">
+                        <!-- Lado Izquierdo: Video / Foto Grande de Cocina (60%) -->
+                        <div class="lg:col-span-7">
                             <div class="relative group">
                                 <div class="overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-4 border-white">
                                     <!-- <img src="{{ asset('assets/home/kitchen_mariana.jpg') }}"
@@ -444,8 +444,8 @@
                             </div>
                         </div>
 
-                        <!-- Lado Derecho: Contenido, Card Flotante y Firma Manuscrita -->
-                        <div class="lg:col-span-6 space-y-6">
+                        <!-- Lado Derecho: Contenido, Card Flotante y Firma Manuscrita (40%) -->
+                        <div class="lg:col-span-5 space-y-6">
 
                             <div class="space-y-3">
                                 <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
