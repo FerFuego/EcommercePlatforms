@@ -289,12 +289,42 @@
         <!-- 2. SECCIÓN: CONOCÉ A QUIENES COCINAN PARA VOS (SLIDER/CARDS) -->
         <!-- ============================================================ -->
         <section class="py-14 sm:py-20 relative" id="cocineros" x-data="{
-                                                    scrollSlider(direction) {
-                                                        const container = this.$refs.cardsContainer;
-                                                        const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
-                                                        container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
-                                                    }
-                                                }">
+            timer: null,
+            scrollSlider(direction) {
+                const container = this.$refs.cardsContainer;
+                if (!container) return;
+                const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
+                const maxScroll = container.scrollWidth - container.clientWidth;
+
+                if (maxScroll <= 10) return;
+
+                // Loop infinito suave: al llegar al final vuelve al inicio
+                if (direction > 0 && container.scrollLeft >= maxScroll - 20) {
+                    container.scrollTo({ left: 0, behavior: 'smooth' });
+                } else if (direction < 0 && container.scrollLeft <= 20) {
+                    container.scrollTo({ left: maxScroll, behavior: 'smooth' });
+                } else {
+                    container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
+                }
+            },
+            startAutoplay() {
+                this.stopAutoplay();
+                this.timer = setInterval(() => {
+                    this.scrollSlider(1);
+                }, 4000);
+            },
+            stopAutoplay() {
+                if (this.timer) {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                }
+            }
+        }"
+        x-init="startAutoplay()"
+        @mouseenter="stopAutoplay()"
+        @mouseleave="startAutoplay()"
+        @touchstart.passive="stopAutoplay()"
+        @touchend.passive="startAutoplay()">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
                 <!-- Título y Subtítulo Centrados -->
@@ -311,14 +341,14 @@
 
                 <!-- Controles de Navegación del Slider (Desktop y Mobile) -->
                 <div class="flex items-center justify-end space-x-2 mb-4 pr-1">
-                    <button @click="scrollSlider(-1)" type="button"
+                    <button @click="scrollSlider(-1); stopAutoplay(); startAutoplay()" type="button"
                         class="w-10 h-10 rounded-full bg-white hover:bg-orange-50 border border-gray-200 text-gray-700 hover:text-orange-600 flex items-center justify-center shadow-sm hover:shadow transition-all active:scale-95"
                         aria-label="Anterior cocinero">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
-                    <button @click="scrollSlider(1)" type="button"
+                    <button @click="scrollSlider(1); stopAutoplay(); startAutoplay()" type="button"
                         class="w-10 h-10 rounded-full bg-white hover:bg-orange-50 border border-gray-200 text-gray-700 hover:text-orange-600 flex items-center justify-center shadow-sm hover:shadow transition-all active:scale-95"
                         aria-label="Siguiente cocinero">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -327,12 +357,12 @@
                     </button>
                 </div>
 
-                <!-- SLIDER CONTENEDOR (Scroll Snap nativo fluido + drag/swipe) -->
+                <!-- SLIDER CONTENEDOR (Scroll Snap nativo fluido + drag/swipe con Autoplay) -->
                 <div x-ref="cardsContainer"
                     class="cook-slider flex gap-5 overflow-x-auto snap-x snap-mandatory py-4 px-1 -mx-4 sm:mx-0 px-4 sm:px-0">
 
-                    @foreach($featuredCooks as $cook)
-                        <div class="cook-card flex-none w-[270px] sm:w-[290px] lg:w-[calc(25%-15px)] snap-start group">
+                    @foreach(array_slice($featuredCooks, 0, 4) as $cook)
+                        <div class="cook-card flex-none w-[270px] sm:w-[290px] lg:w-[310px] xl:w-[325px] snap-start group">
                             <div
                                 class="bg-white rounded-3xl p-4 shadow-sm hover:shadow-xl border border-orange-100/60 hover:border-orange-200 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1">
 
@@ -881,42 +911,67 @@
                         </div>
                     </div>
 
-                    <!-- COLUMNA 3: LO QUE DICEN NUESTROS COMENSALES (Testimonios Slider) -->
+                    <!-- COLUMNA 3: LO QUE DICEN NUESTROS COMENSALES (Testimonios Slider con Autoplay y 4 items) -->
                     <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
                         x-data="{
-                                                                    current: 0,
-                                                                    items: [
-                                                                        {
-                                                                            name: 'Laura G.',
-                                                                            location: 'Córdoba Capital',
-                                                                            text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
-                                                                            stars: 5,
-                                                                            avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
-                                                                        },
-                                                                        {
-                                                                            name: 'Martín P.',
-                                                                            location: 'Villa Allende',
-                                                                            text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
-                                                                            stars: 5,
-                                                                            avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
-                                                                        },
-                                                                        {
-                                                                            name: 'Sofía M.',
-                                                                            location: 'Córdoba Capital',
-                                                                            text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
-                                                                            stars: 5,
-                                                                            avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
-                                                                        }
-                                                                    ]
-                                                                }">
+                            current: 0,
+                            timer: null,
+                            items: [
+                                {
+                                    name: 'Laura G.',
+                                    location: 'Córdoba Capital',
+                                    text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
+                                    stars: 5,
+                                    avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
+                                },
+                                {
+                                    name: 'Martín P.',
+                                    location: 'Villa Allende',
+                                    text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
+                                    stars: 5,
+                                    avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
+                                },
+                                {
+                                    name: 'Sofía M.',
+                                    location: 'Córdoba Capital',
+                                    text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
+                                    stars: 5,
+                                    avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
+                                },
+                                {
+                                    name: 'Gonzalo R.',
+                                    location: 'Bell Ville',
+                                    text: 'Pedir platos caseros recién hechos me cambió la semana. Los sabores son auténticos y la calidad es excelente.',
+                                    stars: 5,
+                                    avatar: '{{ asset('assets/home/cook_fernando.jpg') }}'
+                                }
+                            ],
+                            startAutoplay() {
+                                this.stopAutoplay();
+                                this.timer = setInterval(() => {
+                                    this.current = (this.current + 1) % this.items.length;
+                                }, 4500);
+                            },
+                            stopAutoplay() {
+                                if (this.timer) {
+                                    clearInterval(this.timer);
+                                    this.timer = null;
+                                }
+                            }
+                        }"
+                        x-init="startAutoplay()"
+                        @mouseenter="stopAutoplay()"
+                        @mouseleave="startAutoplay()"
+                        @touchstart.passive="stopAutoplay()"
+                        @touchend.passive="startAutoplay()">
 
                         <div>
                             <h3 class="text-lg sm:text-xl font-bold text-gray-700 mb-6">
                                 Lo que dicen nuestros comensales
                             </h3>
 
-                            <!-- Testimonio Activo -->
-                            <div class="space-y-4">
+                            <!-- Testimonio Activo con transición suave -->
+                            <div class="space-y-4 min-h-[140px]">
                                 <div class="flex items-center space-x-3.5">
                                     <img :src="items[current].avatar" :alt="items[current].name"
                                         class="w-11 h-11 rounded-full object-cover border-2 border-orange-200">
@@ -926,7 +981,7 @@
                                     </div>
                                 </div>
 
-                                <p class="text-xs sm:text-sm text-gray-600 italic leading-relaxed"
+                                <p class="text-xs sm:text-sm text-gray-600 italic leading-relaxed min-h-[50px]"
                                     x-text="'&ldquo;' + items[current].text + '&rdquo;'">
                                 </p>
 
@@ -937,12 +992,12 @@
                             </div>
                         </div>
 
-                        <!-- Dots de paginación del testimonio -->
+                        <!-- Dots de paginación del testimonio (4 items) -->
                         <div class="flex items-center justify-center space-x-2 pt-6">
                             <template x-for="(item, index) in items" :key="index">
-                                <button @click="current = index" type="button"
-                                    class="w-2.5 h-2.5 rounded-full transition-all duration-300"
-                                    :class="current === index ? 'bg-orange-500 w-6' : 'bg-gray-200 hover:bg-gray-300'"
+                                <button @click="current = index; stopAutoplay(); startAutoplay()" type="button"
+                                    class="h-2.5 rounded-full transition-all duration-300"
+                                    :class="current === index ? 'bg-orange-500 w-6' : 'bg-gray-200 hover:bg-gray-300 w-2.5'"
                                     :aria-label="'Ver testimonio ' + (index + 1)">
                                 </button>
                             </template>
