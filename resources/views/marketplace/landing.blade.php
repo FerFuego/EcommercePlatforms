@@ -170,7 +170,7 @@
             </div>
 
             <!-- Contenido textual alineado a la izquierda dentro del contenedor -->
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 py-12 lg:py-16">
+            <div class="container flex items-center h-screen mx-auto px-4 sm:px-6 lg:px-8 relative z-20 py-12 lg:py-16">
                 <div class="max-w-xl space-y-6 lg:space-y-7">
                     <h1
                         class="text-4xl lg:text-5xl xl:text-[3.4rem] font-black tracking-tight text-gray-700 leading-[1.12]">
@@ -289,12 +289,12 @@
         <!-- 2. SECCIÓN: CONOCÉ A QUIENES COCINAN PARA VOS (SLIDER/CARDS) -->
         <!-- ============================================================ -->
         <section class="py-14 sm:py-20 relative" id="cocineros" x-data="{
-                            scrollSlider(direction) {
-                                const container = this.$refs.cardsContainer;
-                                const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
-                                container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
-                            }
-                        }">
+                                scrollSlider(direction) {
+                                    const container = this.$refs.cardsContainer;
+                                    const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
+                                    container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
+                                }
+                            }">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
                 <!-- Título y Subtítulo Centrados -->
@@ -608,13 +608,13 @@
         <!-- ============================================================ -->
         <section class="py-10 sm:py-16" id="para-cocineros">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div
-                    class="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-gradient-to-r from-orange-500 via-rose-500 to-fuchsia-600 text-white shadow-2xl">
+                <div class="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-rose-500 text-white shadow-2xl">
 
-                    <div class="grid grid-cols-1 lg:grid-cols-12 items-center">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
 
-                        <!-- Lado Izquierdo: Textos y Botón -->
-                        <div class="lg:col-span-7 p-8 sm:p-12 lg:p-16 space-y-6 relative z-10">
+                        <!-- Lado Izquierdo: Textos y Botón (degradé propio que termina en rose-500 sólido) -->
+                        <div
+                            class="lg:col-span-7 p-8 sm:p-12 lg:p-16 space-y-6 relative z-10 flex flex-col justify-center bg-gradient-to-b lg:bg-gradient-to-r from-orange-500 to-rose-500">
 
                             <!-- Icono Chef Outline -->
                             <div
@@ -655,13 +655,13 @@
                         </div>
 
                         <!-- Lado Derecho: Foto Cocinera con delantal floreado -->
-                        <div class="lg:col-span-5 h-72 sm:h-96 lg:h-full min-h-[380px] relative">
+                        <div class="lg:col-span-5 relative min-h-[300px] sm:min-h-[380px] lg:-ml-px">
                             <img src="{{ asset('assets/home/banner_cook.jpg') }}"
                                 alt="Cocinera sonriente preparando un guiso casero"
-                                class="w-full h-full object-cover object-center lg:rounded-r-[2.5rem]" loading="lazy">
-                            <!-- Gradiente de fusión suave en móvil y desktop -->
+                                class="absolute inset-0 w-full h-full object-cover object-center" loading="lazy">
+                            <!-- Fusión: arranca en rose-500 sólido (mismo color final del box) y se vuelve transparente -->
                             <div
-                                class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-fuchsia-500/80 via-transparent to-transparent pointer-events-none">
+                                class="absolute inset-0 bg-gradient-to-b lg:bg-gradient-to-r from-rose-500 from-0% via-rose-500/50 via-25% to-transparent to-60% pointer-events-none">
                             </div>
                         </div>
 
@@ -805,31 +805,31 @@
                     <!-- COLUMNA 3: LO QUE DICEN NUESTROS COMENSALES (Testimonios Slider) -->
                     <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
                         x-data="{
-                                            current: 0,
-                                            items: [
-                                                {
-                                                    name: 'Laura G.',
-                                                    location: 'Córdoba Capital',
-                                                    text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
-                                                    stars: 5,
-                                                    avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
-                                                },
-                                                {
-                                                    name: 'Martín P.',
-                                                    location: 'Villa Allende',
-                                                    text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
-                                                    stars: 5,
-                                                    avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
-                                                },
-                                                {
-                                                    name: 'Sofía M.',
-                                                    location: 'Córdoba Capital',
-                                                    text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
-                                                    stars: 5,
-                                                    avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
-                                                }
-                                            ]
-                                        }">
+                                                current: 0,
+                                                items: [
+                                                    {
+                                                        name: 'Laura G.',
+                                                        location: 'Córdoba Capital',
+                                                        text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
+                                                        stars: 5,
+                                                        avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
+                                                    },
+                                                    {
+                                                        name: 'Martín P.',
+                                                        location: 'Villa Allende',
+                                                        text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
+                                                        stars: 5,
+                                                        avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
+                                                    },
+                                                    {
+                                                        name: 'Sofía M.',
+                                                        location: 'Córdoba Capital',
+                                                        text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
+                                                        stars: 5,
+                                                        avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
+                                                    }
+                                                ]
+                                            }">
 
                         <div>
                             <h3 class="text-lg sm:text-xl font-bold text-gray-700 mb-6">
@@ -881,31 +881,31 @@
 
 @push('meta')
     <script type="application/ld+json">
-                    {
-                      "@@context": "https://schema.org",
-                      "@@graph": [
                         {
-                          "@@type": "Organization",
-                          "@@id": "{{ route('home') }}#organization",
-                          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                          "url": "{{ route('home') }}",
-                          "logo": {
-                            "@@type": "ImageObject",
-                            "url": "{{ asset('assets/front/logo-8.webp') }}",
-                            "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
-                          }
-                        },
-                        {
-                          "@@type": "WebSite",
-                          "@@id": "{{ route('home') }}#website",
-                          "url": "{{ route('home') }}",
-                          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                          "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
-                          "publisher": {
-                            "@@id": "{{ route('home') }}#organization"
-                          }
+                          "@@context": "https://schema.org",
+                          "@@graph": [
+                            {
+                              "@@type": "Organization",
+                              "@@id": "{{ route('home') }}#organization",
+                              "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                              "url": "{{ route('home') }}",
+                              "logo": {
+                                "@@type": "ImageObject",
+                                "url": "{{ asset('assets/front/logo-8.webp') }}",
+                                "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
+                              }
+                            },
+                            {
+                              "@@type": "WebSite",
+                              "@@id": "{{ route('home') }}#website",
+                              "url": "{{ route('home') }}",
+                              "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                              "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
+                              "publisher": {
+                                "@@id": "{{ route('home') }}#organization"
+                              }
+                            }
+                          ]
                         }
-                      ]
-                    }
-                    </script>
+                        </script>
 @endpush
