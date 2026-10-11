@@ -152,28 +152,32 @@
         <!-- ========================================== -->
 
         <!-- VERSIÓN DESKTOP / TABLET (Fullwidth con degradé horizontal hacia la imagen) -->
-        <section class="hidden md:block relative w-full overflow-hidden bg-[#faf8f5] min-h-[500px] lg:min-h-[560px] xl:min-h-[600px] flex items-center border-b border-orange-100/30">
+        <section
+            class="hidden md:block relative w-full overflow-hidden bg-[#faf8f5] min-h-[500px] lg:min-h-[560px] xl:min-h-[600px] flex items-center border-b border-orange-100/30">
             <!-- Imagen Fullwidth a la derecha -->
             <div class="absolute inset-y-0 right-0 w-full md:w-[68%] lg:w-[64%] xl:w-[60%] h-full z-0">
-                <img src="{{ asset('assets/home/hero_cook.jpg') }}"
-                    alt="Cocinera preparando comida casera en Cocinarte"
-                    class="w-full h-full object-cover object-[center_right] lg:object-center"
-                    fetchpriority="high">
+                <img src="{{ asset('assets/home/hero_cook.jpg') }}" alt="Cocinera preparando comida casera en Cocinarte"
+                    class="w-full h-full object-cover object-[center_right] lg:object-center" fetchpriority="high">
                 <!-- Fusión con degradé horizontal hacia la izquierda -->
-                <div class="absolute inset-y-0 left-0 w-44 lg:w-72 bg-gradient-to-r from-[#faf8f5] via-[#faf8f5]/85 to-transparent pointer-events-none"></div>
+                <div
+                    class="absolute inset-y-0 left-0 w-44 lg:w-72 bg-gradient-to-r from-[#faf8f5] via-[#faf8f5]/85 to-transparent pointer-events-none">
+                </div>
             </div>
 
             <!-- Overlay de fondo para asegurar legibilidad perfecta de los textos a la izquierda -->
-            <div class="absolute inset-y-0 left-0 w-full md:w-[58%] lg:w-[52%] xl:w-[48%] bg-gradient-to-r from-[#faf8f5] via-[#faf8f5] to-transparent z-10 pointer-events-none"></div>
+            <div
+                class="absolute inset-y-0 left-0 w-full md:w-[58%] lg:w-[52%] xl:w-[48%] bg-gradient-to-r from-[#faf8f5] via-[#faf8f5] to-transparent z-10 pointer-events-none">
+            </div>
 
             <!-- Contenido textual alineado a la izquierda dentro del contenedor -->
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 py-12 lg:py-16">
                 <div class="max-w-xl space-y-6 lg:space-y-7">
-                    <h1 class="text-4xl lg:text-5xl xl:text-[3.4rem] font-black tracking-tight text-gray-900 leading-[1.12]">
+                    <h1
+                        class="text-4xl lg:text-5xl xl:text-[3.4rem] font-black tracking-tight text-gray-700 leading-[1.12]">
                         <span class="text-gradient block">
                             La comida casera
                         </span>
-                        <span class="text-gray-950 block mt-1">
+                        <span class="text-gray-700 block mt-1">
                             de personas como vos.
                         </span>
                     </h1>
@@ -265,16 +269,18 @@
 
             <!-- Imagen debajo con degradé superior e inferior -->
             <div class="relative w-full h-72 sm:h-80 mt-5 overflow-hidden">
-                <img src="{{ asset('assets/home/hero_cook.jpg') }}"
-                    alt="Cocinera preparando comida casera en Cocinarte"
-                    class="w-full h-full object-cover object-[center_right]"
-                    loading="eager">
-                
+                <img src="{{ asset('assets/home/hero_cook.jpg') }}" alt="Cocinera preparando comida casera en Cocinarte"
+                    class="w-full h-full object-cover object-[center_right]" loading="eager">
+
                 <!-- Degradé superior que funde la imagen con el contenido de arriba -->
-                <div class="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#faf8f5] via-[#faf8f5]/70 to-transparent pointer-events-none"></div>
+                <div
+                    class="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#faf8f5] via-[#faf8f5]/70 to-transparent pointer-events-none">
+                </div>
 
                 <!-- Degradé inferior hacia la siguiente sección -->
-                <div class="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#faf8f5] to-transparent pointer-events-none"></div>
+                <div
+                    class="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#faf8f5] to-transparent pointer-events-none">
+                </div>
             </div>
         </section>
 
@@ -283,12 +289,12 @@
         <!-- 2. SECCIÓN: CONOCÉ A QUIENES COCINAN PARA VOS (SLIDER/CARDS) -->
         <!-- ============================================================ -->
         <section class="py-14 sm:py-20 relative" id="cocineros" x-data="{
-            scrollSlider(direction) {
-                const container = this.$refs.cardsContainer;
-                const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
-                container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
-            }
-        }">
+                            scrollSlider(direction) {
+                                const container = this.$refs.cardsContainer;
+                                const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
+                                container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
+                            }
+                        }">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
                 <!-- Título y Subtítulo Centrados -->
@@ -348,7 +354,7 @@
                                 <div class="space-y-1 mb-3">
                                     <div class="flex items-center justify-between">
                                         <h3
-                                            class="font-bold text-gray-900 text-base group-hover:text-orange-600 transition-colors">
+                                            class="font-bold text-gray-700 text-base group-hover:text-orange-600 transition-colors">
                                             {{ $cook['name'] }}
                                         </h3>
                                     </div>
@@ -371,7 +377,7 @@
                                     <!-- Calificación y Reviews -->
                                     <div class="flex items-center space-x-1.5 text-xs pt-1">
                                         <span class="text-amber-500 font-bold">★</span>
-                                        <span class="font-bold text-gray-900">{{ $cook['rating'] }}</span>
+                                        <span class="font-bold text-gray-700">{{ $cook['rating'] }}</span>
                                         <span class="text-gray-400 font-normal">({{ $cook['reviews_count'] }})</span>
                                     </div>
                                 </div>
@@ -451,7 +457,7 @@
                                     <img src="{{ asset('assets/home/cook_mariana.jpg') }}" alt="Mariana López"
                                         class="w-12 h-12 rounded-full object-cover border-2 border-orange-200">
                                     <div>
-                                        <h4 class="font-bold text-gray-900 text-sm">Mariana López</h4>
+                                        <h4 class="font-bold text-gray-700 text-sm">Mariana López</h4>
                                         <div class="flex items-center text-xs text-purple-700 font-medium">
                                             <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
@@ -506,7 +512,7 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
                 <div class="text-center mb-14">
-                    <h2 class="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold tracking-tight text-gray-900">
+                    <h2 class="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold tracking-tight text-gray-700">
                         Así funciona <span class="text-gradient">Cocinarte</span>
                     </h2>
                 </div>
@@ -532,7 +538,7 @@
                             </svg>
                         </div>
 
-                        <h3 class="font-extrabold text-gray-900 text-lg">
+                        <h3 class="font-extrabold text-gray-700 text-lg">
                             Encontrá un cocinero
                         </h3>
                         <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
@@ -558,7 +564,7 @@
                             </svg>
                         </div>
 
-                        <h3 class="font-extrabold text-gray-900 text-lg">
+                        <h3 class="font-extrabold text-gray-700 text-lg">
                             Elegí su comida
                         </h3>
                         <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
@@ -584,7 +590,7 @@
                             </svg>
                         </div>
 
-                        <h3 class="font-extrabold text-gray-900 text-lg">
+                        <h3 class="font-extrabold text-gray-700 text-lg">
                             Recibila o retirala
                         </h3>
                         <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
@@ -688,7 +694,7 @@
                             <h3 class="text-xl font-bold text-rose-500">
                                 ¿Sos comensal?
                             </h3>
-                            <h4 class="text-base font-extrabold text-gray-900 mt-0.5 mb-2.5">
+                            <h4 class="text-base font-extrabold text-gray-700 mt-0.5 mb-2.5">
                                 Disfrutá comida casera, cerca tuyo.
                             </h4>
                             <p class="text-xs sm:text-sm text-gray-600 leading-relaxed font-normal">
@@ -713,7 +719,7 @@
                     <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
                         x-data="{ openFaq: null }">
                         <div>
-                            <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-5">
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-700 mb-5">
                                 Preguntas frecuentes
                             </h3>
 
@@ -799,34 +805,34 @@
                     <!-- COLUMNA 3: LO QUE DICEN NUESTROS COMENSALES (Testimonios Slider) -->
                     <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
                         x-data="{
-                            current: 0,
-                            items: [
-                                {
-                                    name: 'Laura G.',
-                                    location: 'Córdoba Capital',
-                                    text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
-                                    stars: 5,
-                                    avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
-                                },
-                                {
-                                    name: 'Martín P.',
-                                    location: 'Villa Allende',
-                                    text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
-                                    stars: 5,
-                                    avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
-                                },
-                                {
-                                    name: 'Sofía M.',
-                                    location: 'Córdoba Capital',
-                                    text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
-                                    stars: 5,
-                                    avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
-                                }
-                            ]
-                        }">
+                                            current: 0,
+                                            items: [
+                                                {
+                                                    name: 'Laura G.',
+                                                    location: 'Córdoba Capital',
+                                                    text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
+                                                    stars: 5,
+                                                    avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
+                                                },
+                                                {
+                                                    name: 'Martín P.',
+                                                    location: 'Villa Allende',
+                                                    text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
+                                                    stars: 5,
+                                                    avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
+                                                },
+                                                {
+                                                    name: 'Sofía M.',
+                                                    location: 'Córdoba Capital',
+                                                    text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
+                                                    stars: 5,
+                                                    avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
+                                                }
+                                            ]
+                                        }">
 
                         <div>
-                            <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-6">
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-700 mb-6">
                                 Lo que dicen nuestros comensales
                             </h3>
 
@@ -836,7 +842,7 @@
                                     <img :src="items[current].avatar" :alt="items[current].name"
                                         class="w-11 h-11 rounded-full object-cover border-2 border-orange-200">
                                     <div>
-                                        <h4 class="font-bold text-gray-900 text-sm" x-text="items[current].name"></h4>
+                                        <h4 class="font-bold text-gray-700 text-sm" x-text="items[current].name"></h4>
                                         <p class="text-xs text-gray-400" x-text="items[current].location"></p>
                                     </div>
                                 </div>
@@ -875,31 +881,31 @@
 
 @push('meta')
     <script type="application/ld+json">
-    {
-      "@@context": "https://schema.org",
-      "@@graph": [
-        {
-          "@@type": "Organization",
-          "@@id": "{{ route('home') }}#organization",
-          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-          "url": "{{ route('home') }}",
-          "logo": {
-            "@@type": "ImageObject",
-            "url": "{{ asset('assets/front/logo-8.webp') }}",
-            "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
-          }
-        },
-        {
-          "@@type": "WebSite",
-          "@@id": "{{ route('home') }}#website",
-          "url": "{{ route('home') }}",
-          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-          "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
-          "publisher": {
-            "@@id": "{{ route('home') }}#organization"
-          }
-        }
-      ]
-    }
-    </script>
+                    {
+                      "@@context": "https://schema.org",
+                      "@@graph": [
+                        {
+                          "@@type": "Organization",
+                          "@@id": "{{ route('home') }}#organization",
+                          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                          "url": "{{ route('home') }}",
+                          "logo": {
+                            "@@type": "ImageObject",
+                            "url": "{{ asset('assets/front/logo-8.webp') }}",
+                            "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
+                          }
+                        },
+                        {
+                          "@@type": "WebSite",
+                          "@@id": "{{ route('home') }}#website",
+                          "url": "{{ route('home') }}",
+                          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                          "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
+                          "publisher": {
+                            "@@id": "{{ route('home') }}#organization"
+                          }
+                        }
+                      ]
+                    }
+                    </script>
 @endpush
