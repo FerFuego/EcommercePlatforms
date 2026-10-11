@@ -7,811 +7,899 @@
 @section('og_image', asset('assets/home/hero_cook.jpg'))
 
 @push('styles')
-<style>
-    /* Efectos de slider y scroll suave */
-    .cook-slider {
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-    .cook-slider::-webkit-scrollbar {
-        display: none;
-    }
-    .text-gradient {
-        background: linear-gradient(135deg, #ea580c 0%, #e11d48 50%, #9333ea 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .btn-gradient {
-        background: linear-gradient(135deg, #ea580c 0%, #db2777 50%, #9333ea 100%);
-    }
-    .btn-gradient:hover {
-        background: linear-gradient(135deg, #c2410c 0%, #be185d 50%, #7e22ce 100%);
-    }
-    .glow-effect {
-        box-shadow: 0 14px 35px -8px rgba(225, 29, 72, 0.35);
-    }
-</style>
+    <style>
+        /* Efectos de slider y scroll suave */
+        .cook-slider {
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .cook-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ea580c 0%, #e11d48 50%, #9333ea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #ea580c 0%, #db2777 50%, #9333ea 100%);
+        }
+
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #c2410c 0%, #be185d 50%, #7e22ce 100%);
+        }
+
+        .glow-effect {
+            box-shadow: 0 14px 35px -8px rgba(225, 29, 72, 0.35);
+        }
+    </style>
 @endpush
 
 @section('content')
 
-@php
-    // Cocineros destacados de la maqueta (con soporte para incorporar cocineros reales de la BD)
-    $featuredCooks = [
-        [
-            'id' => 1,
-            'name' => 'Doña Rosa',
-            'specialty' => 'Pastas Frescas',
-            'location' => 'Córdoba Capital · 3 km',
-            'rating' => '4.9',
-            'reviews_count' => 124,
-            'photo' => asset('assets/home/cook_dona_rosa.jpg'),
-            'dishes' => [
-                asset('assets/home/dish_mini_lasagna.jpg'),
-                asset('assets/home/dish_mini_gnocchi.jpg'),
-                asset('assets/home/dish_mini_roast.jpg'),
+    @php
+        // Cocineros destacados de la maqueta (con soporte para incorporar cocineros reales de la BD)
+        $featuredCooks = [
+            [
+                'id' => 1,
+                'name' => 'Doña Rosa',
+                'specialty' => 'Pastas Frescas',
+                'location' => 'Córdoba Capital · 3 km',
+                'rating' => '4.9',
+                'reviews_count' => 124,
+                'photo' => asset('assets/home/cook_dona_rosa.jpg'),
+                'dishes' => [
+                    asset('assets/home/dish_mini_lasagna.jpg'),
+                    asset('assets/home/dish_mini_gnocchi.jpg'),
+                    asset('assets/home/dish_mini_roast.jpg'),
+                ],
+                'url' => route('marketplace.catalog', ['search' => 'pastas'])
             ],
-            'url' => route('marketplace.catalog', ['search' => 'pastas'])
-        ],
-        [
-            'id' => 2,
-            'name' => 'Leo Esquivel',
-            'specialty' => 'Comida Italiana',
-            'location' => 'Villa Allende · 7 km',
-            'rating' => '4.8',
-            'reviews_count' => 96,
-            'photo' => asset('assets/home/cook_leo.jpg'),
-            'dishes' => [
-                asset('assets/front/pasta_casera.png'),
-                asset('assets/home/dish_mini_lasagna.jpg'),
-                asset('assets/home/dish_mini_gnocchi.jpg'),
+            [
+                'id' => 2,
+                'name' => 'Leo Esquivel',
+                'specialty' => 'Comida Italiana',
+                'location' => 'Villa Allende · 7 km',
+                'rating' => '4.8',
+                'reviews_count' => 96,
+                'photo' => asset('assets/home/cook_leo.jpg'),
+                'dishes' => [
+                    asset('assets/front/pasta_casera.png'),
+                    asset('assets/home/dish_mini_lasagna.jpg'),
+                    asset('assets/home/dish_mini_gnocchi.jpg'),
+                ],
+                'url' => route('marketplace.catalog', ['search' => 'italiana'])
             ],
-            'url' => route('marketplace.catalog', ['search' => 'italiana'])
-        ],
-        [
-            'id' => 3,
-            'name' => 'Mariana López',
-            'specialty' => 'Cocina Tradicional',
-            'location' => 'Córdoba Capital · 4 km',
-            'rating' => '4.9',
-            'reviews_count' => 87,
-            'photo' => asset('assets/home/cook_mariana.jpg'),
-            'dishes' => [
-                asset('assets/home/dish_mini_gnocchi.jpg'),
-                asset('assets/home/dish_mini_roast.jpg'),
-                asset('assets/front/pollo_curry_casero.png'),
+            [
+                'id' => 3,
+                'name' => 'Mariana López',
+                'specialty' => 'Cocina Tradicional',
+                'location' => 'Córdoba Capital · 4 km',
+                'rating' => '4.9',
+                'reviews_count' => 87,
+                'photo' => asset('assets/home/cook_mariana.jpg'),
+                'dishes' => [
+                    asset('assets/home/dish_mini_gnocchi.jpg'),
+                    asset('assets/home/dish_mini_roast.jpg'),
+                    asset('assets/front/pollo_curry_casero.png'),
+                ],
+                'url' => route('marketplace.catalog', ['search' => 'tradicional'])
             ],
-            'url' => route('marketplace.catalog', ['search' => 'tradicional'])
-        ],
-        [
-            'id' => 4,
-            'name' => 'Fernando Catalano',
-            'specialty' => 'Cocina de Autor',
-            'location' => 'Bell Ville · 6 km',
-            'rating' => '4.8',
-            'reviews_count' => 72,
-            'photo' => asset('assets/home/cook_fernando.jpg'),
-            'dishes' => [
-                asset('assets/home/dish_mini_roast.jpg'),
-                asset('assets/front/ensalada_casera.png'),
-                asset('assets/front/torta_casera.png'),
+            [
+                'id' => 4,
+                'name' => 'Fernando Catalano',
+                'specialty' => 'Cocina de Autor',
+                'location' => 'Bell Ville · 6 km',
+                'rating' => '4.8',
+                'reviews_count' => 72,
+                'photo' => asset('assets/home/cook_fernando.jpg'),
+                'dishes' => [
+                    asset('assets/home/dish_mini_roast.jpg'),
+                    asset('assets/front/ensalada_casera.png'),
+                    asset('assets/front/torta_casera.png'),
+                ],
+                'url' => route('marketplace.catalog', ['search' => 'autor'])
             ],
-            'url' => route('marketplace.catalog', ['search' => 'autor'])
-        ],
-    ];
+        ];
 
-    // Si existen cocineros reales aprobados en la BD, enriquecemos la lista
-    if (isset($dbCooks) && $dbCooks->isNotEmpty()) {
-        $realList = [];
-        foreach ($dbCooks as $realCook) {
-            $dishPhotos = [];
-            foreach ($realCook->dishes as $d) {
-                if (!empty($d->image_path)) {
-                    $dishPhotos[] = asset('storage/' . $d->image_path);
+        // Si existen cocineros reales aprobados en la BD, enriquecemos la lista
+        if (isset($dbCooks) && $dbCooks->isNotEmpty()) {
+            $realList = [];
+            foreach ($dbCooks as $realCook) {
+                $dishPhotos = [];
+                foreach ($realCook->dishes as $d) {
+                    if (!empty($d->image_path)) {
+                        $dishPhotos[] = asset('storage/' . $d->image_path);
+                    }
                 }
-            }
-            while (count($dishPhotos) < 3) {
-                $dishPhotos[] = asset('assets/home/dish_mini_lasagna.jpg');
-            }
+                while (count($dishPhotos) < 3) {
+                    $dishPhotos[] = asset('assets/home/dish_mini_lasagna.jpg');
+                }
 
-            $cookPhoto = asset('assets/home/cook_mariana.jpg');
-            if (!empty($realCook->profile_photo_path)) {
-                $cookPhoto = asset('storage/' . $realCook->profile_photo_path);
-            } elseif (!empty($realCook->user->profile_photo_path)) {
-                $cookPhoto = asset('uploads/' . $realCook->user->profile_photo_path);
-            }
+                $cookPhoto = asset('assets/home/cook_mariana.jpg');
+                if (!empty($realCook->profile_photo_path)) {
+                    $cookPhoto = asset('storage/' . $realCook->profile_photo_path);
+                } elseif (!empty($realCook->user->profile_photo_path)) {
+                    $cookPhoto = asset('uploads/' . $realCook->user->profile_photo_path);
+                }
 
-            $realList[] = [
-                'id' => $realCook->id,
-                'name' => $realCook->user->name ?? 'Cocinero Cocinarte',
-                'specialty' => $realCook->bio_specialty ?? 'Cocina Casera',
-                'location' => ($realCook->city ?? 'Tu zona') . ' · ' . ($realCook->neighborhood ?? 'Cerca tuyo'),
-                'rating' => number_format($realCook->reviews_avg_rating ?? 4.9, 1),
-                'reviews_count' => $realCook->reviews_count ?? 15,
-                'photo' => $cookPhoto,
-                'dishes' => array_slice($dishPhotos, 0, 3),
-                'url' => route('marketplace.cook.profile', $realCook->id)
-            ];
+                $realList[] = [
+                    'id' => $realCook->id,
+                    'name' => $realCook->user->name ?? 'Cocinero Cocinarte',
+                    'specialty' => $realCook->bio_specialty ?? 'Cocina Casera',
+                    'location' => ($realCook->city ?? 'Tu zona') . ' · ' . ($realCook->neighborhood ?? 'Cerca tuyo'),
+                    'rating' => number_format($realCook->reviews_avg_rating ?? 4.9, 1),
+                    'reviews_count' => $realCook->reviews_count ?? 15,
+                    'photo' => $cookPhoto,
+                    'dishes' => array_slice($dishPhotos, 0, 3),
+                    'url' => route('marketplace.cook.profile', $realCook->id)
+                ];
+            }
+            if (!empty($realList)) {
+                $featuredCooks = array_merge($realList, $featuredCooks);
+            }
         }
-        if (!empty($realList)) {
-            $featuredCooks = array_merge($realList, $featuredCooks);
-        }
-    }
-@endphp
+    @endphp
 
-<div class="bg-[#faf8f5] text-gray-800 antialiased overflow-hidden">
+    <div class="bg-[#faf8f5] text-gray-800 antialiased overflow-hidden">
 
-    <!-- ========================================== -->
-    <!-- 1. HERO SECTION                            -->
-    <!-- ========================================== -->
-    <section class="relative pt-8 pb-16 lg:pt-14 lg:pb-24">
-        <!-- Luces y efectos visuales de fondo (Aura sutil) -->
-        <div class="absolute top-10 left-1/4 w-96 h-96 bg-orange-200/40 rounded-full filter blur-3xl pointer-events-none"></div>
-        <div class="absolute top-20 right-10 w-96 h-96 bg-pink-200/30 rounded-full filter blur-3xl pointer-events-none"></div>
-        <div class="absolute top-1/2 left-10 w-80 h-80 bg-purple-200/30 rounded-full filter blur-3xl pointer-events-none"></div>
+        <!-- ========================================== -->
+        <!-- 1. HERO SECTION (FULLWIDTH & RESPONSIVE)    -->
+        <!-- ========================================== -->
 
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-                
-                <!-- Columna Izquierda: Textos y Acciones -->
-                <div class="lg:col-span-5 space-y-7 text-left">
-                    <h1 class="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold tracking-tight text-gray-900 leading-[1.12]">
+        <!-- VERSIÓN DESKTOP / TABLET (Fullwidth con degradé horizontal hacia la imagen) -->
+        <section class="hidden md:block relative w-full overflow-hidden bg-[#faf8f5] min-h-[500px] lg:min-h-[560px] xl:min-h-[600px] flex items-center border-b border-orange-100/30">
+            <!-- Imagen Fullwidth a la derecha -->
+            <div class="absolute inset-y-0 right-0 w-full md:w-[68%] lg:w-[64%] xl:w-[60%] h-full z-0">
+                <img src="{{ asset('assets/home/hero_cook.jpg') }}"
+                    alt="Cocinera preparando comida casera en Cocinarte"
+                    class="w-full h-full object-cover object-[center_right] lg:object-center"
+                    fetchpriority="high">
+                <!-- Fusión con degradé horizontal hacia la izquierda -->
+                <div class="absolute inset-y-0 left-0 w-44 lg:w-72 bg-gradient-to-r from-[#faf8f5] via-[#faf8f5]/85 to-transparent pointer-events-none"></div>
+            </div>
+
+            <!-- Overlay de fondo para asegurar legibilidad perfecta de los textos a la izquierda -->
+            <div class="absolute inset-y-0 left-0 w-full md:w-[58%] lg:w-[52%] xl:w-[48%] bg-gradient-to-r from-[#faf8f5] via-[#faf8f5] to-transparent z-10 pointer-events-none"></div>
+
+            <!-- Contenido textual alineado a la izquierda dentro del contenedor -->
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 py-12 lg:py-16">
+                <div class="max-w-xl space-y-6 lg:space-y-7">
+                    <h1 class="text-4xl lg:text-5xl xl:text-[3.4rem] font-black tracking-tight text-gray-900 leading-[1.12]">
                         <span class="text-gradient block">
                             La comida casera
                         </span>
-                        <span class="text-gray-900 block mt-1">
+                        <span class="text-gray-950 block mt-1">
                             de personas como vos.
                         </span>
                     </h1>
 
-                    <p class="text-base sm:text-lg text-gray-600 leading-relaxed font-normal max-w-lg">
+                    <p class="text-base lg:text-lg text-gray-600 leading-relaxed font-normal max-w-md">
                         Descubrí cocineros independientes de tu zona y pedí sus platos hechos en casa.
                     </p>
 
                     <!-- Botones Principales -->
-                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                    <div class="flex items-center gap-4 pt-1">
                         <a href="{{ route('marketplace.catalog') }}"
-                            class="group btn-gradient text-white px-7 py-3.5 rounded-full font-bold text-sm sm:text-base shadow-md glow-effect hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 inline-flex items-center justify-center">
+                            class="group btn-gradient text-white px-7 py-3.5 rounded-full font-bold text-sm lg:text-base shadow-md glow-effect hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap">
                             <span>Explorar cocineros</span>
-                            <svg class="w-4 h-4 ml-2.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            <svg class="w-4 h-4 ml-2.5 transition-transform duration-200 group-hover:translate-x-1"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
                             </svg>
                         </a>
 
                         <a href="{{ route('register', ['role' => 'cook']) }}"
-                            class="px-7 py-3.5 rounded-full font-bold text-sm sm:text-base bg-white hover:bg-rose-50/50 text-purple-900 border border-purple-200/80 shadow-sm hover:shadow transition-all duration-200 inline-flex items-center justify-center">
+                            class="px-7 py-3.5 rounded-full font-bold text-sm lg:text-base bg-white hover:bg-rose-50/50 text-purple-950 border border-purple-300 shadow-sm hover:shadow transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap">
                             Quiero cocinar
                         </a>
                     </div>
 
                     <!-- Micro-Badges de Confianza con Íconos -->
-                    <div class="pt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs sm:text-sm font-medium text-gray-600">
-                        <div class="inline-flex items-center space-x-1.5 text-gray-600">
+                    <div class="pt-2 flex items-center space-x-3 text-xs lg:text-sm font-medium text-gray-600">
+                        <div class="inline-flex items-center space-x-1.5">
                             <span class="text-rose-500 font-bold">♡</span>
                             <span>Cocineros reales</span>
                         </div>
                         <span class="text-gray-300 font-bold">·</span>
-                        <div class="inline-flex items-center space-x-1.5 text-gray-600">
+                        <div class="inline-flex items-center space-x-1.5">
                             <span>Cocinas reales</span>
                         </div>
                         <span class="text-gray-300 font-bold">·</span>
-                        <div class="inline-flex items-center space-x-1.5 text-gray-600">
+                        <div class="inline-flex items-center space-x-1.5">
                             <span>Comida hecha en casa</span>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- Columna Derecha: Foto Hero con Efecto Warm Editorial -->
-                <div class="lg:col-span-7">
-                    <div class="relative group">
-                        <!-- Glow trasero -->
-                        <div class="absolute -inset-2 bg-gradient-to-r from-orange-400/20 via-rose-400/20 to-purple-500/20 rounded-[2.5rem] filter blur-xl opacity-75 group-hover:opacity-100 transition-opacity"></div>
-                        
-                        <div class="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] shadow-2xl border-4 border-white/80 bg-white">
-                            <img src="{{ asset('assets/home/hero_cook.jpg') }}"
-                                alt="Cocinera preparando comida casera en Cocinarte"
-                                class="w-full h-[360px] sm:h-[440px] lg:h-[480px] object-cover object-center transform group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-                                width="1200" height="700"
-                                fetchpriority="high">
-                        </div>
-                    </div>
+        <!-- VERSIÓN MOBILE (Títulos y botones más chicos en una sola línea arriba, y debajo degradé a la imagen) -->
+        <section class="md:hidden relative w-full bg-[#faf8f5] pt-6 pb-2 overflow-hidden">
+            <!-- Bloque superior de contenidos -->
+            <div class="px-5 space-y-4 text-left">
+                <h1 class="text-3xl font-black tracking-tight leading-[1.15]">
+                    <span class="text-gradient block">
+                        La comida casera
+                    </span>
+                    <span class="text-gray-950 block mt-0.5">
+                        de personas como vos.
+                    </span>
+                </h1>
+
+                <p class="text-xs sm:text-sm text-gray-600 leading-relaxed font-normal">
+                    Descubrí cocineros independientes de tu zona y pedí sus platos hechos en casa.
+                </p>
+
+                <!-- Botones más chicos en una sola línea horizontal -->
+                <div class="flex items-center gap-2 pt-1 w-full max-w-sm">
+                    <a href="{{ route('marketplace.catalog') }}"
+                        class="flex-1 btn-gradient text-white py-2.5 px-2.5 rounded-full font-bold text-[11px] sm:text-xs shadow-sm inline-flex items-center justify-center text-center whitespace-nowrap">
+                        <span>Explorar cocineros</span>
+                        <span class="ml-1 text-[11px]">→</span>
+                    </a>
+
+                    <a href="{{ route('register', ['role' => 'cook']) }}"
+                        class="flex-1 bg-white hover:bg-rose-50/50 text-purple-950 border border-purple-300 py-2.5 px-2.5 rounded-full font-bold text-[11px] sm:text-xs shadow-sm inline-flex items-center justify-center text-center whitespace-nowrap">
+                        Quiero cocinar
+                    </a>
                 </div>
 
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ============================================================ -->
-    <!-- 2. SECCIÓN: CONOCÉ A QUIENES COCINAN PARA VOS (SLIDER/CARDS) -->
-    <!-- ============================================================ -->
-    <section class="py-14 sm:py-20 relative" id="cocineros" x-data="{
-        scrollSlider(direction) {
-            const container = this.$refs.cardsContainer;
-            const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
-            container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
-        }
-    }">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <!-- Título y Subtítulo Centrados -->
-            <div class="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
-                <h2 class="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold tracking-tight">
-                    <span class="text-gradient">
-                        Conocé a quienes cocinan para vos
-                    </span>
-                </h2>
-                <p class="mt-3 text-sm sm:text-base text-gray-600 font-normal">
-                    Personas reales, con sus propias historias, en sus propias cocinas.
-                </p>
+                <!-- Badges de Confianza compactos -->
+                <div class="pt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-medium text-gray-500">
+                    <div class="inline-flex items-center space-x-1">
+                        <span class="text-rose-500 font-bold">♡</span>
+                        <span>Cocineros reales</span>
+                    </div>
+                    <span class="text-gray-300">·</span>
+                    <span>Cocinas reales</span>
+                    <span class="text-gray-300">·</span>
+                    <span>Comida hecha en casa</span>
+                </div>
             </div>
 
-            <!-- Controles de Navegación del Slider (Desktop y Mobile) -->
-            <div class="flex items-center justify-end space-x-2 mb-4 pr-1">
-                <button @click="scrollSlider(-1)"
-                    type="button"
-                    class="w-10 h-10 rounded-full bg-white hover:bg-orange-50 border border-gray-200 text-gray-700 hover:text-orange-600 flex items-center justify-center shadow-sm hover:shadow transition-all active:scale-95"
-                    aria-label="Anterior cocinero">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-                <button @click="scrollSlider(1)"
-                    type="button"
-                    class="w-10 h-10 rounded-full bg-white hover:bg-orange-50 border border-gray-200 text-gray-700 hover:text-orange-600 flex items-center justify-center shadow-sm hover:shadow transition-all active:scale-95"
-                    aria-label="Siguiente cocinero">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- SLIDER CONTENEDOR (Scroll Snap nativo fluido + drag/swipe) -->
-            <div x-ref="cardsContainer"
-                class="cook-slider flex gap-5 overflow-x-auto snap-x snap-mandatory py-4 px-1 -mx-4 sm:mx-0 px-4 sm:px-0">
+            <!-- Imagen debajo con degradé superior e inferior -->
+            <div class="relative w-full h-72 sm:h-80 mt-5 overflow-hidden">
+                <img src="{{ asset('assets/home/hero_cook.jpg') }}"
+                    alt="Cocinera preparando comida casera en Cocinarte"
+                    class="w-full h-full object-cover object-[center_right]"
+                    loading="eager">
                 
-                @foreach($featuredCooks as $cook)
-                    <div class="cook-card flex-none w-[270px] sm:w-[290px] lg:w-[calc(25%-15px)] snap-start group">
-                        <div class="bg-white rounded-3xl p-4 shadow-sm hover:shadow-xl border border-orange-100/60 hover:border-orange-200 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1">
-                            
-                            <!-- Foto del Cocinero + Badge "En tu zona" -->
-                            <div class="relative w-full h-44 rounded-2xl overflow-hidden bg-gray-100 mb-3.5">
-                                <img src="{{ $cook['photo'] }}"
-                                    alt="Cocinero {{ $cook['name'] }}"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                                    loading="lazy">
-                                
-                                <!-- Badge "En tu zona" -->
-                                <span class="absolute top-2.5 right-2.5 bg-white/90 backdrop-blur-md text-amber-700 text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-sm flex items-center space-x-1 border border-orange-100">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                    <span>En tu zona</span>
-                                </span>
+                <!-- Degradé superior que funde la imagen con el contenido de arriba -->
+                <div class="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#faf8f5] via-[#faf8f5]/70 to-transparent pointer-events-none"></div>
+
+                <!-- Degradé inferior hacia la siguiente sección -->
+                <div class="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#faf8f5] to-transparent pointer-events-none"></div>
+            </div>
+        </section>
+
+
+        <!-- ============================================================ -->
+        <!-- 2. SECCIÓN: CONOCÉ A QUIENES COCINAN PARA VOS (SLIDER/CARDS) -->
+        <!-- ============================================================ -->
+        <section class="py-14 sm:py-20 relative" id="cocineros" x-data="{
+            scrollSlider(direction) {
+                const container = this.$refs.cardsContainer;
+                const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
+                container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
+            }
+        }">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+                <!-- Título y Subtítulo Centrados -->
+                <div class="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+                    <h2 class="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold tracking-tight">
+                        <span class="text-gradient">
+                            Conocé a quienes cocinan para vos
+                        </span>
+                    </h2>
+                    <p class="mt-3 text-sm sm:text-base text-gray-600 font-normal">
+                        Personas reales, con sus propias historias, en sus propias cocinas.
+                    </p>
+                </div>
+
+                <!-- Controles de Navegación del Slider (Desktop y Mobile) -->
+                <div class="flex items-center justify-end space-x-2 mb-4 pr-1">
+                    <button @click="scrollSlider(-1)" type="button"
+                        class="w-10 h-10 rounded-full bg-white hover:bg-orange-50 border border-gray-200 text-gray-700 hover:text-orange-600 flex items-center justify-center shadow-sm hover:shadow transition-all active:scale-95"
+                        aria-label="Anterior cocinero">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <button @click="scrollSlider(1)" type="button"
+                        class="w-10 h-10 rounded-full bg-white hover:bg-orange-50 border border-gray-200 text-gray-700 hover:text-orange-600 flex items-center justify-center shadow-sm hover:shadow transition-all active:scale-95"
+                        aria-label="Siguiente cocinero">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- SLIDER CONTENEDOR (Scroll Snap nativo fluido + drag/swipe) -->
+                <div x-ref="cardsContainer"
+                    class="cook-slider flex gap-5 overflow-x-auto snap-x snap-mandatory py-4 px-1 -mx-4 sm:mx-0 px-4 sm:px-0">
+
+                    @foreach($featuredCooks as $cook)
+                        <div class="cook-card flex-none w-[270px] sm:w-[290px] lg:w-[calc(25%-15px)] snap-start group">
+                            <div
+                                class="bg-white rounded-3xl p-4 shadow-sm hover:shadow-xl border border-orange-100/60 hover:border-orange-200 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1">
+
+                                <!-- Foto del Cocinero + Badge "En tu zona" -->
+                                <div class="relative w-full h-44 rounded-2xl overflow-hidden bg-gray-100 mb-3.5">
+                                    <img src="{{ $cook['photo'] }}" alt="Cocinero {{ $cook['name'] }}"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                        loading="lazy">
+
+                                    <!-- Badge "En tu zona" -->
+                                    <span
+                                        class="absolute top-2.5 right-2.5 bg-white/90 backdrop-blur-md text-amber-700 text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-sm flex items-center space-x-1 border border-orange-100">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <span>En tu zona</span>
+                                    </span>
+                                </div>
+
+                                <!-- Información del Cocinero -->
+                                <div class="space-y-1 mb-3">
+                                    <div class="flex items-center justify-between">
+                                        <h3
+                                            class="font-bold text-gray-900 text-base group-hover:text-orange-600 transition-colors">
+                                            {{ $cook['name'] }}
+                                        </h3>
+                                    </div>
+                                    <p class="text-xs text-gray-500 font-medium">
+                                        {{ $cook['specialty'] }}
+                                    </p>
+
+                                    <!-- Ubicación con Pin -->
+                                    <div class="flex items-center text-xs text-purple-700/80 pt-0.5">
+                                        <svg class="w-3.5 h-3.5 mr-1 flex-shrink-0 text-purple-600" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        <span class="truncate">{{ $cook['location'] }}</span>
+                                    </div>
+
+                                    <!-- Calificación y Reviews -->
+                                    <div class="flex items-center space-x-1.5 text-xs pt-1">
+                                        <span class="text-amber-500 font-bold">★</span>
+                                        <span class="font-bold text-gray-900">{{ $cook['rating'] }}</span>
+                                        <span class="text-gray-400 font-normal">({{ $cook['reviews_count'] }})</span>
+                                    </div>
+                                </div>
+
+                                <!-- 3 Fotos Miniatura de sus Platos -->
+                                <div class="grid grid-cols-3 gap-2 pt-2 border-t border-gray-100 mt-auto">
+                                    @foreach($cook['dishes'] as $dishImg)
+                                        <div class="w-full h-16 rounded-xl overflow-hidden bg-gray-50 border border-gray-100/80">
+                                            <img src="{{ $dishImg }}" alt="Plato de {{ $cook['name'] }}"
+                                                class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                                                loading="lazy">
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <!-- Link al perfil / catálogo -->
+                                <a href="{{ $cook['url'] }}"
+                                    class="mt-3 block text-center py-2 px-3 rounded-xl bg-orange-50/60 hover:bg-orange-100/80 text-orange-700 font-semibold text-xs transition-colors">
+                                    Ver platos y menú
+                                </a>
+
+                            </div>
+                        </div>
+                    @endforeach
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ============================================================ -->
+        <!-- 3. SECCIÓN: CADA COCINERO TIENE SU PROPIA COCINA             -->
+        <!-- ============================================================ -->
+        <section class="py-12 sm:py-16" id="historias">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div
+                    class="bg-[#fef9f4] rounded-3xl sm:rounded-[2.5rem] p-6 sm:p-10 lg:p-14 border border-orange-100/80 shadow-sm relative overflow-hidden">
+
+                    <!-- Orbs decorativos traseros -->
+                    <div
+                        class="absolute -right-16 -top-16 w-80 h-80 bg-rose-200/30 rounded-full filter blur-3xl pointer-events-none">
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+
+                        <!-- Lado Izquierdo: Foto Grande de Cocina -->
+                        <div class="lg:col-span-6">
+                            <div class="relative group">
+                                <div class="overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-4 border-white">
+                                    <img src="{{ asset('assets/home/kitchen_mariana.jpg') }}"
+                                        alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
+                                        class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                        loading="lazy">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lado Derecho: Contenido, Card Flotante y Firma Manuscrita -->
+                        <div class="lg:col-span-6 space-y-6">
+
+                            <div class="space-y-3">
+                                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                                    <span class="text-gradient">
+                                        Cada cocinero tiene su propia cocina
+                                    </span>
+                                </h2>
+                                <p class="text-sm sm:text-base text-gray-600 leading-relaxed font-normal">
+                                    Detrás de cada plato hay una persona, su historia y su hogar. Cocinamos en nuestras
+                                    casas, con ingredientes reales y todo el cariño del mundo.
+                                </p>
                             </div>
 
-                            <!-- Información del Cocinero -->
-                            <div class="space-y-1 mb-3">
-                                <div class="flex items-center justify-between">
-                                    <h3 class="font-bold text-gray-900 text-base group-hover:text-orange-600 transition-colors">
-                                        {{ $cook['name'] }}
-                                    </h3>
+                            <!-- Card Flotante de Mariana López -->
+                            <div
+                                class="bg-white rounded-2xl p-5 shadow-lg border border-orange-100/90 space-y-3 transform hover:-translate-y-0.5 transition-transform">
+                                <div class="flex items-center space-x-3.5">
+                                    <img src="{{ asset('assets/home/cook_mariana.jpg') }}" alt="Mariana López"
+                                        class="w-12 h-12 rounded-full object-cover border-2 border-orange-200">
+                                    <div>
+                                        <h4 class="font-bold text-gray-900 text-sm">Mariana López</h4>
+                                        <div class="flex items-center text-xs text-purple-700 font-medium">
+                                            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            </svg>
+                                            <span>Córdoba Capital · 4 km</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p class="text-xs text-gray-500 font-medium">
-                                    {{ $cook['specialty'] }}
+
+                                <p class="text-xs sm:text-sm text-gray-600 italic leading-relaxed">
+                                    "Cocino porque me encanta y porque compartir la comida también es una forma de cuidar."
                                 </p>
 
-                                <!-- Ubicación con Pin -->
-                                <div class="flex items-center text-xs text-purple-700/80 pt-0.5">
-                                    <svg class="w-3.5 h-3.5 mr-1 flex-shrink-0 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <span class="truncate">{{ $cook['location'] }}</span>
-                                </div>
-
-                                <!-- Calificación y Reviews -->
-                                <div class="flex items-center space-x-1.5 text-xs pt-1">
-                                    <span class="text-amber-500 font-bold">★</span>
-                                    <span class="font-bold text-gray-900">{{ $cook['rating'] }}</span>
-                                    <span class="text-gray-400 font-normal">({{ $cook['reviews_count'] }})</span>
-                                </div>
-                            </div>
-
-                            <!-- 3 Fotos Miniatura de sus Platos -->
-                            <div class="grid grid-cols-3 gap-2 pt-2 border-t border-gray-100 mt-auto">
-                                @foreach($cook['dishes'] as $dishImg)
-                                    <div class="w-full h-16 rounded-xl overflow-hidden bg-gray-50 border border-gray-100/80">
-                                        <img src="{{ $dishImg }}"
-                                            alt="Plato de {{ $cook['name'] }}"
-                                            class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                                            loading="lazy">
+                                <!-- Miniaturas de platos de Mariana -->
+                                <div class="grid grid-cols-3 gap-2 pt-2 border-t border-gray-100">
+                                    <div class="h-16 rounded-xl overflow-hidden bg-gray-100">
+                                        <img src="{{ asset('assets/home/dish_mini_gnocchi.jpg') }}" alt="Gnocchi caseros"
+                                            class="w-full h-full object-cover">
                                     </div>
-                                @endforeach
-                            </div>
-
-                            <!-- Link al perfil / catálogo -->
-                            <a href="{{ $cook['url'] }}"
-                                class="mt-3 block text-center py-2 px-3 rounded-xl bg-orange-50/60 hover:bg-orange-100/80 text-orange-700 font-semibold text-xs transition-colors">
-                                Ver platos y menú
-                            </a>
-
-                        </div>
-                    </div>
-                @endforeach
-
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ============================================================ -->
-    <!-- 3. SECCIÓN: CADA COCINERO TIENE SU PROPIA COCINA             -->
-    <!-- ============================================================ -->
-    <section class="py-12 sm:py-16" id="historias">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-[#fef9f4] rounded-3xl sm:rounded-[2.5rem] p-6 sm:p-10 lg:p-14 border border-orange-100/80 shadow-sm relative overflow-hidden">
-                
-                <!-- Orbs decorativos traseros -->
-                <div class="absolute -right-16 -top-16 w-80 h-80 bg-rose-200/30 rounded-full filter blur-3xl pointer-events-none"></div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-                    
-                    <!-- Lado Izquierdo: Foto Grande de Cocina -->
-                    <div class="lg:col-span-6">
-                        <div class="relative group">
-                            <div class="overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-4 border-white">
-                                <img src="{{ asset('assets/home/kitchen_mariana.jpg') }}"
-                                    alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
-                                    class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                                    loading="lazy">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Lado Derecho: Contenido, Card Flotante y Firma Manuscrita -->
-                    <div class="lg:col-span-6 space-y-6">
-                        
-                        <div class="space-y-3">
-                            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                                <span class="text-gradient">
-                                    Cada cocinero tiene su propia cocina
-                                </span>
-                            </h2>
-                            <p class="text-sm sm:text-base text-gray-600 leading-relaxed font-normal">
-                                Detrás de cada plato hay una persona, su historia y su hogar. Cocinamos en nuestras casas, con ingredientes reales y todo el cariño del mundo.
-                            </p>
-                        </div>
-
-                        <!-- Card Flotante de Mariana López -->
-                        <div class="bg-white rounded-2xl p-5 shadow-lg border border-orange-100/90 space-y-3 transform hover:-translate-y-0.5 transition-transform">
-                            <div class="flex items-center space-x-3.5">
-                                <img src="{{ asset('assets/home/cook_mariana.jpg') }}"
-                                    alt="Mariana López"
-                                    class="w-12 h-12 rounded-full object-cover border-2 border-orange-200">
-                                <div>
-                                    <h4 class="font-bold text-gray-900 text-sm">Mariana López</h4>
-                                    <div class="flex items-center text-xs text-purple-700 font-medium">
-                                        <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        </svg>
-                                        <span>Córdoba Capital · 4 km</span>
+                                    <div class="h-16 rounded-xl overflow-hidden bg-gray-100">
+                                        <img src="{{ asset('assets/home/dish_mini_roast.jpg') }}" alt="Pollo al horno"
+                                            class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="h-16 rounded-xl overflow-hidden bg-gray-100">
+                                        <img src="{{ asset('assets/front/ensalada_casera.png') }}" alt="Ensalada fresca"
+                                            class="w-full h-full object-cover">
                                     </div>
                                 </div>
                             </div>
 
-                            <p class="text-xs sm:text-sm text-gray-600 italic leading-relaxed">
-                                "Cocino porque me encanta y porque compartir la comida también es una forma de cuidar."
-                            </p>
+                            <!-- Nota Manuscrita -->
+                            <div class="pt-2 flex justify-end">
+                                <p class="font-handwriting text-2xl sm:text-3xl text-purple-900 -rotate-2 select-none">
+                                    Comida real, hecha en casa <span class="text-rose-500">♡</span>
+                                </p>
+                            </div>
 
-                            <!-- Miniaturas de platos de Mariana -->
-                            <div class="grid grid-cols-3 gap-2 pt-2 border-t border-gray-100">
-                                <div class="h-16 rounded-xl overflow-hidden bg-gray-100">
-                                    <img src="{{ asset('assets/home/dish_mini_gnocchi.jpg') }}" alt="Gnocchi caseros" class="w-full h-full object-cover">
-                                </div>
-                                <div class="h-16 rounded-xl overflow-hidden bg-gray-100">
-                                    <img src="{{ asset('assets/home/dish_mini_roast.jpg') }}" alt="Pollo al horno" class="w-full h-full object-cover">
-                                </div>
-                                <div class="h-16 rounded-xl overflow-hidden bg-gray-100">
-                                    <img src="{{ asset('assets/front/ensalada_casera.png') }}" alt="Ensalada fresca" class="w-full h-full object-cover">
-                                </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ============================================================ -->
+        <!-- 4. SECCIÓN: ASÍ FUNCIONA COCINARTE                           -->
+        <!-- ============================================================ -->
+        <section class="py-14 sm:py-20" id="como-funciona">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div class="text-center mb-14">
+                    <h2 class="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold tracking-tight text-gray-900">
+                        Así funciona <span class="text-gradient">Cocinarte</span>
+                    </h2>
+                </div>
+
+                <!-- 3 Pasos con Flechas Conectoras -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 relative max-w-5xl mx-auto items-start">
+
+                    <!-- Paso 1 -->
+                    <div class="flex flex-col items-center text-center space-y-4 group">
+                        <div class="relative">
+                            <div
+                                class="w-14 h-14 rounded-full bg-rose-500 text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 group-hover:scale-110 transition-transform duration-300">
+                                1
                             </div>
                         </div>
 
-                        <!-- Nota Manuscrita -->
-                        <div class="pt-2 flex justify-end">
-                            <p class="font-handwriting text-2xl sm:text-3xl text-purple-900 -rotate-2 select-none">
-                                Comida real, hecha en casa <span class="text-rose-500">♡</span>
-                            </p>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ============================================================ -->
-    <!-- 4. SECCIÓN: ASÍ FUNCIONA COCINARTE                           -->
-    <!-- ============================================================ -->
-    <section class="py-14 sm:py-20" id="como-funciona">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="text-center mb-14">
-                <h2 class="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold tracking-tight text-gray-900">
-                    Así funciona <span class="text-gradient">Cocinarte</span>
-                </h2>
-            </div>
-
-            <!-- 3 Pasos con Flechas Conectoras -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 relative max-w-5xl mx-auto items-start">
-                
-                <!-- Paso 1 -->
-                <div class="flex flex-col items-center text-center space-y-4 group">
-                    <div class="relative">
-                        <div class="w-14 h-14 rounded-full bg-rose-500 text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 group-hover:scale-110 transition-transform duration-300">
-                            1
-                        </div>
-                    </div>
-                    
-                    <div class="w-12 h-12 rounded-2xl bg-orange-100/70 text-orange-600 flex items-center justify-center">
-                        <!-- Icono Gorro de Chef -->
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4a3.5 3.5 0 00-3.4 2.7A3.5 3.5 0 005 10a3.5 3.5 0 002.5 3.37L7 18h10l-.5-4.63A3.5 3.5 0 0019 10a3.5 3.5 0 00-3.6-3.3A3.5 3.5 0 0012 4zM9 18h6v2H9v-2z" />
-                        </svg>
-                    </div>
-
-                    <h3 class="font-extrabold text-gray-900 text-lg">
-                        Encontrá un cocinero
-                    </h3>
-                    <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
-                        Explorá perfiles, leé sus historias y elegí a quién te inspire.
-                    </p>
-                </div>
-
-                <!-- Paso 2 -->
-                <div class="flex flex-col items-center text-center space-y-4 group">
-                    <div class="relative">
-                        <div class="w-14 h-14 rounded-full bg-rose-500 text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 group-hover:scale-110 transition-transform duration-300">
-                            2
-                        </div>
-                    </div>
-
-                    <div class="w-12 h-12 rounded-2xl bg-orange-100/70 text-orange-600 flex items-center justify-center">
-                        <!-- Icono Bowl / Plato -->
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-3.866 0-7 2.239-7 5 0 2.22 2.054 4.094 5 4.732V20h4v-2.268c2.946-.638 5-2.512 5-4.732 0-2.761-3.134-5-7-5zM4 13h16" />
-                        </svg>
-                    </div>
-
-                    <h3 class="font-extrabold text-gray-900 text-lg">
-                        Elegí su comida
-                    </h3>
-                    <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
-                        Mirá su menú, sus fotos y hacé tu pedido en pocos clics.
-                    </p>
-                </div>
-
-                <!-- Paso 3 -->
-                <div class="flex flex-col items-center text-center space-y-4 group">
-                    <div class="relative">
-                        <div class="w-14 h-14 rounded-full bg-rose-500 text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 group-hover:scale-110 transition-transform duration-300">
-                            3
-                        </div>
-                    </div>
-
-                    <div class="w-12 h-12 rounded-2xl bg-orange-100/70 text-orange-600 flex items-center justify-center">
-                        <!-- Icono Casa / Entrega -->
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                    </div>
-
-                    <h3 class="font-extrabold text-gray-900 text-lg">
-                        Recibila o retirala
-                    </h3>
-                    <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
-                        Coordiná la entrega o pasá a buscarla en la cocina del cocinero.
-                    </p>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ============================================================ -->
-    <!-- 5. BANNER CTA COCINEROS: "¿COCINÁS PARA LOS TUYOS?"          -->
-    <!-- ============================================================ -->
-    <section class="py-10 sm:py-16" id="para-cocineros">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-gradient-to-r from-orange-500 via-rose-500 to-fuchsia-600 text-white shadow-2xl">
-                
-                <div class="grid grid-cols-1 lg:grid-cols-12 items-center">
-                    
-                    <!-- Lado Izquierdo: Textos y Botón -->
-                    <div class="lg:col-span-7 p-8 sm:p-12 lg:p-16 space-y-6 relative z-10">
-                        
-                        <!-- Icono Chef Outline -->
-                        <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-orange-100/70 text-orange-600 flex items-center justify-center">
+                            <!-- Icono Gorro de Chef -->
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4a3.5 3.5 0 00-3.4 2.7A3.5 3.5 0 005 10a3.5 3.5 0 002.5 3.37L7 18h10l-.5-4.63A3.5 3.5 0 0019 10a3.5 3.5 0 00-3.6-3.3A3.5 3.5 0 0012 4zM9 18h6v2H9v-2z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                    d="M12 4a3.5 3.5 0 00-3.4 2.7A3.5 3.5 0 005 10a3.5 3.5 0 002.5 3.37L7 18h10l-.5-4.63A3.5 3.5 0 0019 10a3.5 3.5 0 00-3.6-3.3A3.5 3.5 0 0012 4zM9 18h6v2H9v-2z" />
                             </svg>
                         </div>
 
-                        <div class="space-y-2">
-                            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight">
-                                ¿Cocinás para los tuyos?<br>
-                                Podés cocinar para tu barrio.
-                            </h2>
-                            <p class="text-sm sm:text-base text-white/90 leading-relaxed font-normal pt-2 max-w-lg">
-                                Elegí qué cocinar, cuándo cocinar y a qué precio.<br>
-                                Vos decidís, nosotros te ayudamos a llegar a más personas.
-                            </p>
-                        </div>
-
-                        <div class="pt-4 flex flex-wrap items-center gap-6">
-                            <a href="{{ route('register', ['role' => 'cook']) }}"
-                                class="bg-white hover:bg-rose-50 text-rose-600 px-8 py-4 rounded-full font-bold text-sm sm:text-base shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all inline-flex items-center space-x-2">
-                                <span>Quiero ser cocinero</span>
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                                </svg>
-                            </a>
-
-                            <!-- Frase manuscrita blanca -->
-                            <p class="font-handwriting text-2xl sm:text-3xl text-white/95 leading-tight select-none">
-                                Tu cocina también importa <span class="text-rose-200">♡</span>
-                            </p>
-                        </div>
-
-                    </div>
-
-                    <!-- Lado Derecho: Foto Cocinera con delantal floreado -->
-                    <div class="lg:col-span-5 h-72 sm:h-96 lg:h-full min-h-[380px] relative">
-                        <img src="{{ asset('assets/home/banner_cook.jpg') }}"
-                            alt="Cocinera sonriente preparando un guiso casero"
-                            class="w-full h-full object-cover object-center lg:rounded-r-[2.5rem]"
-                            loading="lazy">
-                        <!-- Gradiente de fusión suave en móvil y desktop -->
-                        <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-orange-500/80 via-transparent to-transparent pointer-events-none"></div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ============================================================ -->
-    <!-- 6. SECCIÓN INFERIOR: 3 COLUMNAS                              -->
-    <!-- (Comensal / Preguntas Frecuentes / Testimonios)             -->
-    <!-- ============================================================ -->
-    <section class="py-12 sm:py-20" id="faq">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
-                
-                <!-- COLUMNA 1: ¿SOS COMENSAL? -->
-                <div class="bg-[#fef9f5] rounded-3xl p-6 sm:p-7 border border-orange-100 flex flex-col justify-between shadow-sm">
-                    <div>
-                        <!-- Foto Plato en Manos -->
-                        <div class="w-full h-44 rounded-2xl overflow-hidden mb-5 bg-gray-100 shadow-sm">
-                            <img src="{{ asset('assets/home/dish_hands.jpg') }}"
-                                alt="Plato de pasta casera con albahaca"
-                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
-                        </div>
-
-                        <h3 class="text-xl font-bold text-rose-500">
-                            ¿Sos comensal?
+                        <h3 class="font-extrabold text-gray-900 text-lg">
+                            Encontrá un cocinero
                         </h3>
-                        <h4 class="text-base font-extrabold text-gray-900 mt-0.5 mb-2.5">
-                            Disfrutá comida casera, cerca tuyo.
-                        </h4>
-                        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed font-normal">
-                            Comida rica, hecha con ingredientes reales, por personas de tu barrio. Apoyás a cocineros independientes y vivís una experiencia única.
+                        <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
+                            Explorá perfiles, leé sus historias y elegí a quién te inspire.
                         </p>
                     </div>
 
-                    <div class="pt-6">
-                        <a href="{{ route('marketplace.catalog') }}"
-                            class="w-full btn-gradient text-white py-3 px-5 rounded-full font-bold text-xs sm:text-sm text-center shadow-md glow-effect hover:-translate-y-0.5 transition-all inline-flex items-center justify-center space-x-2">
-                            <span>Explorar cocineros</span>
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    <!-- Paso 2 -->
+                    <div class="flex flex-col items-center text-center space-y-4 group">
+                        <div class="relative">
+                            <div
+                                class="w-14 h-14 rounded-full bg-rose-500 text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 group-hover:scale-110 transition-transform duration-300">
+                                2
+                            </div>
+                        </div>
+
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-orange-100/70 text-orange-600 flex items-center justify-center">
+                            <!-- Icono Bowl / Plato -->
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                    d="M12 8c-3.866 0-7 2.239-7 5 0 2.22 2.054 4.094 5 4.732V20h4v-2.268c2.946-.638 5-2.512 5-4.732 0-2.761-3.134-5-7-5zM4 13h16" />
                             </svg>
-                        </a>
-                    </div>
-                </div>
+                        </div>
 
-                <!-- COLUMNA 2: PREGUNTAS FRECUENTES (Acordeón) -->
-                <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
-                    x-data="{ openFaq: null }">
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-5">
-                            Preguntas frecuentes
+                        <h3 class="font-extrabold text-gray-900 text-lg">
+                            Elegí su comida
                         </h3>
+                        <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
+                            Mirá su menú, sus fotos y hacé tu pedido en pocos clics.
+                        </p>
+                    </div>
 
-                        <div class="space-y-3">
-                            <!-- FAQ 1 -->
-                            <div class="border-b border-gray-100 pb-3">
-                                <button @click="openFaq = (openFaq === 1 ? null : 1)"
-                                    type="button"
-                                    class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
-                                    <span class="pr-2">¿Cómo funciona Cocinarte?</span>
-                                    <span class="text-gray-400 font-bold text-base transition-transform duration-200"
-                                        :class="{ 'rotate-45 text-rose-500': openFaq === 1 }">+</span>
-                                </button>
-                                <div x-show="openFaq === 1" x-collapse class="mt-2 text-xs text-gray-500 leading-relaxed">
-                                    Elegís un cocinero cerca tuyo, seleccionás sus platos caseros y decidís si querés envío a domicilio o retiro por su cocina. Pagás seguro por la web.
-                                </div>
-                            </div>
-
-                            <!-- FAQ 2 -->
-                            <div class="border-b border-gray-100 pb-3">
-                                <button @click="openFaq = (openFaq === 2 ? null : 2)"
-                                    type="button"
-                                    class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
-                                    <span class="pr-2">¿Cómo se paga?</span>
-                                    <span class="text-gray-400 font-bold text-base transition-transform duration-200"
-                                        :class="{ 'rotate-45 text-rose-500': openFaq === 2 }">+</span>
-                                </button>
-                                <div x-show="openFaq === 2" x-collapse class="mt-2 text-xs text-gray-500 leading-relaxed">
-                                    Aceptamos MercadoPago con tarjetas de débito, crédito o dinero en cuenta, garantizando máxima seguridad en cada transacción.
-                                </div>
-                            </div>
-
-                            <!-- FAQ 3 -->
-                            <div class="border-b border-gray-100 pb-3">
-                                <button @click="openFaq = (openFaq === 3 ? null : 3)"
-                                    type="button"
-                                    class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
-                                    <span class="pr-2">¿Cuánto tarda la entrega o retiro?</span>
-                                    <span class="text-gray-400 font-bold text-base transition-transform duration-200"
-                                        :class="{ 'rotate-45 text-rose-500': openFaq === 3 }">+</span>
-                                </button>
-                                <div x-show="openFaq === 3" x-collapse class="mt-2 text-xs text-gray-500 leading-relaxed">
-                                    Cada cocinero especifica el tiempo de elaboración (habitualmente entre 30 y 60 minutos, o pedidos programados para el mediodía/noche).
-                                </div>
-                            </div>
-
-                            <!-- FAQ 4 -->
-                            <div class="border-b border-gray-100 pb-3">
-                                <button @click="openFaq = (openFaq === 4 ? null : 4)"
-                                    type="button"
-                                    class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
-                                    <span class="pr-2">¿Puedo pedir para varias personas?</span>
-                                    <span class="text-gray-400 font-bold text-base transition-transform duration-200"
-                                        :class="{ 'rotate-45 text-rose-500': openFaq === 4 }">+</span>
-                                </button>
-                                <div x-show="openFaq === 4" x-collapse class="mt-2 text-xs text-gray-500 leading-relaxed">
-                                    ¡Claro que sí! Podés seleccionar múltiples porciones de un mismo cocinero o armar un menú familiar.
-                                </div>
-                            </div>
-
-                            <!-- FAQ 5 -->
-                            <div class="pb-1">
-                                <button @click="openFaq = (openFaq === 5 ? null : 5)"
-                                    type="button"
-                                    class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
-                                    <span class="pr-2">¿Qué pasa si tengo un problema con mi pedido?</span>
-                                    <span class="text-gray-400 font-bold text-base transition-transform duration-200"
-                                        :class="{ 'rotate-45 text-rose-500': openFaq === 5 }">+</span>
-                                </button>
-                                <div x-show="openFaq === 5" x-collapse class="mt-2 text-xs text-gray-500 leading-relaxed">
-                                    Contás con soporte directo por WhatsApp y nuestro equipo de atención para resolver cualquier inconveniente de inmediato.
-                                </div>
+                    <!-- Paso 3 -->
+                    <div class="flex flex-col items-center text-center space-y-4 group">
+                        <div class="relative">
+                            <div
+                                class="w-14 h-14 rounded-full bg-rose-500 text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 group-hover:scale-110 transition-transform duration-300">
+                                3
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- COLUMNA 3: LO QUE DICEN NUESTROS COMENSALES (Testimonios Slider) -->
-                <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
-                    x-data="{
-                        current: 0,
-                        items: [
-                            {
-                                name: 'Laura G.',
-                                location: 'Córdoba Capital',
-                                text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
-                                stars: 5,
-                                avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
-                            },
-                            {
-                                name: 'Martín P.',
-                                location: 'Villa Allende',
-                                text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
-                                stars: 5,
-                                avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
-                            },
-                            {
-                                name: 'Sofía M.',
-                                location: 'Córdoba Capital',
-                                text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
-                                stars: 5,
-                                avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
-                            }
-                        ]
-                    }">
-                    
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-6">
-                            Lo que dicen nuestros comensales
-                        </h3>
-
-                        <!-- Testimonio Activo -->
-                        <div class="space-y-4">
-                            <div class="flex items-center space-x-3.5">
-                                <img :src="items[current].avatar"
-                                    :alt="items[current].name"
-                                    class="w-11 h-11 rounded-full object-cover border-2 border-orange-200">
-                                <div>
-                                    <h4 class="font-bold text-gray-900 text-sm" x-text="items[current].name"></h4>
-                                    <p class="text-xs text-gray-400" x-text="items[current].location"></p>
-                                </div>
-                            </div>
-
-                            <p class="text-xs sm:text-sm text-gray-600 italic leading-relaxed" x-text="'&ldquo;' + items[current].text + '&rdquo;'">
-                            </p>
-
-                            <!-- Estrellas Doradas -->
-                            <div class="flex items-center space-x-1 text-amber-400 text-sm pt-2">
-                                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                            </div>
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-orange-100/70 text-orange-600 flex items-center justify-center">
+                            <!-- Icono Casa / Entrega -->
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
                         </div>
-                    </div>
 
-                    <!-- Dots de paginación del testimonio -->
-                    <div class="flex items-center justify-center space-x-2 pt-6">
-                        <template x-for="(item, index) in items" :key="index">
-                            <button @click="current = index"
-                                type="button"
-                                class="w-2.5 h-2.5 rounded-full transition-all duration-300"
-                                :class="current === index ? 'bg-orange-500 w-6' : 'bg-gray-200 hover:bg-gray-300'"
-                                :aria-label="'Ver testimonio ' + (index + 1)">
-                            </button>
-                        </template>
+                        <h3 class="font-extrabold text-gray-900 text-lg">
+                            Recibila o retirala
+                        </h3>
+                        <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
+                            Coordiná la entrega o pasá a buscarla en la cocina del cocinero.
+                        </p>
                     </div>
 
                 </div>
-
             </div>
-        </div>
-    </section>
+        </section>
 
-</div>
+
+        <!-- ============================================================ -->
+        <!-- 5. BANNER CTA COCINEROS: "¿COCINÁS PARA LOS TUYOS?"          -->
+        <!-- ============================================================ -->
+        <section class="py-10 sm:py-16" id="para-cocineros">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div
+                    class="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-gradient-to-r from-orange-500 via-rose-500 to-fuchsia-600 text-white shadow-2xl">
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 items-center">
+
+                        <!-- Lado Izquierdo: Textos y Botón -->
+                        <div class="lg:col-span-7 p-8 sm:p-12 lg:p-16 space-y-6 relative z-10">
+
+                            <!-- Icono Chef Outline -->
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4a3.5 3.5 0 00-3.4 2.7A3.5 3.5 0 005 10a3.5 3.5 0 002.5 3.37L7 18h10l-.5-4.63A3.5 3.5 0 0019 10a3.5 3.5 0 00-3.6-3.3A3.5 3.5 0 0012 4zM9 18h6v2H9v-2z" />
+                                </svg>
+                            </div>
+
+                            <div class="space-y-2">
+                                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight">
+                                    ¿Cocinás para los tuyos?<br>
+                                    Podés cocinar para tu barrio.
+                                </h2>
+                                <p class="text-sm sm:text-base text-white/90 leading-relaxed font-normal pt-2 max-w-lg">
+                                    Elegí qué cocinar, cuándo cocinar y a qué precio.<br>
+                                    Vos decidís, nosotros te ayudamos a llegar a más personas.
+                                </p>
+                            </div>
+
+                            <div class="pt-4 flex flex-wrap items-center gap-6">
+                                <a href="{{ route('register', ['role' => 'cook']) }}"
+                                    class="bg-white hover:bg-rose-50 text-rose-600 px-8 py-4 rounded-full font-bold text-sm sm:text-base shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all inline-flex items-center space-x-2">
+                                    <span>Quiero ser cocinero</span>
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </a>
+
+                                <!-- Frase manuscrita blanca -->
+                                <p class="font-handwriting text-2xl sm:text-3xl text-white/95 leading-tight select-none">
+                                    Tu cocina también importa <span class="text-rose-200">♡</span>
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <!-- Lado Derecho: Foto Cocinera con delantal floreado -->
+                        <div class="lg:col-span-5 h-72 sm:h-96 lg:h-full min-h-[380px] relative">
+                            <img src="{{ asset('assets/home/banner_cook.jpg') }}"
+                                alt="Cocinera sonriente preparando un guiso casero"
+                                class="w-full h-full object-cover object-center lg:rounded-r-[2.5rem]" loading="lazy">
+                            <!-- Gradiente de fusión suave en móvil y desktop -->
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-fuchsia-500/80 via-transparent to-transparent pointer-events-none">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ============================================================ -->
+        <!-- 6. SECCIÓN INFERIOR: 3 COLUMNAS                              -->
+        <!-- (Comensal / Preguntas Frecuentes / Testimonios)             -->
+        <!-- ============================================================ -->
+        <section class="py-12 sm:py-20" id="faq">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+
+                    <!-- COLUMNA 1: ¿SOS COMENSAL? -->
+                    <div
+                        class="bg-[#fef9f5] rounded-3xl p-6 sm:p-7 border border-orange-100 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <!-- Foto Plato en Manos -->
+                            <div class="w-full h-44 rounded-2xl overflow-hidden mb-5 bg-gray-100 shadow-sm">
+                                <img src="{{ asset('assets/home/dish_hands.jpg') }}"
+                                    alt="Plato de pasta casera con albahaca"
+                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                            </div>
+
+                            <h3 class="text-xl font-bold text-rose-500">
+                                ¿Sos comensal?
+                            </h3>
+                            <h4 class="text-base font-extrabold text-gray-900 mt-0.5 mb-2.5">
+                                Disfrutá comida casera, cerca tuyo.
+                            </h4>
+                            <p class="text-xs sm:text-sm text-gray-600 leading-relaxed font-normal">
+                                Comida rica, hecha con ingredientes reales, por personas de tu barrio. Apoyás a cocineros
+                                independientes y vivís una experiencia única.
+                            </p>
+                        </div>
+
+                        <div class="pt-6">
+                            <a href="{{ route('marketplace.catalog') }}"
+                                class="w-full btn-gradient text-white py-3 px-5 rounded-full font-bold text-xs sm:text-sm text-center shadow-md glow-effect hover:-translate-y-0.5 transition-all inline-flex items-center justify-center space-x-2">
+                                <span>Explorar cocineros</span>
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- COLUMNA 2: PREGUNTAS FRECUENTES (Acordeón) -->
+                    <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
+                        x-data="{ openFaq: null }">
+                        <div>
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-5">
+                                Preguntas frecuentes
+                            </h3>
+
+                            <div class="space-y-3">
+                                <!-- FAQ 1 -->
+                                <div class="border-b border-gray-100 pb-3">
+                                    <button @click="openFaq = (openFaq === 1 ? null : 1)" type="button"
+                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
+                                        <span class="pr-2">¿Cómo funciona Cocinarte?</span>
+                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
+                                            :class="{ 'rotate-45 text-rose-500': openFaq === 1 }">+</span>
+                                    </button>
+                                    <div x-show="openFaq === 1" x-collapse
+                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
+                                        Elegís un cocinero cerca tuyo, seleccionás sus platos caseros y decidís si querés
+                                        envío a domicilio o retiro por su cocina. Pagás seguro por la web.
+                                    </div>
+                                </div>
+
+                                <!-- FAQ 2 -->
+                                <div class="border-b border-gray-100 pb-3">
+                                    <button @click="openFaq = (openFaq === 2 ? null : 2)" type="button"
+                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
+                                        <span class="pr-2">¿Cómo se paga?</span>
+                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
+                                            :class="{ 'rotate-45 text-rose-500': openFaq === 2 }">+</span>
+                                    </button>
+                                    <div x-show="openFaq === 2" x-collapse
+                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
+                                        Aceptamos MercadoPago con tarjetas de débito, crédito o dinero en cuenta,
+                                        garantizando máxima seguridad en cada transacción.
+                                    </div>
+                                </div>
+
+                                <!-- FAQ 3 -->
+                                <div class="border-b border-gray-100 pb-3">
+                                    <button @click="openFaq = (openFaq === 3 ? null : 3)" type="button"
+                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
+                                        <span class="pr-2">¿Cuánto tarda la entrega o retiro?</span>
+                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
+                                            :class="{ 'rotate-45 text-rose-500': openFaq === 3 }">+</span>
+                                    </button>
+                                    <div x-show="openFaq === 3" x-collapse
+                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
+                                        Cada cocinero especifica el tiempo de elaboración (habitualmente entre 30 y 60
+                                        minutos, o pedidos programados para el mediodía/noche).
+                                    </div>
+                                </div>
+
+                                <!-- FAQ 4 -->
+                                <div class="border-b border-gray-100 pb-3">
+                                    <button @click="openFaq = (openFaq === 4 ? null : 4)" type="button"
+                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
+                                        <span class="pr-2">¿Puedo pedir para varias personas?</span>
+                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
+                                            :class="{ 'rotate-45 text-rose-500': openFaq === 4 }">+</span>
+                                    </button>
+                                    <div x-show="openFaq === 4" x-collapse
+                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
+                                        ¡Claro que sí! Podés seleccionar múltiples porciones de un mismo cocinero o armar un
+                                        menú familiar.
+                                    </div>
+                                </div>
+
+                                <!-- FAQ 5 -->
+                                <div class="pb-1">
+                                    <button @click="openFaq = (openFaq === 5 ? null : 5)" type="button"
+                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
+                                        <span class="pr-2">¿Qué pasa si tengo un problema con mi pedido?</span>
+                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
+                                            :class="{ 'rotate-45 text-rose-500': openFaq === 5 }">+</span>
+                                    </button>
+                                    <div x-show="openFaq === 5" x-collapse
+                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
+                                        Contás con soporte directo por WhatsApp y nuestro equipo de atención para resolver
+                                        cualquier inconveniente de inmediato.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COLUMNA 3: LO QUE DICEN NUESTROS COMENSALES (Testimonios Slider) -->
+                    <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
+                        x-data="{
+                            current: 0,
+                            items: [
+                                {
+                                    name: 'Laura G.',
+                                    location: 'Córdoba Capital',
+                                    text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
+                                    stars: 5,
+                                    avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
+                                },
+                                {
+                                    name: 'Martín P.',
+                                    location: 'Villa Allende',
+                                    text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
+                                    stars: 5,
+                                    avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
+                                },
+                                {
+                                    name: 'Sofía M.',
+                                    location: 'Córdoba Capital',
+                                    text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
+                                    stars: 5,
+                                    avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
+                                }
+                            ]
+                        }">
+
+                        <div>
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-6">
+                                Lo que dicen nuestros comensales
+                            </h3>
+
+                            <!-- Testimonio Activo -->
+                            <div class="space-y-4">
+                                <div class="flex items-center space-x-3.5">
+                                    <img :src="items[current].avatar" :alt="items[current].name"
+                                        class="w-11 h-11 rounded-full object-cover border-2 border-orange-200">
+                                    <div>
+                                        <h4 class="font-bold text-gray-900 text-sm" x-text="items[current].name"></h4>
+                                        <p class="text-xs text-gray-400" x-text="items[current].location"></p>
+                                    </div>
+                                </div>
+
+                                <p class="text-xs sm:text-sm text-gray-600 italic leading-relaxed"
+                                    x-text="'&ldquo;' + items[current].text + '&rdquo;'">
+                                </p>
+
+                                <!-- Estrellas Doradas -->
+                                <div class="flex items-center space-x-1 text-amber-400 text-sm pt-2">
+                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dots de paginación del testimonio -->
+                        <div class="flex items-center justify-center space-x-2 pt-6">
+                            <template x-for="(item, index) in items" :key="index">
+                                <button @click="current = index" type="button"
+                                    class="w-2.5 h-2.5 rounded-full transition-all duration-300"
+                                    :class="current === index ? 'bg-orange-500 w-6' : 'bg-gray-200 hover:bg-gray-300'"
+                                    :aria-label="'Ver testimonio ' + (index + 1)">
+                                </button>
+                            </template>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </div>
 
 @endsection
 
 @push('meta')
-<script type="application/ld+json">
-{
-  "@@context": "https://schema.org",
-  "@@graph": [
+    <script type="application/ld+json">
     {
-      "@@type": "Organization",
-      "@@id": "{{ route('home') }}#organization",
-      "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-      "url": "{{ route('home') }}",
-      "logo": {
-        "@@type": "ImageObject",
-        "url": "{{ asset('assets/front/logo-8.webp') }}",
-        "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
-      }
-    },
-    {
-      "@@type": "WebSite",
-      "@@id": "{{ route('home') }}#website",
-      "url": "{{ route('home') }}",
-      "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-      "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
-      "publisher": {
-        "@@id": "{{ route('home') }}#organization"
-      }
+      "@@context": "https://schema.org",
+      "@@graph": [
+        {
+          "@@type": "Organization",
+          "@@id": "{{ route('home') }}#organization",
+          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+          "url": "{{ route('home') }}",
+          "logo": {
+            "@@type": "ImageObject",
+            "url": "{{ asset('assets/front/logo-8.webp') }}",
+            "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
+          }
+        },
+        {
+          "@@type": "WebSite",
+          "@@id": "{{ route('home') }}#website",
+          "url": "{{ route('home') }}",
+          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+          "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
+          "publisher": {
+            "@@id": "{{ route('home') }}#organization"
+          }
+        }
+      ]
     }
-  ]
-}
-</script>
+    </script>
 @endpush
