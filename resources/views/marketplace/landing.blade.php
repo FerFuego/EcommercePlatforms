@@ -36,6 +36,26 @@
         .glow-effect {
             box-shadow: 0 14px 35px -8px rgba(225, 29, 72, 0.35);
         }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0%);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 28s linear infinite;
+        }
+
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
     </style>
 @endpush
 
@@ -103,6 +123,36 @@
                     asset('assets/front/torta_casera.png'),
                 ],
                 'url' => route('marketplace.catalog', ['search' => 'autor'])
+            ],
+            [
+                'id' => 5,
+                'name' => 'Paula Nieva',
+                'specialty' => 'Empanadas y Tartas Caseras',
+                'location' => 'Bell Ville · 3 km',
+                'rating' => '4.6',
+                'reviews_count' => 64,
+                'photo' => asset('assets/home/cook_paula.jpg'),
+                'dishes' => [
+                    asset('assets/home/dish_mini_empanadas.jpg'),
+                    asset('assets/home/dish_mini_milanesa.jpg'),
+                    asset('assets/home/dish_mini_tart.jpg'),
+                ],
+                'url' => route('marketplace.catalog', ['search' => 'empanadas'])
+            ],
+            [
+                'id' => 6,
+                'name' => 'Soledad Pérez',
+                'specialty' => 'Guisos y Postres Caseros',
+                'location' => 'Bell Ville · 2 km',
+                'rating' => '4.7',
+                'reviews_count' => 58,
+                'photo' => asset('assets/home/cook_soledad.jpg'),
+                'dishes' => [
+                    asset('assets/home/dish_mini_stew.jpg'),
+                    asset('assets/home/dish_mini_flan.jpg'),
+                    asset('assets/home/dish_mini_roast.jpg'),
+                ],
+                'url' => route('marketplace.catalog', ['search' => 'guisos'])
             ],
         ];
 
@@ -286,45 +336,140 @@
 
 
         <!-- ============================================================ -->
+        <!-- BANNER MARQUEE DE ALTO IMPACTO (MOVIMIENTO CONTINUO)         -->
+        <!-- ============================================================ -->
+        <section
+            class="relative w-full overflow-hidden bg-gradient-to-r from-orange-500 via-rose-500 to-purple-600 text-white py-3.5 sm:py-4 shadow-lg shadow-rose-500/15 border-y border-white/20 select-none">
+            <!-- Máscaras de degradé en los extremos para desvanecimiento elegante -->
+            <div
+                class="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-24 bg-gradient-to-r from-orange-500 via-orange-500/80 to-transparent z-10">
+            </div>
+            <div
+                class="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-24 bg-gradient-to-l from-purple-600 via-purple-600/80 to-transparent z-10">
+            </div>
+
+            <div class="animate-marquee flex items-center gap-8 sm:gap-14 whitespace-nowrap">
+                <!-- Bloque 1 de items -->
+                <div class="flex items-center gap-8 sm:gap-14 shrink-0">
+                    <a href="{{ route('register', ['role' => 'cook']) }}"
+                        class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
+                        <span
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 text-sm group-hover:scale-110 transition-transform">✨</span>
+                        <span class="font-black text-sm sm:text-base tracking-wide uppercase">Registro gratuito</span>
+                    </a>
+
+                    <span class="text-white/40 text-lg">✦</span>
+
+                    <a href="{{ route('register', ['role' => 'cook']) }}"
+                        class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
+                        <span
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-white text-sm group-hover:scale-110 transition-transform">🚀</span>
+                        <span class="font-black text-sm sm:text-base tracking-wide uppercase">Vendé con nosotros sin
+                            costo</span>
+                    </a>
+
+                    <span class="text-white/40 text-lg">✦</span>
+
+                    <a href="{{ route('register', ['role' => 'cook']) }}"
+                        class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
+                        <span
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-rose-200 text-sm group-hover:scale-110 transition-transform">♡</span>
+                        <span class="font-black text-sm sm:text-base tracking-wide uppercase">Sé parte del cambio</span>
+                    </a>
+
+                    <span class="text-white/40 text-lg">✦</span>
+
+                    <a href="{{ route('register', ['role' => 'cook']) }}"
+                        class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
+                        <span
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 text-sm group-hover:scale-110 transition-transform">🧑‍🍳</span>
+                        <span class="font-black text-sm sm:text-base tracking-wide uppercase">Cociná para tu barrio o ciudad
+                            y convertilo en tu oficio</span>
+                    </a>
+
+                    <span class="text-white/40 text-lg">✦</span>
+                </div>
+
+                <!-- Bloque 2 duplicado idéntico para loop infinito perfecto -->
+                <div class="flex items-center gap-8 sm:gap-14 shrink-0" aria-hidden="true">
+                    <a href="{{ route('register', ['role' => 'cook']) }}"
+                        class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
+                        <span
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 text-sm group-hover:scale-110 transition-transform">✨</span>
+                        <span class="font-black text-sm sm:text-base tracking-wide uppercase">Registro gratuito</span>
+                    </a>
+
+                    <span class="text-white/40 text-lg">✦</span>
+
+                    <a href="{{ route('register', ['role' => 'cook']) }}"
+                        class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
+                        <span
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-white text-sm group-hover:scale-110 transition-transform">🚀</span>
+                        <span class="font-black text-sm sm:text-base tracking-wide uppercase">Vendé con nosotros sin
+                            costo</span>
+                    </a>
+
+                    <span class="text-white/40 text-lg">✦</span>
+
+                    <a href="{{ route('register', ['role' => 'cook']) }}"
+                        class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
+                        <span
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-rose-200 text-sm group-hover:scale-110 transition-transform">♡</span>
+                        <span class="font-black text-sm sm:text-base tracking-wide uppercase">Sé parte del cambio</span>
+                    </a>
+
+                    <span class="text-white/40 text-lg">✦</span>
+
+                    <a href="{{ route('register', ['role' => 'cook']) }}"
+                        class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
+                        <span
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 text-sm group-hover:scale-110 transition-transform">🧑‍🍳</span>
+                        <span class="font-black text-sm sm:text-base tracking-wide uppercase">Cociná para tu barrio o ciudad
+                            y convertilo en tu oficio</span>
+                    </a>
+
+                    <span class="text-white/40 text-lg">✦</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ============================================================ -->
         <!-- 2. SECCIÓN: CONOCÉ A QUIENES COCINAN PARA VOS (SLIDER/CARDS) -->
         <!-- ============================================================ -->
         <section class="py-14 sm:py-20 relative" id="cocineros" x-data="{
-            timer: null,
-            scrollSlider(direction) {
-                const container = this.$refs.cardsContainer;
-                if (!container) return;
-                const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
-                const maxScroll = container.scrollWidth - container.clientWidth;
+                                                        timer: null,
+                                                        scrollSlider(direction) {
+                                                            const container = this.$refs.cardsContainer;
+                                                            if (!container) return;
+                                                            const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
+                                                            const maxScroll = container.scrollWidth - container.clientWidth;
 
-                if (maxScroll <= 10) return;
+                                                            if (maxScroll <= 10) return;
 
-                // Loop infinito suave: al llegar al final vuelve al inicio
-                if (direction > 0 && container.scrollLeft >= maxScroll - 20) {
-                    container.scrollTo({ left: 0, behavior: 'smooth' });
-                } else if (direction < 0 && container.scrollLeft <= 20) {
-                    container.scrollTo({ left: maxScroll, behavior: 'smooth' });
-                } else {
-                    container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
-                }
-            },
-            startAutoplay() {
-                this.stopAutoplay();
-                this.timer = setInterval(() => {
-                    this.scrollSlider(1);
-                }, 4000);
-            },
-            stopAutoplay() {
-                if (this.timer) {
-                    clearInterval(this.timer);
-                    this.timer = null;
-                }
-            }
-        }"
-        x-init="startAutoplay()"
-        @mouseenter="stopAutoplay()"
-        @mouseleave="startAutoplay()"
-        @touchstart.passive="stopAutoplay()"
-        @touchend.passive="startAutoplay()">
+                                                            // Loop infinito suave: al llegar al final vuelve al inicio
+                                                            if (direction > 0 && container.scrollLeft >= maxScroll - 20) {
+                                                                container.scrollTo({ left: 0, behavior: 'smooth' });
+                                                            } else if (direction < 0 && container.scrollLeft <= 20) {
+                                                                container.scrollTo({ left: maxScroll, behavior: 'smooth' });
+                                                            } else {
+                                                                container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
+                                                            }
+                                                        },
+                                                        startAutoplay() {
+                                                            this.stopAutoplay();
+                                                            this.timer = setInterval(() => {
+                                                                this.scrollSlider(1);
+                                                            }, 4000);
+                                                        },
+                                                        stopAutoplay() {
+                                                            if (this.timer) {
+                                                                clearInterval(this.timer);
+                                                                this.timer = null;
+                                                            }
+                                                        }
+                                                    }" x-init="startAutoplay()" @mouseenter="stopAutoplay()"
+            @mouseleave="startAutoplay()" @touchstart.passive="stopAutoplay()" @touchend.passive="startAutoplay()">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
                 <!-- Título y Subtítulo Centrados -->
@@ -361,8 +506,8 @@
                 <div x-ref="cardsContainer"
                     class="cook-slider flex gap-5 overflow-x-auto snap-x snap-mandatory py-4 px-1 -mx-4 sm:mx-0 px-4 sm:px-0">
 
-                    @foreach(array_slice($featuredCooks, 0, 4) as $cook)
-                        <div class="cook-card flex-none w-[270px] sm:w-[290px] lg:w-[310px] xl:w-[325px] snap-start group">
+                    @foreach($featuredCooks as $cook)
+                        <div class="cook-card flex-none w-[270px] sm:w-[290px] lg:w-[calc(25%-15px)] snap-start group">
                             <div
                                 class="bg-white rounded-3xl p-4 shadow-sm hover:shadow-xl border border-orange-100/60 hover:border-orange-200 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1">
 
@@ -458,9 +603,9 @@
                             <div class="relative group">
                                 <div class="overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-4 border-white">
                                     <!-- <img src="{{ asset('assets/home/kitchen_mariana.jpg') }}"
-                                                    alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
-                                                    class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                                                    loading="lazy"> -->
+                                                                                                alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
+                                                                                                class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                                                                                loading="lazy"> -->
                                     <div
                                         class="aspect-video bg-gradient-to-br from-purple-200 via-pink-200 to-orange-200 rounded-2xl flex items-center justify-center text-8xl">
                                         <video class="w-full h-full rounded-2xl"
@@ -914,55 +1059,52 @@
                     <!-- COLUMNA 3: LO QUE DICEN NUESTROS COMENSALES (Testimonios Slider con Autoplay y 4 items) -->
                     <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
                         x-data="{
-                            current: 0,
-                            timer: null,
-                            items: [
-                                {
-                                    name: 'Laura G.',
-                                    location: 'Córdoba Capital',
-                                    text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
-                                    stars: 5,
-                                    avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
-                                },
-                                {
-                                    name: 'Martín P.',
-                                    location: 'Villa Allende',
-                                    text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
-                                    stars: 5,
-                                    avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
-                                },
-                                {
-                                    name: 'Sofía M.',
-                                    location: 'Córdoba Capital',
-                                    text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
-                                    stars: 5,
-                                    avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
-                                },
-                                {
-                                    name: 'Gonzalo R.',
-                                    location: 'Bell Ville',
-                                    text: 'Pedir platos caseros recién hechos me cambió la semana. Los sabores son auténticos y la calidad es excelente.',
-                                    stars: 5,
-                                    avatar: '{{ asset('assets/home/cook_fernando.jpg') }}'
-                                }
-                            ],
-                            startAutoplay() {
-                                this.stopAutoplay();
-                                this.timer = setInterval(() => {
-                                    this.current = (this.current + 1) % this.items.length;
-                                }, 4500);
-                            },
-                            stopAutoplay() {
-                                if (this.timer) {
-                                    clearInterval(this.timer);
-                                    this.timer = null;
-                                }
-                            }
-                        }"
-                        x-init="startAutoplay()"
-                        @mouseenter="stopAutoplay()"
-                        @mouseleave="startAutoplay()"
-                        @touchstart.passive="stopAutoplay()"
+                                                                        current: 0,
+                                                                        timer: null,
+                                                                        items: [
+                                                                            {
+                                                                                name: 'Laura G.',
+                                                                                location: 'Córdoba Capital',
+                                                                                text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
+                                                                                stars: 5,
+                                                                                avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
+                                                                            },
+                                                                            {
+                                                                                name: 'Martín P.',
+                                                                                location: 'Villa Allende',
+                                                                                text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
+                                                                                stars: 5,
+                                                                                avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
+                                                                            },
+                                                                            {
+                                                                                name: 'Sofía M.',
+                                                                                location: 'Córdoba Capital',
+                                                                                text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
+                                                                                stars: 5,
+                                                                                avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
+                                                                            },
+                                                                            {
+                                                                                name: 'Gonzalo R.',
+                                                                                location: 'Bell Ville',
+                                                                                text: 'Pedir platos caseros recién hechos me cambió la semana. Los sabores son auténticos y la calidad es excelente.',
+                                                                                stars: 5,
+                                                                                avatar: '{{ asset('assets/home/cook_fernando.jpg') }}'
+                                                                            }
+                                                                        ],
+                                                                        startAutoplay() {
+                                                                            this.stopAutoplay();
+                                                                            this.timer = setInterval(() => {
+                                                                                this.current = (this.current + 1) % this.items.length;
+                                                                            }, 4500);
+                                                                        },
+                                                                        stopAutoplay() {
+                                                                            if (this.timer) {
+                                                                                clearInterval(this.timer);
+                                                                                this.timer = null;
+                                                                            }
+                                                                        }
+                                                                    }" x-init="startAutoplay()"
+                        @mouseenter="stopAutoplay()" @mouseleave="startAutoplay()" @touchstart.passive="stopAutoplay()"
                         @touchend.passive="startAutoplay()">
 
                         <div>
@@ -1015,31 +1157,31 @@
 
 @push('meta')
     <script type="application/ld+json">
-                                            {
-                                              "@@context": "https://schema.org",
-                                              "@@graph": [
-                                                {
-                                                  "@@type": "Organization",
-                                                  "@@id": "{{ route('home') }}#organization",
-                                                  "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                                                  "url": "{{ route('home') }}",
-                                                  "logo": {
-                                                    "@@type": "ImageObject",
-                                                    "url": "{{ asset('assets/front/logo-8.webp') }}",
-                                                    "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
-                                                  }
-                                                },
-                                                {
-                                                  "@@type": "WebSite",
-                                                  "@@id": "{{ route('home') }}#website",
-                                                  "url": "{{ route('home') }}",
-                                                  "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                                                  "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
-                                                  "publisher": {
-                                                    "@@id": "{{ route('home') }}#organization"
-                                                  }
-                                                }
-                                              ]
-                                            }
-                                            </script>
+                                                                                        {
+                                                                                          "@@context": "https://schema.org",
+                                                                                          "@@graph": [
+                                                                                            {
+                                                                                              "@@type": "Organization",
+                                                                                              "@@id": "{{ route('home') }}#organization",
+                                                                                              "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                                                                                              "url": "{{ route('home') }}",
+                                                                                              "logo": {
+                                                                                                "@@type": "ImageObject",
+                                                                                                "url": "{{ asset('assets/front/logo-8.webp') }}",
+                                                                                                "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
+                                                                                              }
+                                                                                            },
+                                                                                            {
+                                                                                              "@@type": "WebSite",
+                                                                                              "@@id": "{{ route('home') }}#website",
+                                                                                              "url": "{{ route('home') }}",
+                                                                                              "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                                                                                              "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
+                                                                                              "publisher": {
+                                                                                                "@@id": "{{ route('home') }}#organization"
+                                                                                              }
+                                                                                            }
+                                                                                          ]
+                                                                                        }
+                                                                                        </script>
 @endpush
