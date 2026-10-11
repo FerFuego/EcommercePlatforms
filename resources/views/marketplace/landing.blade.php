@@ -289,12 +289,12 @@
         <!-- 2. SECCIÓN: CONOCÉ A QUIENES COCINAN PARA VOS (SLIDER/CARDS) -->
         <!-- ============================================================ -->
         <section class="py-14 sm:py-20 relative" id="cocineros" x-data="{
-                                            scrollSlider(direction) {
-                                                const container = this.$refs.cardsContainer;
-                                                const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
-                                                container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
-                                            }
-                                        }">
+                                                scrollSlider(direction) {
+                                                    const container = this.$refs.cardsContainer;
+                                                    const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
+                                                    container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
+                                                }
+                                            }">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
                 <!-- Título y Subtítulo Centrados -->
@@ -421,16 +421,16 @@
                         class="absolute -right-16 -top-16 w-80 h-80 bg-rose-200/30 rounded-full filter blur-3xl pointer-events-none">
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 relative z-10">
 
                         <!-- Lado Izquierdo: Video / Foto Grande de Cocina (60%) -->
                         <div class="lg:col-span-7">
                             <div class="relative group">
                                 <div class="overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-4 border-white">
                                     <!-- <img src="{{ asset('assets/home/kitchen_mariana.jpg') }}"
-                                            alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
-                                            class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                                            loading="lazy"> -->
+                                                alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
+                                                class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                                loading="lazy"> -->
                                     <div
                                         class="aspect-video bg-gradient-to-br from-purple-200 via-pink-200 to-orange-200 rounded-2xl flex items-center justify-center text-8xl">
                                         <video class="w-full h-full rounded-2xl"
@@ -884,31 +884,31 @@
                     <!-- COLUMNA 3: LO QUE DICEN NUESTROS COMENSALES (Testimonios Slider) -->
                     <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
                         x-data="{
-                                                            current: 0,
-                                                            items: [
-                                                                {
-                                                                    name: 'Laura G.',
-                                                                    location: 'Córdoba Capital',
-                                                                    text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
-                                                                    stars: 5,
-                                                                    avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
-                                                                },
-                                                                {
-                                                                    name: 'Martín P.',
-                                                                    location: 'Villa Allende',
-                                                                    text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
-                                                                    stars: 5,
-                                                                    avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
-                                                                },
-                                                                {
-                                                                    name: 'Sofía M.',
-                                                                    location: 'Córdoba Capital',
-                                                                    text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
-                                                                    stars: 5,
-                                                                    avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
-                                                                }
-                                                            ]
-                                                        }">
+                                                                current: 0,
+                                                                items: [
+                                                                    {
+                                                                        name: 'Laura G.',
+                                                                        location: 'Córdoba Capital',
+                                                                        text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
+                                                                        stars: 5,
+                                                                        avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
+                                                                    },
+                                                                    {
+                                                                        name: 'Martín P.',
+                                                                        location: 'Villa Allende',
+                                                                        text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
+                                                                        stars: 5,
+                                                                        avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
+                                                                    },
+                                                                    {
+                                                                        name: 'Sofía M.',
+                                                                        location: 'Córdoba Capital',
+                                                                        text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
+                                                                        stars: 5,
+                                                                        avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
+                                                                    }
+                                                                ]
+                                                            }">
 
                         <div>
                             <h3 class="text-lg sm:text-xl font-bold text-gray-700 mb-6">
@@ -960,31 +960,31 @@
 
 @push('meta')
     <script type="application/ld+json">
-                                    {
-                                      "@@context": "https://schema.org",
-                                      "@@graph": [
                                         {
-                                          "@@type": "Organization",
-                                          "@@id": "{{ route('home') }}#organization",
-                                          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                                          "url": "{{ route('home') }}",
-                                          "logo": {
-                                            "@@type": "ImageObject",
-                                            "url": "{{ asset('assets/front/logo-8.webp') }}",
-                                            "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
-                                          }
-                                        },
-                                        {
-                                          "@@type": "WebSite",
-                                          "@@id": "{{ route('home') }}#website",
-                                          "url": "{{ route('home') }}",
-                                          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                                          "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
-                                          "publisher": {
-                                            "@@id": "{{ route('home') }}#organization"
-                                          }
+                                          "@@context": "https://schema.org",
+                                          "@@graph": [
+                                            {
+                                              "@@type": "Organization",
+                                              "@@id": "{{ route('home') }}#organization",
+                                              "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                                              "url": "{{ route('home') }}",
+                                              "logo": {
+                                                "@@type": "ImageObject",
+                                                "url": "{{ asset('assets/front/logo-8.webp') }}",
+                                                "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
+                                              }
+                                            },
+                                            {
+                                              "@@type": "WebSite",
+                                              "@@id": "{{ route('home') }}#website",
+                                              "url": "{{ route('home') }}",
+                                              "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                                              "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
+                                              "publisher": {
+                                                "@@id": "{{ route('home') }}#organization"
+                                              }
+                                            }
+                                          ]
                                         }
-                                      ]
-                                    }
-                                    </script>
+                                        </script>
 @endpush
