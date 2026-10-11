@@ -289,12 +289,12 @@
         <!-- 2. SECCIÓN: CONOCÉ A QUIENES COCINAN PARA VOS (SLIDER/CARDS) -->
         <!-- ============================================================ -->
         <section class="py-14 sm:py-20 relative" id="cocineros" x-data="{
-                                        scrollSlider(direction) {
-                                            const container = this.$refs.cardsContainer;
-                                            const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
-                                            container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
-                                        }
-                                    }">
+                                            scrollSlider(direction) {
+                                                const container = this.$refs.cardsContainer;
+                                                const cardWidth = container.querySelector('.cook-card')?.offsetWidth || 300;
+                                                container.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
+                                            }
+                                        }">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
                 <!-- Título y Subtítulo Centrados -->
@@ -427,10 +427,19 @@
                         <div class="lg:col-span-6">
                             <div class="relative group">
                                 <div class="overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-4 border-white">
-                                    <img src="{{ asset('assets/home/kitchen_mariana.jpg') }}"
-                                        alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
-                                        class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                                        loading="lazy">
+                                    <!-- <img src="{{ asset('assets/home/kitchen_mariana.jpg') }}"
+                                            alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
+                                            class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                            loading="lazy"> -->
+                                    <div
+                                        class="aspect-video bg-gradient-to-br from-purple-200 via-pink-200 to-orange-200 rounded-2xl flex items-center justify-center text-8xl">
+                                        <video class="w-full h-full rounded-2xl"
+                                            poster="{{ asset('assets/front/cubierta.webp') }}" width="100%" height="auto"
+                                            controls>
+                                            <source src="{{ asset('assets/video/presentation.mp4') }}" type="video/mp4">
+                                            Tu navegador no soporta la etiqueta de video.
+                                        </video>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -511,91 +520,161 @@
         <section class="py-14 sm:py-20" id="como-funciona">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
-                <div class="text-center mb-14">
-                    <h2 class="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold tracking-tight text-gray-700">
+                <div class="text-center mb-12 sm:mb-16">
+                    <h2 class="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold tracking-tight text-gray-800">
                         Así funciona <span class="text-gradient">Cocinarte</span>
                     </h2>
                 </div>
 
-                <!-- 3 Pasos con Flechas Conectoras -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 relative max-w-5xl mx-auto items-start">
+                <!-- SVG Defs para Gradientes de Íconos y Flechas -->
+                <svg class="absolute w-0 h-0 overflow-hidden pointer-events-none" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="step-icon-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#f97316" />
+                            <stop offset="50%" stop-color="#e11d48" />
+                            <stop offset="100%" stop-color="#c026d3" />
+                        </linearGradient>
+                        <linearGradient id="step-arrow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#e11d48" />
+                            <stop offset="100%" stop-color="#9333ea" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+
+                <!-- 3 Pasos con Layout Horizontal y Flechas Conectoras -->
+                <div
+                    class="max-w-5xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8 md:gap-4 lg:gap-6 relative">
 
                     <!-- Paso 1 -->
-                    <div class="flex flex-col items-center text-center space-y-4 group">
-                        <div class="relative">
-                            <div
-                                class="w-14 h-14 rounded-full bg-rose-500 text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 group-hover:scale-110 transition-transform duration-300">
-                                1
-                            </div>
-                        </div>
-
+                    <div class="flex-1 flex items-start gap-3.5 sm:gap-4 group">
+                        <!-- Círculo Número 1 -->
                         <div
-                            class="w-12 h-12 rounded-2xl bg-orange-100/70 text-orange-600 flex items-center justify-center">
-                            <!-- Icono Gorro de Chef -->
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                    d="M12 4a3.5 3.5 0 00-3.4 2.7A3.5 3.5 0 005 10a3.5 3.5 0 002.5 3.37L7 18h10l-.5-4.63A3.5 3.5 0 0019 10a3.5 3.5 0 00-3.6-3.3A3.5 3.5 0 0012 4zM9 18h6v2H9v-2z" />
-                            </svg>
+                            class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-orange-500 via-rose-500 to-pink-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-200">
+                            1
                         </div>
 
-                        <h3 class="font-extrabold text-gray-700 text-lg">
-                            Encontrá un cocinero
-                        </h3>
-                        <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
-                            Explorá perfiles, leé sus historias y elegí a quién te inspire.
-                        </p>
+                        <!-- Contenido: Icono + Título + Descripción -->
+                        <div class="space-y-2.5 sm:space-y-3">
+                            <div
+                                class="w-12 h-12 flex items-center justify-start group-hover:scale-105 transition-transform duration-200">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="url(#step-icon-grad)" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="w-11 h-11 sm:w-12 sm:h-12 drop-shadow-sm">
+                                    <path d="M6 18h12v3H6z" />
+                                    <path d="M6 18v-2" />
+                                    <path d="M18 18v-2" />
+                                    <path
+                                        d="M6 16c-2 0-3.5-1.8-3-3.8C3.5 10 5.2 9 7 9.5 7.8 6.8 10.2 5 13 5c2.5 0 4.7 1.4 5.6 3.6 1.8-.3 3.4.8 3.9 2.5.6 2.2-.8 4.9-3.5 4.9" />
+                                    <path d="M9 16v-5.5" />
+                                    <path d="M12 16V11" />
+                                    <path d="M15 16v-4.5" />
+                                </svg>
+                            </div>
+
+                            <h3 class="font-extrabold text-gray-800 text-lg leading-tight">
+                                Encontrá un cocinero
+                            </h3>
+                            <p class="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal max-w-[240px]">
+                                Explorá perfiles, leé sus historias y elegí a quién te inspire.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Flecha 1 -> 2 (Desktop) -->
+                    <div class="hidden md:flex items-center justify-center pt-3 shrink-0 px-1 lg:px-2">
+                        <svg class="w-7 h-7 lg:w-8 lg:h-8" fill="none" viewBox="0 0 24 24">
+                            <path d="M4 12h14m-5-5l5 5-5 5" stroke="url(#step-arrow-grad)" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    <!-- Flecha 1 -> 2 (Mobile vertical) -->
+                    <div class="flex md:hidden items-center justify-center w-full py-1">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
+                            <path d="M12 4v14m-5-5l5 5 5-5" stroke="url(#step-arrow-grad)" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
                     </div>
 
                     <!-- Paso 2 -->
-                    <div class="flex flex-col items-center text-center space-y-4 group">
-                        <div class="relative">
-                            <div
-                                class="w-14 h-14 rounded-full bg-rose-500 text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 group-hover:scale-110 transition-transform duration-300">
-                                2
-                            </div>
-                        </div>
-
+                    <div class="flex-1 flex items-start gap-3.5 sm:gap-4 group">
+                        <!-- Círculo Número 2 -->
                         <div
-                            class="w-12 h-12 rounded-2xl bg-orange-100/70 text-orange-600 flex items-center justify-center">
-                            <!-- Icono Bowl / Plato -->
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                    d="M12 8c-3.866 0-7 2.239-7 5 0 2.22 2.054 4.094 5 4.732V20h4v-2.268c2.946-.638 5-2.512 5-4.732 0-2.761-3.134-5-7-5zM4 13h16" />
-                            </svg>
+                            class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-orange-500 via-rose-500 to-pink-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-200">
+                            2
                         </div>
 
-                        <h3 class="font-extrabold text-gray-700 text-lg">
-                            Elegí su comida
-                        </h3>
-                        <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
-                            Mirá su menú, sus fotos y hacé tu pedido en pocos clics.
-                        </p>
+                        <!-- Contenido: Icono + Título + Descripción -->
+                        <div class="space-y-2.5 sm:space-y-3">
+                            <div
+                                class="w-12 h-12 flex items-center justify-start group-hover:scale-105 transition-transform duration-200">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="url(#step-icon-grad)" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="w-11 h-11 sm:w-12 sm:h-12 drop-shadow-sm">
+                                    <path d="M2 10h20" />
+                                    <path d="M3 10c0 5.5 4 9 9 9s9-3.5 9-9" />
+                                    <path d="M9 19c0 1.5 1.5 2 3 2s3-.5 3-2" />
+                                    <path d="M9 7c.5-1.5-.5-2.5 0-4" />
+                                    <path d="M12 7c.5-1.5-.5-2.5 0-4" />
+                                    <path d="M15 7c.5-1.5-.5-2.5 0-4" />
+                                    <path d="M16 10l2.5-3" />
+                                    <path d="M6 10c1 0 1.5-.5 2-.5s1 .5 2 .5 1.5-.5 2-.5 1 .5 2 .5" />
+                                </svg>
+                            </div>
+
+                            <h3 class="font-extrabold text-gray-800 text-lg leading-tight">
+                                Elegí su comida
+                            </h3>
+                            <p class="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal max-w-[240px]">
+                                Mirá su menú, sus fotos y hacé tu pedido en pocos clics.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Flecha 2 -> 3 (Desktop) -->
+                    <div class="hidden md:flex items-center justify-center pt-3 shrink-0 px-1 lg:px-2">
+                        <svg class="w-7 h-7 lg:w-8 lg:h-8" fill="none" viewBox="0 0 24 24">
+                            <path d="M4 12h14m-5-5l5 5-5 5" stroke="url(#step-arrow-grad)" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    <!-- Flecha 2 -> 3 (Mobile vertical) -->
+                    <div class="flex md:hidden items-center justify-center w-full py-1">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
+                            <path d="M12 4v14m-5-5l5 5 5-5" stroke="url(#step-arrow-grad)" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
                     </div>
 
                     <!-- Paso 3 -->
-                    <div class="flex flex-col items-center text-center space-y-4 group">
-                        <div class="relative">
-                            <div
-                                class="w-14 h-14 rounded-full bg-rose-500 text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 group-hover:scale-110 transition-transform duration-300">
-                                3
-                            </div>
-                        </div>
-
+                    <div class="flex-1 flex items-start gap-3.5 sm:gap-4 group">
+                        <!-- Círculo Número 3 -->
                         <div
-                            class="w-12 h-12 rounded-2xl bg-orange-100/70 text-orange-600 flex items-center justify-center">
-                            <!-- Icono Casa / Entrega -->
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                            </svg>
+                            class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-orange-500 via-rose-500 to-pink-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-200">
+                            3
                         </div>
 
-                        <h3 class="font-extrabold text-gray-700 text-lg">
-                            Recibila o retirala
-                        </h3>
-                        <p class="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-xs font-normal">
-                            Coordiná la entrega o pasá a buscarla en la cocina del cocinero.
-                        </p>
+                        <!-- Contenido: Icono + Título + Descripción -->
+                        <div class="space-y-2.5 sm:space-y-3">
+                            <div
+                                class="w-12 h-12 flex items-center justify-start group-hover:scale-105 transition-transform duration-200">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="url(#step-icon-grad)" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="w-11 h-11 sm:w-12 sm:h-12 drop-shadow-sm">
+                                    <path d="M17 7.5V4h-2.2v1.7" />
+                                    <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10.5z" />
+                                    <path d="M9 22v-5a3 3 0 0 1 6 0v5" />
+                                </svg>
+                            </div>
+
+                            <h3 class="font-extrabold text-gray-800 text-lg leading-tight">
+                                Recibila o retirala
+                            </h3>
+                            <p class="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal max-w-[240px]">
+                                Coordiná la entrega o pasá a buscarla en la cocina del cocinero.
+                            </p>
+                        </div>
                     </div>
 
                 </div>
@@ -805,31 +884,31 @@
                     <!-- COLUMNA 3: LO QUE DICEN NUESTROS COMENSALES (Testimonios Slider) -->
                     <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
                         x-data="{
-                                                        current: 0,
-                                                        items: [
-                                                            {
-                                                                name: 'Laura G.',
-                                                                location: 'Córdoba Capital',
-                                                                text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
-                                                                stars: 5,
-                                                                avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
-                                                            },
-                                                            {
-                                                                name: 'Martín P.',
-                                                                location: 'Villa Allende',
-                                                                text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
-                                                                stars: 5,
-                                                                avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
-                                                            },
-                                                            {
-                                                                name: 'Sofía M.',
-                                                                location: 'Córdoba Capital',
-                                                                text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
-                                                                stars: 5,
-                                                                avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
-                                                            }
-                                                        ]
-                                                    }">
+                                                            current: 0,
+                                                            items: [
+                                                                {
+                                                                    name: 'Laura G.',
+                                                                    location: 'Córdoba Capital',
+                                                                    text: 'La comida de Doña Rosa es espectacular. Todo casero, riquísimo y con mucho amor. Ya pedí varias veces y siempre es un placer.',
+                                                                    stars: 5,
+                                                                    avatar: '{{ asset('assets/home/cook_mariana.jpg') }}'
+                                                                },
+                                                                {
+                                                                    name: 'Martín P.',
+                                                                    location: 'Villa Allende',
+                                                                    text: 'Increíble la calidad de las pastas de Leo. Se nota la masa fresca de verdad. Llegó caliente y en horario perfecto.',
+                                                                    stars: 5,
+                                                                    avatar: '{{ asset('assets/home/cook_leo.jpg') }}'
+                                                                },
+                                                                {
+                                                                    name: 'Sofía M.',
+                                                                    location: 'Córdoba Capital',
+                                                                    text: 'Cocinamos poco por el trabajo y Cocinarte nos salvó las cenas. Comida sana, como la que hacía mi abuela.',
+                                                                    stars: 5,
+                                                                    avatar: '{{ asset('assets/home/cook_dona_rosa.jpg') }}'
+                                                                }
+                                                            ]
+                                                        }">
 
                         <div>
                             <h3 class="text-lg sm:text-xl font-bold text-gray-700 mb-6">
@@ -881,31 +960,31 @@
 
 @push('meta')
     <script type="application/ld+json">
-                                {
-                                  "@@context": "https://schema.org",
-                                  "@@graph": [
                                     {
-                                      "@@type": "Organization",
-                                      "@@id": "{{ route('home') }}#organization",
-                                      "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                                      "url": "{{ route('home') }}",
-                                      "logo": {
-                                        "@@type": "ImageObject",
-                                        "url": "{{ asset('assets/front/logo-8.webp') }}",
-                                        "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
-                                      }
-                                    },
-                                    {
-                                      "@@type": "WebSite",
-                                      "@@id": "{{ route('home') }}#website",
-                                      "url": "{{ route('home') }}",
-                                      "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                                      "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
-                                      "publisher": {
-                                        "@@id": "{{ route('home') }}#organization"
-                                      }
+                                      "@@context": "https://schema.org",
+                                      "@@graph": [
+                                        {
+                                          "@@type": "Organization",
+                                          "@@id": "{{ route('home') }}#organization",
+                                          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                                          "url": "{{ route('home') }}",
+                                          "logo": {
+                                            "@@type": "ImageObject",
+                                            "url": "{{ asset('assets/front/logo-8.webp') }}",
+                                            "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
+                                          }
+                                        },
+                                        {
+                                          "@@type": "WebSite",
+                                          "@@id": "{{ route('home') }}#website",
+                                          "url": "{{ route('home') }}",
+                                          "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                                          "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
+                                          "publisher": {
+                                            "@@id": "{{ route('home') }}#organization"
+                                          }
+                                        }
+                                      ]
                                     }
-                                  ]
-                                }
-                                </script>
+                                    </script>
 @endpush
