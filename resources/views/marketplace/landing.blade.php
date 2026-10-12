@@ -222,7 +222,7 @@
                     <!-- Botones Principales -->
                     <div class="flex items-center gap-4 pt-1">
                         <a href="{{ route('marketplace.catalog') }}"
-                            class="group btn-gradient text-white px-7 py-3.5 rounded-full font-bold text-sm lg:text-base shadow-md glow-effect hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap">
+                            class="group btn-gradient btn-shine text-white px-7 py-3.5 rounded-full font-bold text-sm lg:text-base shadow-md glow-effect hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap">
                             <span>Explorar cocineros</span>
                             <svg class="w-4 h-4 ml-2.5 transition-transform duration-200 group-hover:translate-x-1"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1268,7 +1268,7 @@
                         <div
                             class="mt-6 pt-5 border-t border-orange-200/60 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                             <a href="mailto:info@cocinarte.app?subject=Pre-inscripci%C3%B3n%20Cocinero%20Cocinarte&body=Hola%20Cocinarte!%0A%0AQuiero%20pre-inscribirme%20como%20cocinero/a%20para%20el%20lanzamiento%20de%20Enero%202027.%0A%0AMis%20datos:%0A-%20Nombre%20completo:%20%0A-%20WhatsApp%20de%20contacto:%20%0A-%20Barrio%20/%20Ciudad:%20%0A-%20Plato%20estrella%20(nombre%20y%20precio):%20%0A%0A(Adjunto%20foto%20de%20perfil,%20foto%20de%20cocina%20y%20foto%20del%20plato)%0A%0AGracias!"
-                                class="btn-gradient text-white px-6 py-3.5 rounded-full font-bold text-sm shadow-md glow-effect hover:scale-[1.02] active:scale-[0.98] transition-all text-center inline-flex items-center justify-center gap-2.5">
+                                class="btn-gradient btn-shine text-white px-6 py-3.5 rounded-full font-bold text-sm shadow-md glow-effect hover:scale-[1.02] active:scale-[0.98] transition-all text-center inline-flex items-center justify-center gap-2.5">
                                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
