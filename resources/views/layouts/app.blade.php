@@ -146,10 +146,6 @@
                         class="hover:text-orange-600 transition-colors whitespace-nowrap">
                         Qué ofrecemos?
                     </a>
-                    <a href="{{ route('home') }}#para-cocineros"
-                        class="hover:text-orange-600 transition-colors whitespace-nowrap">
-                        Para cocineros
-                    </a>
                     <a href="{{ route('marketplace.catalog') }}"
                         class="hover:text-orange-600 transition-colors whitespace-nowrap">
                         Buscar Cocineros
