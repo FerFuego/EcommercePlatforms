@@ -700,7 +700,8 @@
                                 Dejá tu reseña
                             </h3>
                             <p class="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal">
-                                Calificá el plato y contá tu experiencia. Las reseñas son el pilar de Cocinarte y ayudan a crecer a tu cocinero.
+                                Calificá el plato y contá tu experiencia. Las reseñas son el pilar de Cocinarte y ayudan a
+                                crecer a tu cocinero.
                             </p>
                         </div>
                     </div>
@@ -713,9 +714,9 @@
         <!-- ============================================================ -->
         <!-- 3. SECCIÓN: CONOCÉ A QUIENES COCINAN PARA VOS (SLIDER/CARDS) -->
         <!-- ============================================================ -->
-        <section class="py-14 sm:py-20 relative overflow-hidden" id="cocineros" x-data="cooksSlider()" x-init="startAutoplay()"
-            @mouseenter="stopAutoplay()" @mouseleave="startAutoplay()" @touchstart.passive="stopAutoplay()"
-            @touchend.passive="startAutoplay()">
+        <section class="py-14 sm:py-20 relative overflow-hidden" id="cocineros" x-data="cooksSlider()"
+            x-init="startAutoplay()" @mouseenter="stopAutoplay()" @mouseleave="startAutoplay()"
+            @touchstart.passive="stopAutoplay()" @touchend.passive="startAutoplay()">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
                 <!-- Título y Subtítulo Centrados -->
@@ -848,9 +849,9 @@
                             <div class="relative group">
                                 <div class="overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-4 border-white">
                                     <!-- <img src="{{ asset('assets/home/kitchen_mariana.jpg') }}"
-                                                                                                                                                alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
-                                                                                                                                                class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                                                                                                                                                loading="lazy"> -->
+                                                                                                                                                    alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
+                                                                                                                                                    class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                                                                                                                                    loading="lazy"> -->
                                     <div
                                         class="aspect-video bg-gradient-to-br from-purple-200 via-pink-200 to-orange-200 rounded-2xl flex items-center justify-center text-8xl">
                                         <video class="w-full h-full rounded-2xl"
@@ -1053,13 +1054,19 @@
                             </div>
 
                             <!-- Destellos Sparkle Decorativos flotantes sobre el teléfono -->
-                            <div class="absolute top-[18%] left-[28%] text-amber-300 text-xl sparkle-spin-1 pointer-events-none drop-shadow-md">✦</div>
-                            <div class="absolute top-[38%] right-[22%] text-amber-200 text-lg sparkle-spin-2 pointer-events-none drop-shadow-md">✨</div>
-                            <div class="absolute top-[12%] right-[35%] text-orange-300 text-sm sparkle-spin-3 pointer-events-none drop-shadow-md">✦</div>
+                            <div
+                                class="absolute top-[18%] left-[28%] text-amber-300 text-xl sparkle-spin-1 pointer-events-none drop-shadow-md">
+                                ✦</div>
+                            <div
+                                class="absolute top-[38%] right-[22%] text-amber-200 text-lg sparkle-spin-2 pointer-events-none drop-shadow-md">
+                                ✨</div>
+                            <div
+                                class="absolute top-[12%] right-[35%] text-orange-300 text-sm sparkle-spin-3 pointer-events-none drop-shadow-md">
+                                ✦</div>
 
                             <!-- ESTRELLAS GIGANTES FLOTANTES SOBRE EL MÓVIL (HUD Interactivo) -->
                             <div class="rating-stars-hud flex flex-col items-center select-none">
-                                
+
                                 <!-- Pill Indicador con Puntuación Viva -->
                                 <div
                                     class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/90 backdrop-blur-md shadow-lg border border-amber-200/80 mb-2 transform -translate-y-1">
@@ -1069,26 +1076,26 @@
                                 </div>
 
                                 <!-- Fila de 5 Estrellas Grandes con rebote suave, resplandor y clic interactivo -->
-                                <div class="flex items-center justify-center gap-1.5 sm:gap-2.5 p-2 rounded-2xl bg-black/35 backdrop-blur-sm border border-white/20 shadow-inner">
+                                <div
+                                    class="flex items-center justify-center gap-1.5 sm:gap-2.5 p-2 rounded-2xl bg-black/35 backdrop-blur-sm border border-white/20 shadow-inner">
                                     <template x-for="star in [1, 2, 3, 4, 5]" :key="star">
-                                        <button type="button"
-                                            @click="setRating(star)"
-                                            @mouseenter="hoverRating = star"
-                                            @mouseleave="hoverRating = 0"
-                                            :class="'star-pulse-' + star"
+                                        <button type="button" @click="setRating(star)" @mouseenter="hoverRating = star"
+                                            @mouseleave="hoverRating = 0" :class="'star-pulse-' + star"
                                             class="rating-star-btn relative focus:outline-none p-1 sm:p-1.5 transition-transform"
                                             :aria-label="'Calificar con ' + star + ' estrellas'">
                                             <svg class="w-8 h-8 sm:w-11 sm:h-11 drop-shadow-lg transition-colors duration-200"
                                                 :class="(hoverRating ? hoverRating >= star : selectedRating >= star) ? 'text-amber-400 fill-amber-400' : 'text-white/40 fill-white/20'"
                                                 viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"
+                                                <path stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                                    stroke-linejoin="round"
                                                     d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                                             </svg>
                                         </button>
                                     </template>
                                 </div>
 
-                                <span class="text-[10px] sm:text-[11px] font-semibold text-white/90 drop-shadow mt-1.5 tracking-wide">
+                                <span
+                                    class="text-[10px] sm:text-[11px] font-semibold text-white/90 drop-shadow mt-1.5 tracking-wide">
                                     Tocá las estrellas para probar la puntuación
                                 </span>
                             </div>
@@ -1119,7 +1126,8 @@
 
                             <p class="text-xs sm:text-sm text-gray-700 italic font-medium leading-relaxed min-h-[44px]"
                                 x-text="'&ldquo;' + stories[activeStoryIndex].quote + '&rdquo;'">
-                                "¡Masa fresca casera inolvidable! Llegó calentito y con salsa abundante. Se nota el amor con que cocinan."
+                                "¡Masa fresca casera inolvidable! Llegó calentito y con salsa abundante. Se nota el amor con
+                                que cocinan."
                             </p>
 
                             <div class="flex items-center justify-between mt-3 pt-2 text-xs">
@@ -1145,7 +1153,8 @@
                         <!-- Eyebrow Pill -->
                         <div
                             class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-800 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-sm">
-                            <svg class="w-4 h-4 text-amber-500 animate-spin" style="animation-duration: 8s;" fill="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 text-amber-500 animate-spin" style="animation-duration: 8s;"
+                                fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 2l2.4 7.2L21 12l-6.6 2.8L12 22l-2.4-7.2L3 12l6.6-2.8L12 2z" />
                             </svg>
                             <span>El pilar de Cocinarte · Reseñas reales</span>
@@ -1160,7 +1169,9 @@
 
                         <!-- Bajada Explicativa -->
                         <p class="text-sm sm:text-base text-gray-600 leading-relaxed font-normal">
-                            En Cocinarte no existen algoritmos oscuros ni calificaciones compradas. Quien cocina es tu vecino y quien califica sos vos después de saborear tu plato en casa. Cada opinión sincera construye confianza comunitaria y premia la dedicación de quienes cocinan con el corazón.
+                            En Cocinarte no existen algoritmos oscuros ni calificaciones compradas. Quien cocina es tu
+                            vecino y quien califica sos vos después de saborear tu plato en casa. Cada opinión sincera
+                            construye confianza comunitaria y premia la dedicación de quienes cocinan con el corazón.
                         </p>
 
                         <!-- 3 Tarjetas Bento de Beneficios / Pilares -->
@@ -1181,7 +1192,8 @@
                                         Calificaciones 100% verificadas
                                     </h3>
                                     <p class="text-xs sm:text-sm text-gray-500 mt-0.5 leading-relaxed">
-                                        Solo comensales que completaron y recibieron su pedido pueden calificar. Garantía de autenticidad absoluta sin opiniones infladas.
+                                        Solo comensales que completaron y recibieron su pedido pueden calificar. Garantía de
+                                        autenticidad absoluta sin opiniones infladas.
                                     </p>
                                 </div>
                             </div>
@@ -1201,7 +1213,8 @@
                                         Puntuá con un toque desde tu celular
                                     </h3>
                                     <p class="text-xs sm:text-sm text-gray-500 mt-0.5 leading-relaxed">
-                                        Apenas terminás de comer, abrís tu WhatsApp o la app, elegís tus estrellas y le dejás unas palabras de aliento al cocinero en segundos.
+                                        Apenas terminás de comer, abrís tu WhatsApp o la app, elegís tus estrellas y le
+                                        dejás unas palabras de aliento al cocinero en segundos.
                                     </p>
                                 </div>
                             </div>
@@ -1221,7 +1234,8 @@
                                         Crecimiento real para las cocinas de tu barrio
                                     </h3>
                                     <p class="text-xs sm:text-sm text-gray-500 mt-0.5 leading-relaxed">
-                                        Cada estrella suma reputación. Las buenas valoraciones le permiten a cocineros independientes ganar clientes fieles y afianzar su marca.
+                                        Cada estrella suma reputación. Las buenas valoraciones le permiten a cocineros
+                                        independientes ganar clientes fieles y afianzar su marca.
                                     </p>
                                 </div>
                             </div>
@@ -1239,9 +1253,6 @@
                                         d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
                             </a>
-                            <span class="text-xs font-medium text-gray-600 text-center sm:text-left">
-                                ⭐ Filtro por calificaciones reales
-                            </span>
                         </div>
 
                     </div>
@@ -2063,33 +2074,33 @@
 
 @push('meta')
     <script type="application/ld+json">
-                                {
-                                    "@@context": "https://schema.org",
-                                    "@@graph": [
                                     {
-                                        "@@type": "Organization",
-                                        "@@id": "{{ route('home') }}#organization",
-                                        "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                                        "url": "{{ route('home') }}",
-                                        "logo": {
-                                        "@@type": "ImageObject",
-                                        "url": "{{ asset('assets/front/logo-8.webp') }}",
-                                        "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
+                                        "@@context": "https://schema.org",
+                                        "@@graph": [
+                                        {
+                                            "@@type": "Organization",
+                                            "@@id": "{{ route('home') }}#organization",
+                                            "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                                            "url": "{{ route('home') }}",
+                                            "logo": {
+                                            "@@type": "ImageObject",
+                                            "url": "{{ asset('assets/front/logo-8.webp') }}",
+                                            "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
+                                            }
+                                        },
+                                        {
+                                            "@@type": "WebSite",
+                                            "@@id": "{{ route('home') }}#website",
+                                            "url": "{{ route('home') }}",
+                                            "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                                            "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
+                                            "publisher": {
+                                            "@@id": "{{ route('home') }}#organization"
+                                            }
                                         }
-                                    },
-                                    {
-                                        "@@type": "WebSite",
-                                        "@@id": "{{ route('home') }}#website",
-                                        "url": "{{ route('home') }}",
-                                        "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                                        "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
-                                        "publisher": {
-                                        "@@id": "{{ route('home') }}#organization"
-                                        }
+                                        ]
                                     }
-                                    ]
-                                }
-                            </script>
+                                </script>
 @endpush
 
 @push('scripts')
