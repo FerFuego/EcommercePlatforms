@@ -4,6 +4,16 @@
  * solo en esta vista: @vite(['resources/css/pages/landing.css', ...]).
  */
 
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
 /* Efectos de slider y scroll suave */
 .cook-slider {
     scroll-behavior: smooth;

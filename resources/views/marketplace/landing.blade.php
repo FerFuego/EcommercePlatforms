@@ -178,7 +178,7 @@
         ];
     @endphp
 
-    <div class="bg-[#faf8f5] text-gray-700 antialiased overflow-hidden">
+    <div class="relative w-full max-w-full bg-[#faf8f5] text-gray-700 antialiased overflow-hidden">
 
         <!-- ========================================== -->
         <!-- 1. HERO SECTION (FULLWIDTH & RESPONSIVE)    -->
@@ -498,7 +498,7 @@
         <!-- ============================================================ -->
         <!-- 2. SECCIÓN: ASÍ FUNCIONA COCINARTE                           -->
         <!-- ============================================================ -->
-        <section class="py-14 sm:py-20" id="como-funciona">
+        <section class="py-14 sm:py-20 relative overflow-hidden" id="como-funciona">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
                 <div class="text-center mb-12 sm:mb-16">
@@ -666,7 +666,7 @@
         <!-- ============================================================ -->
         <!-- 3. SECCIÓN: CONOCÉ A QUIENES COCINAN PARA VOS (SLIDER/CARDS) -->
         <!-- ============================================================ -->
-        <section class="py-14 sm:py-20 relative" id="cocineros" x-data="cooksSlider()" x-init="startAutoplay()"
+        <section class="py-14 sm:py-20 relative overflow-hidden" id="cocineros" x-data="cooksSlider()" x-init="startAutoplay()"
             @mouseenter="stopAutoplay()" @mouseleave="startAutoplay()" @touchstart.passive="stopAutoplay()"
             @touchend.passive="startAutoplay()">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -785,9 +785,9 @@
         <!-- ============================================================ -->
         <!-- 4. SECCIÓN: CADA COCINERO TIENE SU PROPIA COCINA             -->
         <!-- ============================================================ -->
-        <section class="py-12 sm:py-16" id="historias">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="">
+        <section class="py-12 sm:py-16 relative overflow-hidden" id="historias">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+                <div class="relative">
 
                     <!-- Orbs decorativos traseros -->
                     <div
@@ -890,7 +890,7 @@
         <!-- ============================================================ -->
         <!-- 5. BANNER CTA COCINEROS: "¿COCINÁS PARA LOS TUYOS?"          -->
         <!-- ============================================================ -->
-        <section class="py-10 sm:py-16" id="para-cocineros">
+        <section class="py-10 sm:py-16 relative overflow-hidden" id="para-cocineros">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-rose-500 text-white shadow-2xl">
 
@@ -1585,7 +1585,7 @@
         <!-- 8. SECCIÓN INFERIOR: 3 COLUMNAS                              -->
         <!-- (Comensal / Preguntas Frecuentes / Testimonios)             -->
         <!-- ============================================================ -->
-        <section class="py-12 sm:py-20" id="faq">
+        <section class="py-12 sm:py-20 relative overflow-hidden" id="faq">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
 

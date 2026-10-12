@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth overflow-x-hidden">
 
 <head>
     <meta charset="UTF-8">
@@ -103,7 +103,7 @@
     @endif
 </head>
 
-<body class="bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 min-h-screen">
+<body class="bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 min-h-screen overflow-x-hidden">
 
     @php
         $cart = session()->get('cart', []);
@@ -530,7 +530,7 @@
     @endif
 
     <!-- Main Content -->
-    <main>
+    <main class="overflow-x-hidden">
         @yield('content')
     </main>
 
