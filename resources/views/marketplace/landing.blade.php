@@ -337,40 +337,69 @@
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
-                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 text-sm group-hover:scale-110 transition-transform">✨</span>
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 group-hover:scale-110 transition-transform">
+                            <svg class="w-4 h-4 fill-amber-200" viewBox="0 0 24 24">
+                                <path d="M12 2l2.4 7.2L21 12l-6.6 2.8L12 22l-2.4-7.2L3 12l6.6-2.8L12 2z" />
+                            </svg>
+                        </span>
                         <span class="font-black text-sm sm:text-base tracking-wide uppercase">Registro gratuito</span>
                     </a>
 
-                    <span class="text-white/40 text-lg">✦</span>
+                    <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                    </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
-                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-white text-sm group-hover:scale-110 transition-transform">🚀</span>
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-white group-hover:scale-110 transition-transform">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
+                                <path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
+                                <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+                                <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+                            </svg>
+                        </span>
                         <span class="font-black text-sm sm:text-base tracking-wide uppercase">Vendé con nosotros sin
                             costo</span>
                     </a>
 
-                    <span class="text-white/40 text-lg">✦</span>
+                    <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                    </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
-                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-rose-200 text-sm group-hover:scale-110 transition-transform">♡</span>
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-rose-200 group-hover:scale-110 transition-transform">
+                            <svg class="w-4 h-4 fill-rose-200" viewBox="0 0 24 24">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                            </svg>
+                        </span>
                         <span class="font-black text-sm sm:text-base tracking-wide uppercase">Sé parte del cambio</span>
                     </a>
 
-                    <span class="text-white/40 text-lg">✦</span>
+                    <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                    </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
-                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 text-sm group-hover:scale-110 transition-transform">🧑‍🍳</span>
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 group-hover:scale-110 transition-transform">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M6 13.8a4.5 4.5 0 0 1-2.8-4.1 4.5 4.5 0 0 1 7.2-3.6 4.5 4.5 0 0 1 7.2 3.6 4.5 4.5 0 0 1-2.8 4.1" />
+                                <path d="M6 14h12v4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-4z" />
+                                <line x1="6" y1="17" x2="18" y2="17" />
+                            </svg>
+                        </span>
                         <span class="font-black text-sm sm:text-base tracking-wide uppercase">Cociná para tu barrio o ciudad
                             y convertilo en tu oficio</span>
                     </a>
 
-                    <span class="text-white/40 text-lg">✦</span>
+                    <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                    </svg>
                 </div>
 
                 <!-- Bloque 2 duplicado idéntico para loop infinito perfecto -->
@@ -378,40 +407,69 @@
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
-                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 text-sm group-hover:scale-110 transition-transform">✨</span>
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 group-hover:scale-110 transition-transform">
+                            <svg class="w-4 h-4 fill-amber-200" viewBox="0 0 24 24">
+                                <path d="M12 2l2.4 7.2L21 12l-6.6 2.8L12 22l-2.4-7.2L3 12l6.6-2.8L12 2z" />
+                            </svg>
+                        </span>
                         <span class="font-black text-sm sm:text-base tracking-wide uppercase">Registro gratuito</span>
                     </a>
 
-                    <span class="text-white/40 text-lg">✦</span>
+                    <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                    </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
-                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-white text-sm group-hover:scale-110 transition-transform">🚀</span>
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-white group-hover:scale-110 transition-transform">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
+                                <path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
+                                <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+                                <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+                            </svg>
+                        </span>
                         <span class="font-black text-sm sm:text-base tracking-wide uppercase">Vendé con nosotros sin
                             costo</span>
                     </a>
 
-                    <span class="text-white/40 text-lg">✦</span>
+                    <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                    </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
-                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-rose-200 text-sm group-hover:scale-110 transition-transform">♡</span>
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-rose-200 group-hover:scale-110 transition-transform">
+                            <svg class="w-4 h-4 fill-rose-200" viewBox="0 0 24 24">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                            </svg>
+                        </span>
                         <span class="font-black text-sm sm:text-base tracking-wide uppercase">Sé parte del cambio</span>
                     </a>
 
-                    <span class="text-white/40 text-lg">✦</span>
+                    <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                    </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
-                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 text-sm group-hover:scale-110 transition-transform">🧑‍🍳</span>
+                            class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 group-hover:scale-110 transition-transform">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M6 13.8a4.5 4.5 0 0 1-2.8-4.1 4.5 4.5 0 0 1 7.2-3.6 4.5 4.5 0 0 1 7.2 3.6 4.5 4.5 0 0 1-2.8 4.1" />
+                                <path d="M6 14h12v4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-4z" />
+                                <line x1="6" y1="17" x2="18" y2="17" />
+                            </svg>
+                        </span>
                         <span class="font-black text-sm sm:text-base tracking-wide uppercase">Cociná para tu barrio o ciudad
                             y convertilo en tu oficio</span>
                     </a>
 
-                    <span class="text-white/40 text-lg">✦</span>
+                    <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                    </svg>
                 </div>
             </div>
         </section>
