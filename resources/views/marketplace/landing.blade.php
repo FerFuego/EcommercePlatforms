@@ -522,12 +522,12 @@
                     </defs>
                 </svg>
 
-                <!-- 3 Pasos con Layout Horizontal y Flechas Conectoras -->
+                <!-- 4 Pasos con Layout Horizontal y Flechas Conectoras -->
                 <div
-                    class="max-w-5xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8 md:gap-4 lg:gap-6 relative">
+                    class="max-w-6xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8 md:gap-2.5 lg:gap-4 xl:gap-6 relative">
 
                     <!-- Paso 1 -->
-                    <div class="flex-1 flex items-start gap-3.5 sm:gap-4 group">
+                    <div class="flex-1 flex items-start gap-3 sm:gap-3.5 group">
                         <!-- Círculo Número 1 -->
                         <div
                             class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-orange-500 via-rose-500 to-pink-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-200">
@@ -552,18 +552,18 @@
                                 </svg>
                             </div>
 
-                            <h3 class="font-extrabold text-gray-700 text-lg leading-tight">
+                            <h3 class="font-extrabold text-gray-700 text-base lg:text-lg leading-tight">
                                 Encontrá un cocinero
                             </h3>
-                            <p class="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal max-w-[240px]">
+                            <p class="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal">
                                 Explorá perfiles, leé sus historias y elegí a quién te inspire.
                             </p>
                         </div>
                     </div>
 
                     <!-- Flecha 1 -> 2 (Desktop) -->
-                    <div class="hidden md:flex items-center justify-center pt-3 shrink-0 px-1 lg:px-2">
-                        <svg class="w-7 h-7 lg:w-8 lg:h-8" fill="none" viewBox="0 0 24 24">
+                    <div class="hidden md:flex items-center justify-center pt-3 shrink-0 px-0.5 lg:px-1 xl:px-2">
+                        <svg class="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7" fill="none" viewBox="0 0 24 24">
                             <path d="M4 12h14m-5-5l5 5-5 5" stroke="url(#step-arrow-grad)" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
@@ -578,7 +578,7 @@
                     </div>
 
                     <!-- Paso 2 -->
-                    <div class="flex-1 flex items-start gap-3.5 sm:gap-4 group">
+                    <div class="flex-1 flex items-start gap-3 sm:gap-3.5 group">
                         <!-- Círculo Número 2 -->
                         <div
                             class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-orange-500 via-rose-500 to-pink-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-200">
@@ -603,18 +603,18 @@
                                 </svg>
                             </div>
 
-                            <h3 class="font-extrabold text-gray-700 text-lg leading-tight">
+                            <h3 class="font-extrabold text-gray-700 text-base lg:text-lg leading-tight">
                                 Elegí su comida
                             </h3>
-                            <p class="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal max-w-[240px]">
+                            <p class="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal">
                                 Mirá su menú, sus fotos y hacé tu pedido en pocos clics.
                             </p>
                         </div>
                     </div>
 
                     <!-- Flecha 2 -> 3 (Desktop) -->
-                    <div class="hidden md:flex items-center justify-center pt-3 shrink-0 px-1 lg:px-2">
-                        <svg class="w-7 h-7 lg:w-8 lg:h-8" fill="none" viewBox="0 0 24 24">
+                    <div class="hidden md:flex items-center justify-center pt-3 shrink-0 px-0.5 lg:px-1 xl:px-2">
+                        <svg class="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7" fill="none" viewBox="0 0 24 24">
                             <path d="M4 12h14m-5-5l5 5-5 5" stroke="url(#step-arrow-grad)" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
@@ -629,7 +629,7 @@
                     </div>
 
                     <!-- Paso 3 -->
-                    <div class="flex-1 flex items-start gap-3.5 sm:gap-4 group">
+                    <div class="flex-1 flex items-start gap-3 sm:gap-3.5 group">
                         <!-- Círculo Número 3 -->
                         <div
                             class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-orange-500 via-rose-500 to-pink-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-200">
@@ -649,11 +649,58 @@
                                 </svg>
                             </div>
 
-                            <h3 class="font-extrabold text-gray-700 text-lg leading-tight">
+                            <h3 class="font-extrabold text-gray-700 text-base lg:text-lg leading-tight">
                                 Recibila o retirala
                             </h3>
-                            <p class="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal max-w-[240px]">
+                            <p class="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal">
                                 Coordiná la entrega o pasá a buscarla en la cocina del cocinero.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Flecha 3 -> 4 (Desktop) -->
+                    <div class="hidden md:flex items-center justify-center pt-3 shrink-0 px-0.5 lg:px-1 xl:px-2">
+                        <svg class="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7" fill="none" viewBox="0 0 24 24">
+                            <path d="M4 12h14m-5-5l5 5-5 5" stroke="url(#step-arrow-grad)" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    <!-- Flecha 3 -> 4 (Mobile vertical) -->
+                    <div class="flex md:hidden items-center justify-center w-full py-1">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
+                            <path d="M12 4v14m-5-5l5 5 5-5" stroke="url(#step-arrow-grad)" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    <!-- Paso 4 -->
+                    <div class="flex-1 flex items-start gap-3 sm:gap-3.5 group">
+                        <!-- Círculo Número 4 -->
+                        <div
+                            class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-orange-500 via-rose-500 to-pink-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-200">
+                            4
+                        </div>
+
+                        <!-- Contenido: Icono + Título + Descripción -->
+                        <div class="space-y-2.5 sm:space-y-3">
+                            <div
+                                class="w-12 h-12 flex items-center justify-start group-hover:scale-105 transition-transform duration-200">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="url(#step-icon-grad)" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="w-11 h-11 sm:w-12 sm:h-12 drop-shadow-sm">
+                                    <path
+                                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                                    <path
+                                        d="M12 7.8l1.1 2.2 2.4.3-1.7 1.7.4 2.4-2.2-1.1-2.2 1.1.4-2.4-1.7-1.7 2.4-.3L12 7.8z" />
+                                </svg>
+                            </div>
+
+                            <h3 class="font-extrabold text-gray-700 text-base lg:text-lg leading-tight">
+                                Dejá tu reseña
+                            </h3>
+                            <p class="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal">
+                                Calificá el plato y contá tu experiencia. Las reseñas son el pilar de Cocinarte y ayudan a crecer a tu cocinero.
                             </p>
                         </div>
                     </div>
