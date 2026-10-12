@@ -85,6 +85,25 @@ export function initValuePropSection() {
     });
 }
 
+export function initPreInscripcionesSection() {
+    const section = document.getElementById('pre-inscripciones');
+    if (!section) return;
+
+    if ('IntersectionObserver' in window) {
+        section.classList.add('pre-ready');
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        section.querySelectorAll('.pre-reveal').forEach((el) => io.observe(el));
+    }
+}
+
 // Registro global para Alpine.js
 window.cooksSlider = cooksSlider;
 window.testimonialsSlider = testimonialsSlider;
@@ -100,8 +119,14 @@ if (window.Alpine) {
 }
 
 // Inicialización de efectos DOM
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initValuePropSection);
-} else {
+function initLandingEffects() {
     initValuePropSection();
+    initPreInscripcionesSection();
 }
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLandingEffects);
+} else {
+    initLandingEffects();
+}
+

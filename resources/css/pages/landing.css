@@ -885,3 +885,78 @@
     background: rgba(251, 146, 60, .18);
     color: #fdba74;
 }
+
+/* ============================================================ */
+/* PRE-INSCRIPCIONES COCINEROS: INTERACCIONES Y ANIMACIONES     */
+/* ============================================================ */
+.pre-ready .pre-reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--pre-delay, 0ms),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--pre-delay, 0ms);
+    will-change: opacity, transform;
+}
+
+.pre-ready .pre-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.pre-delay-1 { --pre-delay: 100ms; }
+.pre-delay-2 { --pre-delay: 200ms; }
+.pre-delay-3 { --pre-delay: 300ms; }
+.pre-delay-4 { --pre-delay: 400ms; }
+
+/* Suave zoom e interacciones con el mouse */
+.pre-zoom-card {
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s ease;
+}
+
+.pre-zoom-card:hover {
+    transform: translateY(-4px) scale(1.012);
+}
+
+.pre-img-box {
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pre-img-box:hover {
+    transform: translateY(-5px);
+}
+
+.pre-img-box img {
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pre-img-box:hover img {
+    transform: scale(1.07);
+}
+
+.pre-step-item {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s ease,
+                border-color 0.3s ease,
+                background-color 0.3s ease;
+}
+
+.pre-step-item:hover {
+    transform: translateY(-2px) scale(1.01);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pre-ready .pre-reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+    .pre-zoom-card, 
+    .pre-img-box, 
+    .pre-img-box img, 
+    .pre-step-item {
+        transform: none !important;
+        transition: none !important;
+    }
+}
