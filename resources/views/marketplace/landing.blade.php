@@ -1004,6 +1004,255 @@
 
 
         <!-- ============================================================ -->
+        <!-- 5.1 VALORACIONES REALES: "CADA ESTRELLA CUENTA UNA HISTORIA" -->
+        <!-- ============================================================ -->
+        <section class="py-16 sm:py-24 relative overflow-hidden bg-[#faf8f5] border-t border-orange-100/60"
+            id="resenas-en-vivo" x-data="ratingExperience()" x-init="init()">
+
+            <!-- Fondos lumínicos suaves contenidos dentro del overflow-hidden -->
+            <div class="pointer-events-none absolute -top-24 -left-24 w-96 h-96 bg-amber-200/35 rounded-full blur-3xl"
+                aria-hidden="true"></div>
+            <div class="pointer-events-none absolute -bottom-24 -right-24 w-96 h-96 bg-rose-200/30 rounded-full blur-3xl"
+                aria-hidden="true"></div>
+            <div class="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-orange-100/25 rounded-full blur-3xl"
+                aria-hidden="true"></div>
+
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center max-w-6xl mx-auto">
+
+                    <!-- Lado Izquierdo (lg:col-span-6): Mockup de Puntuación con Imagen Real + Estrellas Gigantes en Movimiento -->
+                    <div class="lg:col-span-6 relative">
+
+                        <!-- Halo lumínico animado detrás de la imagen -->
+                        <div
+                            class="absolute -inset-2 bg-gradient-to-tr from-amber-400/25 via-rose-500/20 to-purple-600/20 rounded-[2.5rem] blur-xl opacity-75 halo-pulse-glow -z-10 pointer-events-none">
+                        </div>
+
+                        <!-- Badge Flotante Superior: 4.9 Promedio -->
+                        <div
+                            class="absolute -top-4 sm:-top-5 -left-2 sm:-left-3 z-30 card-float-gentle bg-white/95 backdrop-blur-md px-4 py-2 rounded-full border border-amber-200 shadow-xl shadow-amber-500/10 flex items-center gap-2">
+                            <span class="flex items-center text-amber-500 text-sm">★</span>
+                            <span class="text-xs sm:text-sm font-extrabold text-gray-800">4.9 / 5.0</span>
+                            <span class="text-[11px] text-gray-600 font-medium">· +2.400 platos valorados</span>
+                        </div>
+
+                        <!-- Contenedor Principal de la Foto de Calificación -->
+                        <div
+                            class="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border-4 border-white shadow-2xl shadow-orange-950/15 bg-orange-100 group">
+
+                            <!-- Imagen Principal: Foto de persona puntuando con su celular en la mesa -->
+                            <img src="{{ asset('assets/home/rating_experience.jpg') }}"
+                                alt="Persona disfrutando de comida casera y calificando a su cocinero desde el celular"
+                                class="w-full h-auto aspect-[4/3] object-cover object-center group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                                loading="lazy">
+
+                            <!-- Degradé inferior suave para contrastar -->
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none">
+                            </div>
+
+                            <!-- Destellos Sparkle Decorativos flotantes sobre el teléfono -->
+                            <div class="absolute top-[18%] left-[28%] text-amber-300 text-xl sparkle-spin-1 pointer-events-none drop-shadow-md">✦</div>
+                            <div class="absolute top-[38%] right-[22%] text-amber-200 text-lg sparkle-spin-2 pointer-events-none drop-shadow-md">✨</div>
+                            <div class="absolute top-[12%] right-[35%] text-orange-300 text-sm sparkle-spin-3 pointer-events-none drop-shadow-md">✦</div>
+
+                            <!-- ESTRELLAS GIGANTES FLOTANTES SOBRE EL MÓVIL (HUD Interactivo) -->
+                            <div class="rating-stars-hud flex flex-col items-center select-none">
+                                
+                                <!-- Pill Indicador con Puntuación Viva -->
+                                <div
+                                    class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/90 backdrop-blur-md shadow-lg border border-amber-200/80 mb-2 transform -translate-y-1">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    <span class="text-[11px] sm:text-xs font-black text-gray-800 tracking-wide"
+                                        x-text="currentScoreLabel">¡Excelente! Sabor casero 10/10 ⭐</span>
+                                </div>
+
+                                <!-- Fila de 5 Estrellas Grandes con rebote suave, resplandor y clic interactivo -->
+                                <div class="flex items-center justify-center gap-1.5 sm:gap-2.5 p-2 rounded-2xl bg-black/35 backdrop-blur-sm border border-white/20 shadow-inner">
+                                    <template x-for="star in [1, 2, 3, 4, 5]" :key="star">
+                                        <button type="button"
+                                            @click="setRating(star)"
+                                            @mouseenter="hoverRating = star"
+                                            @mouseleave="hoverRating = 0"
+                                            :class="'star-pulse-' + star"
+                                            class="rating-star-btn relative focus:outline-none p-1 sm:p-1.5 transition-transform"
+                                            :aria-label="'Calificar con ' + star + ' estrellas'">
+                                            <svg class="w-8 h-8 sm:w-11 sm:h-11 drop-shadow-lg transition-colors duration-200"
+                                                :class="(hoverRating ? hoverRating >= star : selectedRating >= star) ? 'text-amber-400 fill-amber-400' : 'text-white/40 fill-white/20'"
+                                                viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                            </svg>
+                                        </button>
+                                    </template>
+                                </div>
+
+                                <span class="text-[10px] sm:text-[11px] font-semibold text-white/90 drop-shadow mt-1.5 tracking-wide">
+                                    Tocá las estrellas para probar la puntuación
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <!-- Card Flotante Inferior de Reseña Verificada (Ciclo de historias dinámicas) -->
+                        <div
+                            class="relative z-20 -mt-10 sm:-mt-14 mx-3 sm:mx-6 bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-orange-200/80 shadow-2xl shadow-orange-950/10 transition-all duration-300">
+                            <div class="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        class="inline-flex items-center gap-1 text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                                        <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                                d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Reseña verificada
+                                    </span>
+                                    <span class="text-[11px] text-gray-600 font-medium"
+                                        x-text="stories[activeStoryIndex].time">Hace 12 min</span>
+                                </div>
+                                <div class="flex items-center text-amber-400 text-xs">
+                                    <span>★★★★★</span>
+                                </div>
+                            </div>
+
+                            <p class="text-xs sm:text-sm text-gray-700 italic font-medium leading-relaxed min-h-[44px]"
+                                x-text="'&ldquo;' + stories[activeStoryIndex].quote + '&rdquo;'">
+                                "¡Masa fresca casera inolvidable! Llegó calentito y con salsa abundante. Se nota el amor con que cocinan."
+                            </p>
+
+                            <div class="flex items-center justify-between mt-3 pt-2 text-xs">
+                                <div>
+                                    <strong class="text-gray-900 font-bold block"
+                                        x-text="stories[activeStoryIndex].name">Marta L.</strong>
+                                    <span class="text-gray-600 text-[11px]"
+                                        x-text="stories[activeStoryIndex].location">Córdoba Capital</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[11px] text-gray-600 block">Plato calificado</span>
+                                    <strong class="text-rose-600 font-bold text-xs"
+                                        x-text="stories[activeStoryIndex].dish">Sorrentinos de calabaza</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Lado Derecho (lg:col-span-6): Textos de Alto Impacto & Pilares de Valor -->
+                    <div class="lg:col-span-6 space-y-6 sm:space-y-7">
+
+                        <!-- Eyebrow Pill -->
+                        <div
+                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-800 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-sm">
+                            <svg class="w-4 h-4 text-amber-500 animate-spin" style="animation-duration: 8s;" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l2.4 7.2L21 12l-6.6 2.8L12 22l-2.4-7.2L3 12l6.6-2.8L12 2z" />
+                            </svg>
+                            <span>El pilar de Cocinarte · Reseñas reales</span>
+                        </div>
+
+                        <!-- Título Principal -->
+                        <h2
+                            class="text-3xl sm:text-4xl lg:text-[2.75rem] font-black tracking-tight text-gray-900 leading-[1.15]">
+                            Cada estrella cuenta una historia.<br>
+                            <span class="text-gradient">Tu reseña impulsa a tu cocinero.</span>
+                        </h2>
+
+                        <!-- Bajada Explicativa -->
+                        <p class="text-sm sm:text-base text-gray-600 leading-relaxed font-normal">
+                            En Cocinarte no existen algoritmos oscuros ni calificaciones compradas. Quien cocina es tu vecino y quien califica sos vos después de saborear tu plato en casa. Cada opinión sincera construye confianza comunitaria y premia la dedicación de quienes cocinan con el corazón.
+                        </p>
+
+                        <!-- 3 Tarjetas Bento de Beneficios / Pilares -->
+                        <div class="space-y-3 pt-1">
+
+                            <!-- Pilar 1 -->
+                            <div
+                                class="flex items-start gap-4 p-4 rounded-2xl bg-white border border-orange-100/90 shadow-sm hover:shadow-md hover:border-amber-200 transition-all duration-300 group">
+                                <div
+                                    class="w-11 h-11 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-extrabold text-gray-900 text-sm sm:text-base">
+                                        Calificaciones 100% verificadas
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-gray-500 mt-0.5 leading-relaxed">
+                                        Solo comensales que completaron y recibieron su pedido pueden calificar. Garantía de autenticidad absoluta sin opiniones infladas.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Pilar 2 -->
+                            <div
+                                class="flex items-start gap-4 p-4 rounded-2xl bg-white border border-orange-100/90 shadow-sm hover:shadow-md hover:border-amber-200 transition-all duration-300 group">
+                                <div
+                                    class="w-11 h-11 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 group-hover:bg-rose-500 group-hover:text-white transition-all duration-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-extrabold text-gray-900 text-sm sm:text-base">
+                                        Puntuá con un toque desde tu celular
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-gray-500 mt-0.5 leading-relaxed">
+                                        Apenas terminás de comer, abrís tu WhatsApp o la app, elegís tus estrellas y le dejás unas palabras de aliento al cocinero en segundos.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Pilar 3 -->
+                            <div
+                                class="flex items-start gap-4 p-4 rounded-2xl bg-white border border-orange-100/90 shadow-sm hover:shadow-md hover:border-amber-200 transition-all duration-300 group">
+                                <div
+                                    class="w-11 h-11 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-500 group-hover:text-white transition-all duration-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-extrabold text-gray-900 text-sm sm:text-base">
+                                        Crecimiento real para las cocinas de tu barrio
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-gray-500 mt-0.5 leading-relaxed">
+                                        Cada estrella suma reputación. Las buenas valoraciones le permiten a cocineros independientes ganar clientes fieles y afianzar su marca.
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Botón CTA con efecto destello -->
+                        <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                            <a href="{{ route('marketplace.catalog', ['sort' => 'rating']) }}"
+                                class="group btn-gradient btn-shine text-white px-7 py-3.5 rounded-full font-bold text-sm lg:text-base shadow-md glow-effect hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 inline-flex items-center justify-center gap-2 text-center">
+                                <span>Explorar platos mejor calificados</span>
+                                <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </a>
+                            <span class="text-xs font-medium text-gray-600 text-center sm:text-left">
+                                ⭐ Filtro por calificaciones reales
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ============================================================ -->
         <!-- 6. PRE-INSCRIPCIONES: COCINEROS INDEPENDIENTES (ENERO 2027)    -->
         <!-- ============================================================ -->
         <section class="py-14 sm:py-20 border-b border-orange-100/50 relative overflow-hidden" id="pre-inscripciones">

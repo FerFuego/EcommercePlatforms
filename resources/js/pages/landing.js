@@ -104,17 +104,85 @@ export function initPreInscripcionesSection() {
     }
 }
 
+export function ratingExperience() {
+    return {
+        selectedRating: 5,
+        hoverRating: 0,
+        activeStoryIndex: 0,
+        stories: [
+            {
+                name: 'Marta L.',
+                location: 'Córdoba Capital',
+                dish: 'Sorrentinos de calabaza y muzzarella',
+                cook: 'Doña Rosa',
+                score: '5.0',
+                quote: '¡Masa fresca casera inolvidable! Llegó calentito y con salsa abundante. Se nota el amor con que cocinan.',
+                time: 'Hace 12 min'
+            },
+            {
+                name: 'Joaquín G.',
+                location: 'Villa Allende',
+                dish: 'Empanadas criollas al horno de barro',
+                cook: 'Paula Nieva',
+                score: '5.0',
+                quote: 'El relleno es puro sabor de verdad. Mucho mejor que cualquier delivery común. Calificarlos con 5 estrellas es poco.',
+                time: 'Hace 28 min'
+            },
+            {
+                name: 'Carolina V.',
+                location: 'Bell Ville',
+                dish: 'Guiso de lentejas tradicional',
+                cook: 'Soledad Pérez',
+                score: '5.0',
+                quote: 'Comida con gusto a infancia, sana y reconfortante. Da gusto apoyar a cocineros independientes del barrio.',
+                time: 'Hace 45 min'
+            }
+        ],
+        timer: null,
+        init() {
+            this.startLoop();
+        },
+        startLoop() {
+            this.stopLoop();
+            this.timer = setInterval(() => {
+                this.activeStoryIndex = (this.activeStoryIndex + 1) % this.stories.length;
+            }, 4200);
+        },
+        stopLoop() {
+            if (this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+        },
+        setRating(stars) {
+            this.selectedRating = stars;
+            this.stopLoop();
+        },
+        get currentScoreLabel() {
+            const current = this.hoverRating || this.selectedRating;
+            if (current === 5) return '¡Excelente! Sabor casero 10/10 ⭐';
+            if (current === 4) return '¡Muy rico y fresco! 👌';
+            if (current === 3) return 'Buen sabor casero 👍';
+            if (current === 2) return 'Aceptable 🙂';
+            return 'Para mejorar 💡';
+        }
+    };
+}
+
 // Registro global para Alpine.js
 window.cooksSlider = cooksSlider;
 window.testimonialsSlider = testimonialsSlider;
+window.ratingExperience = ratingExperience;
 
 if (window.Alpine) {
     window.Alpine.data('cooksSlider', cooksSlider);
     window.Alpine.data('testimonialsSlider', testimonialsSlider);
+    window.Alpine.data('ratingExperience', ratingExperience);
 } else {
     document.addEventListener('alpine:init', () => {
         window.Alpine.data('cooksSlider', cooksSlider);
         window.Alpine.data('testimonialsSlider', testimonialsSlider);
+        window.Alpine.data('ratingExperience', ratingExperience);
     });
 }
 
