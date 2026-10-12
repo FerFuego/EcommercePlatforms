@@ -49,6 +49,7 @@ class AdminSettingController extends Controller
             'site_name',
             'meta_title',
             'meta_description',
+            'instagram_url',
             'commission_rate',
             'stripe_publishable_key',
             'stripe_secret_key',

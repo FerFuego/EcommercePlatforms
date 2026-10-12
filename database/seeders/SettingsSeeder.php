@@ -35,6 +35,13 @@ class SettingsSeeder extends Seeder
                 'type' => 'textarea',
             ],
             [
+                'key' => 'instagram_url',
+                'value' => 'https://www.instagram.com/cocinarte.app/',
+                'group' => 'seo',
+                'label' => 'Instagram URL',
+                'type' => 'text',
+            ],
+            [
                 'key' => 'commission_rate',
                 'value' => '15',
                 'group' => 'financial',
