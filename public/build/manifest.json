@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-DUzzT5k4.css",
+    "file": "assets/app-DCJU_8wi.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -27,10 +27,13 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-Bi5dmR7N.js",
+    "file": "assets/app-gOcfuM7I.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "resources/js/pages/landing.js"
+    ]
   },
   "resources/js/chatbot.js": {
     "file": "assets/chatbot-BIoV-AwW.js",
@@ -39,7 +42,7 @@
     "isEntry": true
   },
   "resources/js/pages/landing.js": {
-    "file": "assets/landing-CGLmQPAg.js",
+    "file": "assets/landing-DI0XT2TF.js",
     "name": "landing",
     "src": "resources/js/pages/landing.js",
     "isEntry": true

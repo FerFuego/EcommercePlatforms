@@ -3,8 +3,15 @@ import './order-listener';
 
 import Alpine from 'alpinejs';
 import { requestPermission } from './push-notifications';
+import { cooksSlider, testimonialsSlider } from './pages/landing';
 
 window.Alpine = Alpine;
+window.cooksSlider = cooksSlider;
+window.testimonialsSlider = testimonialsSlider;
+
+Alpine.data('cooksSlider', cooksSlider);
+Alpine.data('testimonialsSlider', testimonialsSlider);
+
 Alpine.start();
 
 // Request permission if authenticated
