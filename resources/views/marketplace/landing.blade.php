@@ -416,6 +416,187 @@
             </div>
         </section>
 
+
+        <!-- ============================================================ -->
+        <!-- PRE-INSCRIPCIONES: COCINEROS INDEPENDIENTES (ENERO 2027)    -->
+        <!-- ============================================================ -->
+        <section class="py-14 sm:py-20 bg-white border-b border-orange-100/50 relative overflow-hidden" id="pre-inscripciones">
+            <!-- Fondos sutiles difuminados -->
+            <div class="absolute top-0 right-0 w-80 sm:w-96 h-80 sm:h-96 bg-orange-100/50 rounded-full blur-3xl pointer-events-none -mr-24 -mt-24" aria-hidden="true"></div>
+            <div class="absolute bottom-0 left-0 w-80 sm:w-96 h-80 sm:h-96 bg-rose-100/40 rounded-full blur-3xl pointer-events-none -ml-24 -mb-24" aria-hidden="true"></div>
+
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+                <!-- Encabezado de la Sección -->
+                <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 border border-orange-200/80 text-orange-700 text-xs sm:text-sm font-bold uppercase tracking-wider mb-4 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+                        Pre-inscripciones Abiertas · Lanzamiento Enero 2027
+                    </div>
+
+                    <h2 class="text-3xl sm:text-4xl lg:text-[2.75rem] font-black tracking-tight text-gray-800 leading-[1.15]">
+                        ¿Cocinás rico en casa y querés vender en tu barrio?<br>
+                        <span class="text-gradient">Nosotros te armamos el perfil.</span>
+                    </h2>
+
+                    <p class="mt-4 text-sm sm:text-base text-gray-600 leading-relaxed font-normal max-w-2xl mx-auto">
+                        El lanzamiento oficial de Cocinarte será en <strong>Enero de 2027</strong>. Hasta entonces, recibimos a todos los cocineros y cocineras independientes con tiempo para preparar su perfil y sus platos sin apuros. Si te cuesta la tecnología o tenés dudas de cómo empezar, <strong>estamos para ayudarte</strong>.
+                    </p>
+                </div>
+
+                <!-- Grilla Principal estilo Bento (2 Columnas) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch max-w-6xl mx-auto">
+
+                    <!-- Columna Izquierda (lg:col-span-5): Fotos de Cocineros Argentinos Reales + Tarjeta de Lanzamiento -->
+                    <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
+
+                        <!-- Contenedor con las dos fotos (Cocinera y Cocinero argentinos) -->
+                        <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                            <!-- Foto Cocinera Argentina -->
+                            <div class="group relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border-2 border-orange-100/80 bg-orange-50 aspect-square">
+                                <img src="{{ asset('assets/home/cocinera_argentina.jpg') }}"
+                                    alt="Cocinera argentina sonriente preparando empanadas en su cocina"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    loading="lazy">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-3 sm:p-4 text-white">
+                                    <span class="text-[10px] sm:text-xs font-semibold text-orange-200 uppercase tracking-wider">Cocina casera</span>
+                                    <p class="text-xs sm:text-sm font-bold leading-tight">Mariana · Empanadas & Pastas</p>
+                                </div>
+                            </div>
+
+                            <!-- Foto Cocinero Argentino -->
+                            <div class="group relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border-2 border-orange-100/80 bg-orange-50 aspect-square">
+                                <img src="{{ asset('assets/home/cocinero_argentino.jpg') }}"
+                                    alt="Cocinero argentino preparando un guiso tradicional en su cocina"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    loading="lazy">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-3 sm:p-4 text-white">
+                                    <span class="text-[10px] sm:text-xs font-semibold text-rose-200 uppercase tracking-wider">Sabores del barrio</span>
+                                    <p class="text-xs sm:text-sm font-bold leading-tight">Marcelo · Guisos & Carnes</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Informativa: Tiempo y tranquilidad para organizarse -->
+                        <div class="bg-gradient-to-br from-orange-50 via-rose-50/40 to-pink-50 p-6 sm:p-7 rounded-2xl sm:rounded-3xl border border-orange-200/70 shadow-sm flex-1 flex flex-col justify-center">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 rounded-2xl bg-orange-500 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-orange-500/25 shrink-0">
+                                    📅
+                                </div>
+                                <div>
+                                    <h4 class="font-extrabold text-gray-800 text-base leading-tight">Lanzamiento: Enero 2027</h4>
+                                    <p class="text-xs text-orange-600 font-semibold">Tenés tiempo para preparar todo con calma</p>
+                                </div>
+                            </div>
+                            <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                                No hay presiones. Hasta el lanzamiento estamos sumando a la primera comunidad de cocineros pioneros. Vos decidís qué cocinar, qué días hacerlo y qué precio ponerle a tus platos.
+                            </p>
+                            <div class="mt-4 pt-3 border-t border-orange-200/50 flex items-center justify-between text-xs font-semibold text-gray-500">
+                                <span class="flex items-center gap-1.5"><span class="text-emerald-600 font-bold">✓</span> Sin costos de inicio</span>
+                                <span class="flex items-center gap-1.5"><span class="text-emerald-600 font-bold">✓</span> 100% independiente</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Columna Derecha (lg:col-span-7): "Nosotros te creamos el perfil" -->
+                    <div class="lg:col-span-7 bg-[#fffaf5] p-6 sm:p-8 lg:p-9 rounded-3xl border-2 border-orange-200/80 shadow-xl flex flex-col justify-between relative overflow-hidden">
+                        <!-- Pill superior -->
+                        <div class="flex items-center justify-between gap-2 flex-wrap mb-4">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-extrabold text-rose-600 bg-rose-50 px-3 py-1 rounded-full border border-rose-200">
+                                <span>🤝</span> Ayuda y acompañamiento personal
+                            </span>
+                            <span class="text-xs font-semibold text-gray-500">
+                                ¿Dudas tecnológicas? Cero problema
+                            </span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-2xl sm:text-3xl font-black text-gray-800 tracking-tight leading-snug">
+                                ¿Te cuesta crear tu perfil o te da miedo la tecnología?
+                            </h3>
+                            <p class="text-sm sm:text-base text-gray-600 mt-2 leading-relaxed">
+                                No te preocupes por formularios ni configuraciones difíciles. Envianos un email a
+                                <a href="mailto:info@cocinarte.app" class="font-bold text-orange-600 hover:text-orange-700 underline decoration-orange-300">info@cocinarte.app</a>
+                                con estos datos mínimos y <strong>nosotros nos encargamos de armar y publicar tu perfil completo</strong>:
+                            </p>
+
+                            <!-- Lista de datos mínimos y necesarios -->
+                            <div class="mt-5 space-y-3">
+                                <div class="flex items-start gap-3 bg-white p-3 sm:p-3.5 rounded-2xl border border-orange-100 shadow-sm">
+                                    <div class="w-7 h-7 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                                        1
+                                    </div>
+                                    <div class="text-xs sm:text-sm text-gray-700">
+                                        <strong class="text-gray-900 block font-bold">Nombre y teléfono / WhatsApp</strong>
+                                        Para coordinar con vos y avisarte cuando tu perfil esté listo.
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-3 bg-white p-3 sm:p-3.5 rounded-2xl border border-orange-100 shadow-sm">
+                                    <div class="w-7 h-7 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                                        2
+                                    </div>
+                                    <div class="text-xs sm:text-sm text-gray-700">
+                                        <strong class="text-gray-900 block font-bold">Tu dirección o barrio aproximado</strong>
+                                        La zona donde cocinás (para que los vecinos cercanos sepan que estás cerca).
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-3 bg-white p-3 sm:p-3.5 rounded-2xl border border-orange-100 shadow-sm">
+                                    <div class="w-7 h-7 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                                        3
+                                    </div>
+                                    <div class="text-xs sm:text-sm text-gray-700">
+                                        <strong class="text-gray-900 block font-bold">Foto tuya y foto de tu cocina</strong>
+                                        Dos fotos sacadas con el celular: tu sonrisa y el espacio donde cocinás con amor.
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-3 bg-white p-3 sm:p-3.5 rounded-2xl border border-orange-100 shadow-sm">
+                                    <div class="w-7 h-7 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                                        4
+                                    </div>
+                                    <div class="text-xs sm:text-sm text-gray-700">
+                                        <strong class="text-gray-900 block font-bold">Un plato estrella que quieras publicar</strong>
+                                        El nombre del plato, una foto, ingredientes o descripción casera y el precio que quieras cobrarlo.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bloque de Acción: Mailto Directo + Botón de Registro -->
+                        <div class="mt-6 pt-5 border-t border-orange-200/60 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                            <a href="mailto:info@cocinarte.app?subject=Pre-inscripci%C3%B3n%20Cocinero%20Cocinarte&body=Hola%20Cocinarte!%0A%0AQuiero%20pre-inscribirme%20como%20cocinero/a%20para%20el%20lanzamiento%20de%20Enero%202027.%0A%0AMis%20datos:%0A-%20Nombre%20completo:%20%0A-%20WhatsApp%20de%20contacto:%20%0A-%20Barrio%20/%20Ciudad:%20%0A-%20Plato%20estrella%20(nombre%20y%20precio):%20%0A%0A(Adjunto%20foto%20de%20perfil,%20foto%20de%20cocina%20y%20foto%20del%20plato)%0A%0AGracias!"
+                                class="btn-gradient text-white px-6 py-3.5 rounded-full font-bold text-sm shadow-md glow-effect hover:-translate-y-0.5 transition-all text-center inline-flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                <span>Enviar mis datos a info@cocinarte.app</span>
+                            </a>
+
+                            <a href="{{ route('register', ['role' => 'cook']) }}"
+                                class="bg-white hover:bg-orange-50/60 text-gray-700 hover:text-orange-600 px-5 py-3.5 rounded-full font-semibold text-xs sm:text-sm border border-gray-300 text-center transition-all inline-flex items-center justify-center gap-1.5">
+                                <span>O registrate vos mismo</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+
+                        <!-- Nota de cercanía y calidez al pie -->
+                        <p class="text-xs text-gray-500 mt-3 text-center sm:text-left flex items-center justify-center sm:justify-start gap-1.5">
+                            <span class="text-rose-500">♡</span>
+                            <span>Cualquier duda escribinos a <strong>info@cocinarte.app</strong>. ¡Estamos para ayudarte en cada paso!</span>
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
         <!-- ============================================================ -->
         <!-- 2. SECCIÓN: ASÍ FUNCIONA COCINARTE                           -->
         <!-- ============================================================ -->
