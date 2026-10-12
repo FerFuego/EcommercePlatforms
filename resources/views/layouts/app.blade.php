@@ -59,7 +59,8 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <style>
         .font-handwriting {
@@ -126,8 +127,7 @@
                         class="flex items-center space-x-2 transition-transform hover:scale-[1.02]">
                         <img src="{{ asset('assets/front/logo-8.webp') }}"
                             alt="{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
-                            class="h-7 sm:h-10 md:h-12 w-auto object-contain"
-                            width="240" height="60"
+                            class="h-7 sm:h-10 md:h-12 w-auto object-contain" width="240" height="60"
                             fetchpriority="high">
                     </a>
                 </div>
@@ -138,16 +138,23 @@
                         class="hover:text-orange-600 transition-colors whitespace-nowrap">
                         Cómo funciona
                     </a>
-                    <a href="{{ route('marketplace.catalog') }}"
+                    <a href="{{ route('home') }}#pre-inscripciones"
                         class="hover:text-orange-600 transition-colors whitespace-nowrap">
-                        Cocineros
+                        Pre-inscripciones
+                    </a>
+                    <a href="{{ route('home') }}#que-ofrecemos"
+                        class="hover:text-orange-600 transition-colors whitespace-nowrap">
+                        Qué ofrecemos?
                     </a>
                     <a href="{{ route('home') }}#para-cocineros"
                         class="hover:text-orange-600 transition-colors whitespace-nowrap">
                         Para cocineros
                     </a>
-                    <a href="{{ route('home') }}#faq"
+                    <a href="{{ route('marketplace.catalog') }}"
                         class="hover:text-orange-600 transition-colors whitespace-nowrap">
+                        Buscar Cocineros
+                    </a>
+                    <a href="{{ route('home') }}#faq" class="hover:text-orange-600 transition-colors whitespace-nowrap">
                         Ayuda
                     </a>
                 </div>
@@ -542,7 +549,8 @@
                 <!-- Columna Logo & Eslogan -->
                 <div class="lg:col-span-2 space-y-4 pr-4">
                     <a href="{{ route('home') }}" class="inline-block transition-transform hover:scale-[1.02]">
-                        <img src="{{ asset('assets/front/logo-w.webp') }}" alt="Cocinarte Logo" class="h-9 sm:h-11 w-auto object-contain">
+                        <img src="{{ asset('assets/front/logo-w.webp') }}" alt="Cocinarte Logo"
+                            class="h-9 sm:h-11 w-auto object-contain">
                     </a>
                     <p class="text-sm text-gray-400 font-normal">
                         Comida casera de personas como vos.
@@ -554,13 +562,16 @@
                     <h4 class="text-xs font-semibold tracking-wider text-gray-300 uppercase mb-4">Para comensales</h4>
                     <ul class="space-y-2.5 text-xs text-gray-400">
                         <li>
-                            <a href="{{ route('home') }}#como-funciona" class="hover:text-orange-400 transition-colors">Cómo funciona</a>
+                            <a href="{{ route('home') }}#como-funciona"
+                                class="hover:text-orange-400 transition-colors">Cómo funciona</a>
                         </li>
                         <li>
-                            <a href="{{ route('marketplace.catalog') }}" class="hover:text-orange-400 transition-colors">Explorar cocineros</a>
+                            <a href="{{ route('marketplace.catalog') }}"
+                                class="hover:text-orange-400 transition-colors">Explorar cocineros</a>
                         </li>
                         <li>
-                            <a href="{{ route('home') }}#faq" class="hover:text-orange-400 transition-colors">Preguntas frecuentes</a>
+                            <a href="{{ route('home') }}#faq" class="hover:text-orange-400 transition-colors">Preguntas
+                                frecuentes</a>
                         </li>
                     </ul>
                 </div>
@@ -570,10 +581,12 @@
                     <h4 class="text-xs font-semibold tracking-wider text-gray-300 uppercase mb-4">Para cocineros</h4>
                     <ul class="space-y-2.5 text-xs text-gray-400">
                         <li>
-                            <a href="{{ route('register', ['role' => 'cook']) }}" class="hover:text-pink-400 transition-colors">Quiero ser cocinero</a>
+                            <a href="{{ route('register', ['role' => 'cook']) }}"
+                                class="hover:text-pink-400 transition-colors">Quiero ser cocinero</a>
                         </li>
                         <li>
-                            <a href="{{ route('home') }}#faq" class="hover:text-pink-400 transition-colors">Centro de ayuda</a>
+                            <a href="{{ route('home') }}#faq" class="hover:text-pink-400 transition-colors">Centro de
+                                ayuda</a>
                         </li>
                     </ul>
                 </div>
@@ -583,10 +596,12 @@
                     <h4 class="text-xs font-semibold tracking-wider text-gray-300 uppercase mb-4">Sobre Cocinarte</h4>
                     <ul class="space-y-2.5 text-xs text-gray-400 mb-6">
                         <li>
-                            <a href="{{ route('home') }}#historias" class="hover:text-purple-400 transition-colors">Nuestra historia</a>
+                            <a href="{{ route('home') }}#historias"
+                                class="hover:text-purple-400 transition-colors">Nuestra historia</a>
                         </li>
                         <li>
-                            <a href="mailto:info@cocinarte.app" class="hover:text-purple-400 transition-colors">Contacto</a>
+                            <a href="mailto:info@cocinarte.app"
+                                class="hover:text-purple-400 transition-colors">Contacto</a>
                         </li>
                     </ul>
 
@@ -594,20 +609,35 @@
                     <div class="space-y-3">
                         <div class="flex items-center space-x-3 text-gray-400">
                             <!-- Instagram -->
-                            <a href="{{ $globalSettings['instagram_url'] ?? 'https://www.instagram.com/cocinarte.ar' }}" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors" aria-label="Instagram">
-                                <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.13-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            <a href="{{ $globalSettings['instagram_url'] ?? 'https://www.instagram.com/cocinarte.ar' }}"
+                                target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors"
+                                aria-label="Instagram">
+                                <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.13-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                                </svg>
                             </a>
                             <!-- Facebook / Meta -->
                             <a href="#" class="hover:text-white transition-colors" aria-label="Facebook">
-                                <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.6 5H18V0h-3.808C10.595 0 9 1.582 9 4.615V8z"/></svg>
+                                <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.6 5H18V0h-3.808C10.595 0 9 1.582 9 4.615V8z" />
+                                </svg>
                             </a>
                             <!-- X (Twitter) -->
                             <a href="#" class="hover:text-white transition-colors" aria-label="X">
-                                <svg class="w-3.5 h-3.5 fill-currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                <svg class="w-3.5 h-3.5 fill-currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                </svg>
                             </a>
                             <!-- WhatsApp -->
-                            <a href="https://wa.me/5493537604555" target="_blank" rel="noopener noreferrer" class="hover:text-green-400 transition-colors" aria-label="WhatsApp">
-                                <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                            <a href="https://wa.me/5493537604555" target="_blank" rel="noopener noreferrer"
+                                class="hover:text-green-400 transition-colors" aria-label="WhatsApp">
+                                <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
+                                </svg>
                             </a>
                         </div>
                         <p class="font-handwriting text-lg text-pink-300/90 leading-tight">
@@ -621,11 +651,14 @@
             <div class="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500 gap-4">
                 <p>&copy; {{ date('Y') }} Cocinarte. Todos los derechos reservados.</p>
                 <div class="flex items-center space-x-6">
-                    <a href="{{ route('terms') }}" class="hover:text-gray-300 transition-colors">Términos y condiciones</a>
+                    <a href="{{ route('terms') }}" class="hover:text-gray-300 transition-colors">Términos y
+                        condiciones</a>
                     <span>·</span>
-                    <a href="{{ route('privacy') }}" class="hover:text-gray-300 transition-colors">Política de privacidad</a>
+                    <a href="{{ route('privacy') }}" class="hover:text-gray-300 transition-colors">Política de
+                        privacidad</a>
                     <span>·</span>
-                    <a href="{{ route('cookies') }}" class="hover:text-gray-300 transition-colors">Política de cookies</a>
+                    <a href="{{ route('cookies') }}" class="hover:text-gray-300 transition-colors">Política de
+                        cookies</a>
                 </div>
             </div>
         </div>
@@ -851,7 +884,8 @@
             <div class="p-8 text-center">
                 <!-- Logo -->
                 <div class="mb-6 flex justify-center">
-                    <img src="{{ asset('assets/front/logo-8.webp') }}" alt="Cocinarte" class="h-12 sm:h-16 w-auto object-contain">
+                    <img src="{{ asset('assets/front/logo-8.webp') }}" alt="Cocinarte"
+                        class="h-12 sm:h-16 w-auto object-contain">
                 </div>
 
                 <h3 class="text-2xl font-bold text-gray-800 mb-2">¡Casi listo para ordenar!</h3>
