@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-C9sW2oBh.css",
+    "file": "assets/app-DUzzT5k4.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -17,6 +17,15 @@
       "chatbot.css"
     ]
   },
+  "resources/css/pages/landing.css": {
+    "file": "assets/landing-YWv3bKGb.css",
+    "src": "resources/css/pages/landing.css",
+    "isEntry": true,
+    "name": "landing",
+    "names": [
+      "landing.css"
+    ]
+  },
   "resources/js/app.js": {
     "file": "assets/app-Bi5dmR7N.js",
     "name": "app",
@@ -27,6 +36,12 @@
     "file": "assets/chatbot-BIoV-AwW.js",
     "name": "chatbot",
     "src": "resources/js/chatbot.js",
+    "isEntry": true
+  },
+  "resources/js/pages/landing.js": {
+    "file": "assets/landing-CGLmQPAg.js",
+    "name": "landing",
+    "src": "resources/js/pages/landing.js",
     "isEntry": true
   }
 }
