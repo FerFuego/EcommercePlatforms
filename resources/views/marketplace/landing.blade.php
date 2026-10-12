@@ -346,16 +346,20 @@
                     </a>
 
                     <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                        <path
+                            d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
                     </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
                             class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-white group-hover:scale-110 transition-transform">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
-                                <path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path
+                                    d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
+                                <path
+                                    d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
                                 <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
                                 <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
                             </svg>
@@ -365,7 +369,8 @@
                     </a>
 
                     <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                        <path
+                            d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
                     </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
@@ -373,22 +378,26 @@
                         <span
                             class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-rose-200 group-hover:scale-110 transition-transform">
                             <svg class="w-4 h-4 fill-rose-200" viewBox="0 0 24 24">
-                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                <path
+                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                             </svg>
                         </span>
                         <span class="font-black text-sm sm:text-base tracking-wide uppercase">Sé parte del cambio</span>
                     </a>
 
                     <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                        <path
+                            d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
                     </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
                             class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 group-hover:scale-110 transition-transform">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M6 13.8a4.5 4.5 0 0 1-2.8-4.1 4.5 4.5 0 0 1 7.2-3.6 4.5 4.5 0 0 1 7.2 3.6 4.5 4.5 0 0 1-2.8 4.1" />
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path
+                                    d="M6 13.8a4.5 4.5 0 0 1-2.8-4.1 4.5 4.5 0 0 1 7.2-3.6 4.5 4.5 0 0 1 7.2 3.6 4.5 4.5 0 0 1-2.8 4.1" />
                                 <path d="M6 14h12v4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-4z" />
                                 <line x1="6" y1="17" x2="18" y2="17" />
                             </svg>
@@ -398,7 +407,8 @@
                     </a>
 
                     <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                        <path
+                            d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
                     </svg>
                 </div>
 
@@ -416,16 +426,20 @@
                     </a>
 
                     <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                        <path
+                            d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
                     </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
                             class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-white group-hover:scale-110 transition-transform">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
-                                <path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path
+                                    d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
+                                <path
+                                    d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
                                 <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
                                 <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
                             </svg>
@@ -435,7 +449,8 @@
                     </a>
 
                     <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                        <path
+                            d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
                     </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
@@ -443,22 +458,26 @@
                         <span
                             class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-rose-200 group-hover:scale-110 transition-transform">
                             <svg class="w-4 h-4 fill-rose-200" viewBox="0 0 24 24">
-                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                <path
+                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                             </svg>
                         </span>
                         <span class="font-black text-sm sm:text-base tracking-wide uppercase">Sé parte del cambio</span>
                     </a>
 
                     <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                        <path
+                            d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
                     </svg>
 
                     <a href="{{ route('register', ['role' => 'cook']) }}"
                         class="inline-flex items-center gap-3 group hover:opacity-95 transition-opacity">
                         <span
                             class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-md shadow-inner text-amber-200 group-hover:scale-110 transition-transform">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M6 13.8a4.5 4.5 0 0 1-2.8-4.1 4.5 4.5 0 0 1 7.2-3.6 4.5 4.5 0 0 1 7.2 3.6 4.5 4.5 0 0 1-2.8 4.1" />
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path
+                                    d="M6 13.8a4.5 4.5 0 0 1-2.8-4.1 4.5 4.5 0 0 1 7.2-3.6 4.5 4.5 0 0 1 7.2 3.6 4.5 4.5 0 0 1-2.8 4.1" />
                                 <path d="M6 14h12v4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-4z" />
                                 <line x1="6" y1="17" x2="18" y2="17" />
                             </svg>
@@ -468,7 +487,8 @@
                     </a>
 
                     <svg class="w-3.5 h-3.5 text-white/40 shrink-0 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
+                        <path
+                            d="M12 0C12 6.627 6.627 12 0 12c6.627 0 12 5.627 12 12 0-6.373 5.627-12 12-12-6.373 0-12-5.373-12-12z" />
                     </svg>
                 </div>
             </div>
@@ -781,9 +801,9 @@
                             <div class="relative group">
                                 <div class="overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-4 border-white">
                                     <!-- <img src="{{ asset('assets/home/kitchen_mariana.jpg') }}"
-                                                                                                                                    alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
-                                                                                                                                    class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                                                                                                                                    loading="lazy"> -->
+                                                                                                                                                alt="Cocinera Mariana en su cocina preparando ingredientes frescos"
+                                                                                                                                                class="w-full h-[320px] sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                                                                                                                                loading="lazy"> -->
                                     <div
                                         class="aspect-video bg-gradient-to-br from-purple-200 via-pink-200 to-orange-200 rounded-2xl flex items-center justify-center text-8xl">
                                         <video class="w-full h-full rounded-2xl"
@@ -937,7 +957,7 @@
 
 
         <!-- ============================================================ -->
-        <!-- PRE-INSCRIPCIONES: COCINEROS INDEPENDIENTES (ENERO 2027)    -->
+        <!-- 6. PRE-INSCRIPCIONES: COCINEROS INDEPENDIENTES (ENERO 2027)    -->
         <!-- ============================================================ -->
         <section class="py-14 sm:py-20 border-b border-orange-100/50 relative overflow-hidden" id="pre-inscripciones">
             <!-- Fondos sutiles difuminados -->
@@ -1286,189 +1306,9 @@
             </div>
         </section>
 
-        <!-- ============================================================ -->
-        <!-- 6. SECCIÓN INFERIOR: 3 COLUMNAS                              -->
-        <!-- (Comensal / Preguntas Frecuentes / Testimonios)             -->
-        <!-- ============================================================ -->
-        <section class="py-12 sm:py-20" id="faq">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
-
-                    <!-- COLUMNA 1: ¿SOS COMENSAL? -->
-                    <div
-                        class="bg-[#fef9f5] rounded-3xl p-6 sm:p-7 border border-orange-100 flex flex-col justify-between shadow-sm">
-                        <div>
-                            <!-- Foto Plato en Manos -->
-                            <div class="w-full h-44 rounded-2xl overflow-hidden mb-5 bg-gray-100 shadow-sm">
-                                <img src="{{ asset('assets/home/dish_hands.jpg') }}"
-                                    alt="Plato de pasta casera con albahaca"
-                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
-                            </div>
-
-                            <h3 class="text-xl font-bold text-rose-500">
-                                ¿Sos comensal?
-                            </h3>
-                            <h4 class="text-base font-extrabold text-gray-700 mt-0.5 mb-2.5">
-                                Disfrutá comida casera, cerca tuyo.
-                            </h4>
-                            <p class="text-xs sm:text-sm text-gray-600 leading-relaxed font-normal">
-                                Comida rica, hecha con ingredientes reales, por personas de tu barrio. Apoyás a cocineros
-                                independientes y vivís una experiencia única.
-                            </p>
-                        </div>
-
-                        <div class="pt-6">
-                            <a href="{{ route('marketplace.catalog') }}"
-                                class="w-full btn-gradient text-white py-3 px-5 rounded-full font-bold text-xs sm:text-sm text-center shadow-md glow-effect hover:-translate-y-0.5 transition-all inline-flex items-center justify-center space-x-2">
-                                <span>Explorar cocineros</span>
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- COLUMNA 2: PREGUNTAS FRECUENTES (Acordeón) -->
-                    <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
-                        x-data="{ openFaq: null }">
-                        <div>
-                            <h3 class="text-lg sm:text-xl font-bold text-gray-700 mb-5">
-                                Preguntas frecuentes
-                            </h3>
-
-                            <div class="space-y-3">
-                                <!-- FAQ 1 -->
-                                <div class="border-b border-gray-100 pb-3">
-                                    <button @click="openFaq = (openFaq === 1 ? null : 1)" type="button"
-                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-700 hover:text-orange-600 transition-colors">
-                                        <span class="pr-2">¿Cómo funciona Cocinarte?</span>
-                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
-                                            :class="{ 'rotate-45 text-rose-500': openFaq === 1 }">+</span>
-                                    </button>
-                                    <div x-show="openFaq === 1" x-collapse
-                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
-                                        Elegís un cocinero cerca tuyo, seleccionás sus platos caseros y decidís si querés
-                                        envío a domicilio o retiro por su cocina. Pagás seguro por la web.
-                                    </div>
-                                </div>
-
-                                <!-- FAQ 2 -->
-                                <div class="border-b border-gray-100 pb-3">
-                                    <button @click="openFaq = (openFaq === 2 ? null : 2)" type="button"
-                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-700 hover:text-orange-600 transition-colors">
-                                        <span class="pr-2">¿Cómo se paga?</span>
-                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
-                                            :class="{ 'rotate-45 text-rose-500': openFaq === 2 }">+</span>
-                                    </button>
-                                    <div x-show="openFaq === 2" x-collapse
-                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
-                                        Aceptamos MercadoPago con tarjetas de débito, crédito o dinero en cuenta,
-                                        garantizando máxima seguridad en cada transacción.
-                                    </div>
-                                </div>
-
-                                <!-- FAQ 3 -->
-                                <div class="border-b border-gray-100 pb-3">
-                                    <button @click="openFaq = (openFaq === 3 ? null : 3)" type="button"
-                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-700 hover:text-orange-600 transition-colors">
-                                        <span class="pr-2">¿Cuánto tarda la entrega o retiro?</span>
-                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
-                                            :class="{ 'rotate-45 text-rose-500': openFaq === 3 }">+</span>
-                                    </button>
-                                    <div x-show="openFaq === 3" x-collapse
-                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
-                                        Cada cocinero especifica el tiempo de elaboración (habitualmente entre 30 y 60
-                                        minutos, o pedidos programados para el mediodía/noche).
-                                    </div>
-                                </div>
-
-                                <!-- FAQ 4 -->
-                                <div class="border-b border-gray-100 pb-3">
-                                    <button @click="openFaq = (openFaq === 4 ? null : 4)" type="button"
-                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-700 hover:text-orange-600 transition-colors">
-                                        <span class="pr-2">¿Puedo pedir para varias personas?</span>
-                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
-                                            :class="{ 'rotate-45 text-rose-500': openFaq === 4 }">+</span>
-                                    </button>
-                                    <div x-show="openFaq === 4" x-collapse
-                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
-                                        ¡Claro que sí! Podés seleccionar múltiples porciones de un mismo cocinero o armar un
-                                        menú familiar.
-                                    </div>
-                                </div>
-
-                                <!-- FAQ 5 -->
-                                <div class="pb-1">
-                                    <button @click="openFaq = (openFaq === 5 ? null : 5)" type="button"
-                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-700 hover:text-orange-600 transition-colors">
-                                        <span class="pr-2">¿Qué pasa si tengo un problema con mi pedido?</span>
-                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
-                                            :class="{ 'rotate-45 text-rose-500': openFaq === 5 }">+</span>
-                                    </button>
-                                    <div x-show="openFaq === 5" x-collapse
-                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
-                                        Contás con soporte directo por WhatsApp y nuestro equipo de atención para resolver
-                                        cualquier inconveniente de inmediato.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- COLUMNA 3: LO QUE DICEN NUESTROS COMENSALES (Testimonios Slider con Autoplay y 4 items) -->
-                    <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
-                        x-data="testimonialsSlider({{ Js::from($testimonials) }})" x-init="startAutoplay()"
-                        @mouseenter="stopAutoplay()" @mouseleave="startAutoplay()" @touchstart.passive="stopAutoplay()"
-                        @touchend.passive="startAutoplay()">
-
-                        <div>
-                            <h3 class="text-lg sm:text-xl font-bold text-gray-700 mb-6">
-                                Lo que dicen nuestros comensales
-                            </h3>
-
-                            <!-- Testimonio Activo con transición suave -->
-                            <div class="space-y-4 min-h-[140px]">
-                                <div class="flex items-center space-x-3.5">
-                                    <img :src="items[current].avatar" :alt="items[current].name"
-                                        class="w-11 h-11 rounded-full object-cover border-2 border-orange-200">
-                                    <div>
-                                        <h4 class="font-bold text-gray-700 text-sm" x-text="items[current].name"></h4>
-                                        <p class="text-xs text-gray-400" x-text="items[current].location"></p>
-                                    </div>
-                                </div>
-
-                                <p class="text-xs sm:text-sm text-gray-600 italic leading-relaxed min-h-[50px]"
-                                    x-text="'&ldquo;' + items[current].text + '&rdquo;'">
-                                </p>
-
-                                <!-- Estrellas Doradas -->
-                                <div class="flex items-center space-x-1 text-amber-400 text-sm pt-2">
-                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Dots de paginación del testimonio (4 items) -->
-                        <div class="flex items-center justify-center space-x-2 pt-6">
-                            <template x-for="(item, index) in items" :key="index">
-                                <button @click="current = index; stopAutoplay(); startAutoplay()" type="button"
-                                    class="h-2.5 rounded-full transition-all duration-300"
-                                    :class="current === index ? 'bg-orange-500 w-6' : 'bg-gray-200 hover:bg-gray-300 w-2.5'"
-                                    :aria-label="'Ver testimonio ' + (index + 1)">
-                                </button>
-                            </template>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
 
         <!-- ============================================================ -->
-        <!-- 7 PROPUESTA DE VALOR: "VOS PONÉS EL SABOR..."             -->
+        <!-- 7. PROPUESTA DE VALOR: "VOS PONÉS EL SABOR..."             -->
         <!-- (Plataforma / Difusión / Crecimiento / Y mucho más)          -->
         <!-- ============================================================ -->
         <section class="vp-section" id="que-ofrecemos" aria-labelledby="vp-title">
@@ -1740,39 +1580,220 @@
             </div>
         </section>
 
+
+        <!-- ============================================================ -->
+        <!-- 8. SECCIÓN INFERIOR: 3 COLUMNAS                              -->
+        <!-- (Comensal / Preguntas Frecuentes / Testimonios)             -->
+        <!-- ============================================================ -->
+        <section class="py-12 sm:py-20" id="faq">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+
+                    <!-- COLUMNA 1: ¿SOS COMENSAL? -->
+                    <div
+                        class="bg-[#fef9f5] rounded-3xl p-6 sm:p-7 border border-orange-100 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <!-- Foto Plato en Manos -->
+                            <div class="w-full h-44 rounded-2xl overflow-hidden mb-5 bg-gray-100 shadow-sm">
+                                <img src="{{ asset('assets/home/dish_hands.jpg') }}"
+                                    alt="Plato de pasta casera con albahaca"
+                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                            </div>
+
+                            <h3 class="text-xl font-bold text-rose-500">
+                                ¿Sos comensal?
+                            </h3>
+                            <h4 class="text-base font-extrabold text-gray-700 mt-0.5 mb-2.5">
+                                Disfrutá comida casera, cerca tuyo.
+                            </h4>
+                            <p class="text-xs sm:text-sm text-gray-600 leading-relaxed font-normal">
+                                Comida rica, hecha con ingredientes reales, por personas de tu barrio. Apoyás a cocineros
+                                independientes y vivís una experiencia única.
+                            </p>
+                        </div>
+
+                        <div class="pt-6">
+                            <a href="{{ route('marketplace.catalog') }}"
+                                class="w-full btn-gradient text-white py-3 px-5 rounded-full font-bold text-xs sm:text-sm text-center shadow-md glow-effect hover:-translate-y-0.5 transition-all inline-flex items-center justify-center space-x-2">
+                                <span>Explorar cocineros</span>
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- COLUMNA 2: PREGUNTAS FRECUENTES (Acordeón) -->
+                    <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
+                        x-data="{ openFaq: null }">
+                        <div>
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-700 mb-5">
+                                Preguntas frecuentes
+                            </h3>
+
+                            <div class="space-y-3">
+                                <!-- FAQ 1 -->
+                                <div class="border-b border-gray-100 pb-3">
+                                    <button @click="openFaq = (openFaq === 1 ? null : 1)" type="button"
+                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-700 hover:text-orange-600 transition-colors">
+                                        <span class="pr-2">¿Cómo funciona Cocinarte?</span>
+                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
+                                            :class="{ 'rotate-45 text-rose-500': openFaq === 1 }">+</span>
+                                    </button>
+                                    <div x-show="openFaq === 1" x-collapse
+                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
+                                        Elegís un cocinero cerca tuyo, seleccionás sus platos caseros y decidís si querés
+                                        envío a domicilio o retiro por su cocina. Pagás seguro por la web.
+                                    </div>
+                                </div>
+
+                                <!-- FAQ 2 -->
+                                <div class="border-b border-gray-100 pb-3">
+                                    <button @click="openFaq = (openFaq === 2 ? null : 2)" type="button"
+                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-700 hover:text-orange-600 transition-colors">
+                                        <span class="pr-2">¿Cómo se paga?</span>
+                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
+                                            :class="{ 'rotate-45 text-rose-500': openFaq === 2 }">+</span>
+                                    </button>
+                                    <div x-show="openFaq === 2" x-collapse
+                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
+                                        Aceptamos MercadoPago con tarjetas de débito, crédito o dinero en cuenta,
+                                        garantizando máxima seguridad en cada transacción.
+                                    </div>
+                                </div>
+
+                                <!-- FAQ 3 -->
+                                <div class="border-b border-gray-100 pb-3">
+                                    <button @click="openFaq = (openFaq === 3 ? null : 3)" type="button"
+                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-700 hover:text-orange-600 transition-colors">
+                                        <span class="pr-2">¿Cuánto tarda la entrega o retiro?</span>
+                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
+                                            :class="{ 'rotate-45 text-rose-500': openFaq === 3 }">+</span>
+                                    </button>
+                                    <div x-show="openFaq === 3" x-collapse
+                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
+                                        Cada cocinero especifica el tiempo de elaboración (habitualmente entre 30 y 60
+                                        minutos, o pedidos programados para el mediodía/noche).
+                                    </div>
+                                </div>
+
+                                <!-- FAQ 4 -->
+                                <div class="border-b border-gray-100 pb-3">
+                                    <button @click="openFaq = (openFaq === 4 ? null : 4)" type="button"
+                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-700 hover:text-orange-600 transition-colors">
+                                        <span class="pr-2">¿Puedo pedir para varias personas?</span>
+                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
+                                            :class="{ 'rotate-45 text-rose-500': openFaq === 4 }">+</span>
+                                    </button>
+                                    <div x-show="openFaq === 4" x-collapse
+                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
+                                        ¡Claro que sí! Podés seleccionar múltiples porciones de un mismo cocinero o armar un
+                                        menú familiar.
+                                    </div>
+                                </div>
+
+                                <!-- FAQ 5 -->
+                                <div class="pb-1">
+                                    <button @click="openFaq = (openFaq === 5 ? null : 5)" type="button"
+                                        class="w-full text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-gray-700 hover:text-orange-600 transition-colors">
+                                        <span class="pr-2">¿Qué pasa si tengo un problema con mi pedido?</span>
+                                        <span class="text-gray-400 font-bold text-base transition-transform duration-200"
+                                            :class="{ 'rotate-45 text-rose-500': openFaq === 5 }">+</span>
+                                    </button>
+                                    <div x-show="openFaq === 5" x-collapse
+                                        class="mt-2 text-xs text-gray-500 leading-relaxed">
+                                        Contás con soporte directo por WhatsApp y nuestro equipo de atención para resolver
+                                        cualquier inconveniente de inmediato.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COLUMNA 3: LO QUE DICEN NUESTROS COMENSALES (Testimonios Slider con Autoplay y 4 items) -->
+                    <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-sm flex flex-col justify-between"
+                        x-data="testimonialsSlider({{ Js::from($testimonials) }})" x-init="startAutoplay()"
+                        @mouseenter="stopAutoplay()" @mouseleave="startAutoplay()" @touchstart.passive="stopAutoplay()"
+                        @touchend.passive="startAutoplay()">
+
+                        <div>
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-700 mb-6">
+                                Lo que dicen nuestros comensales
+                            </h3>
+
+                            <!-- Testimonio Activo con transición suave -->
+                            <div class="space-y-4 min-h-[140px]">
+                                <div class="flex items-center space-x-3.5">
+                                    <img :src="items[current].avatar" :alt="items[current].name"
+                                        class="w-11 h-11 rounded-full object-cover border-2 border-orange-200">
+                                    <div>
+                                        <h4 class="font-bold text-gray-700 text-sm" x-text="items[current].name"></h4>
+                                        <p class="text-xs text-gray-400" x-text="items[current].location"></p>
+                                    </div>
+                                </div>
+
+                                <p class="text-xs sm:text-sm text-gray-600 italic leading-relaxed min-h-[50px]"
+                                    x-text="'&ldquo;' + items[current].text + '&rdquo;'">
+                                </p>
+
+                                <!-- Estrellas Doradas -->
+                                <div class="flex items-center space-x-1 text-amber-400 text-sm pt-2">
+                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dots de paginación del testimonio (4 items) -->
+                        <div class="flex items-center justify-center space-x-2 pt-6">
+                            <template x-for="(item, index) in items" :key="index">
+                                <button @click="current = index; stopAutoplay(); startAutoplay()" type="button"
+                                    class="h-2.5 rounded-full transition-all duration-300"
+                                    :class="current === index ? 'bg-orange-500 w-6' : 'bg-gray-200 hover:bg-gray-300 w-2.5'"
+                                    :aria-label="'Ver testimonio ' + (index + 1)">
+                                </button>
+                            </template>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
     </div>
 
 @endsection
 
 @push('meta')
     <script type="application/ld+json">
-                    {
-                        "@@context": "https://schema.org",
-                        "@@graph": [
-                        {
-                            "@@type": "Organization",
-                            "@@id": "{{ route('home') }}#organization",
-                            "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                            "url": "{{ route('home') }}",
-                            "logo": {
-                            "@@type": "ImageObject",
-                            "url": "{{ asset('assets/front/logo-8.webp') }}",
-                            "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
-                            }
-                        },
-                        {
-                            "@@type": "WebSite",
-                            "@@id": "{{ route('home') }}#website",
-                            "url": "{{ route('home') }}",
-                            "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
-                            "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
-                            "publisher": {
-                            "@@id": "{{ route('home') }}#organization"
-                            }
-                        }
-                        ]
-                    }
-                </script>
+                                {
+                                    "@@context": "https://schema.org",
+                                    "@@graph": [
+                                    {
+                                        "@@type": "Organization",
+                                        "@@id": "{{ route('home') }}#organization",
+                                        "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                                        "url": "{{ route('home') }}",
+                                        "logo": {
+                                        "@@type": "ImageObject",
+                                        "url": "{{ asset('assets/front/logo-8.webp') }}",
+                                        "caption": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}"
+                                        }
+                                    },
+                                    {
+                                        "@@type": "WebSite",
+                                        "@@id": "{{ route('home') }}#website",
+                                        "url": "{{ route('home') }}",
+                                        "name": "{{ $globalSettings['site_name'] ?? 'Cocinarte' }}",
+                                        "description": "{{ $globalSettings['meta_description'] ?? 'La comida casera de personas como vos' }}",
+                                        "publisher": {
+                                        "@@id": "{{ route('home') }}#organization"
+                                        }
+                                    }
+                                    ]
+                                }
+                            </script>
 @endpush
 
 @push('scripts')
