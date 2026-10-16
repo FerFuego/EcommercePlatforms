@@ -6,11 +6,10 @@ use App\Channels\WebPushChannel;
 use App\Channels\WhatsAppChannel;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class OrderDeliveryStatusNotification extends Notification implements ShouldQueue
+class OrderDeliveryStatusNotification extends Notification
 {
     use Queueable;
 

@@ -4,11 +4,10 @@ namespace App\Notifications;
 
 use App\Models\Cook;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AdminNewCookProfileNotification extends Notification implements ShouldQueue
+class AdminNewCookProfileNotification extends Notification
 {
     use Queueable;
 

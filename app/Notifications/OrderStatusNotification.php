@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -12,7 +11,7 @@ use App\Channels\WhatsAppChannel;
 
 use App\Channels\WebPushChannel;
 
-class OrderStatusNotification extends Notification implements ShouldQueue
+class OrderStatusNotification extends Notification
 {
     use Queueable;
 
