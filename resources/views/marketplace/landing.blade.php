@@ -524,10 +524,10 @@
 
                 <!-- 4 Pasos con Layout Horizontal y Flechas Conectoras -->
                 <div
-                    class="max-w-6xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8 md:gap-2.5 lg:gap-4 xl:gap-6 relative">
+                    class="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-8 md:gap-2.5 lg:gap-4 xl:gap-6 relative">
 
                     <!-- Paso 1 -->
-                    <div class="flex-1 flex items-start gap-3 sm:gap-3.5 group">
+                    <div class="flex-1 flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-3 sm:gap-3.5 group max-w-sm md:max-w-none">
                         <!-- Círculo Número 1 -->
                         <div
                             class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-orange-500 via-rose-500 to-pink-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-200">
@@ -535,9 +535,9 @@
                         </div>
 
                         <!-- Contenido: Icono + Título + Descripción -->
-                        <div class="space-y-2.5 sm:space-y-3">
+                        <div class="space-y-2.5 sm:space-y-3 flex flex-col items-center md:items-start">
                             <div
-                                class="w-12 h-12 flex items-center justify-start group-hover:scale-105 transition-transform duration-200">
+                                class="w-12 h-12 flex items-center justify-center md:justify-start group-hover:scale-105 transition-transform duration-200">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="url(#step-icon-grad)" stroke-width="1.8"
                                     stroke-linecap="round" stroke-linejoin="round"
                                     class="w-11 h-11 sm:w-12 sm:h-12 drop-shadow-sm">
@@ -578,7 +578,7 @@
                     </div>
 
                     <!-- Paso 2 -->
-                    <div class="flex-1 flex items-start gap-3 sm:gap-3.5 group">
+                    <div class="flex-1 flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-3 sm:gap-3.5 group max-w-sm md:max-w-none">
                         <!-- Círculo Número 2 -->
                         <div
                             class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-orange-500 via-rose-500 to-pink-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-200">
@@ -586,9 +586,9 @@
                         </div>
 
                         <!-- Contenido: Icono + Título + Descripción -->
-                        <div class="space-y-2.5 sm:space-y-3">
+                        <div class="space-y-2.5 sm:space-y-3 flex flex-col items-center md:items-start">
                             <div
-                                class="w-12 h-12 flex items-center justify-start group-hover:scale-105 transition-transform duration-200">
+                                class="w-12 h-12 flex items-center justify-center md:justify-start group-hover:scale-105 transition-transform duration-200">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="url(#step-icon-grad)" stroke-width="1.8"
                                     stroke-linecap="round" stroke-linejoin="round"
                                     class="w-11 h-11 sm:w-12 sm:h-12 drop-shadow-sm">
@@ -629,7 +629,7 @@
                     </div>
 
                     <!-- Paso 3 -->
-                    <div class="flex-1 flex items-start gap-3 sm:gap-3.5 group">
+                    <div class="flex-1 flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-3 sm:gap-3.5 group max-w-sm md:max-w-none">
                         <!-- Círculo Número 3 -->
                         <div
                             class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-orange-500 via-rose-500 to-pink-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-200">
@@ -637,9 +637,9 @@
                         </div>
 
                         <!-- Contenido: Icono + Título + Descripción -->
-                        <div class="space-y-2.5 sm:space-y-3">
+                        <div class="space-y-2.5 sm:space-y-3 flex flex-col items-center md:items-start">
                             <div
-                                class="w-12 h-12 flex items-center justify-start group-hover:scale-105 transition-transform duration-200">
+                                class="w-12 h-12 flex items-center justify-center md:justify-start group-hover:scale-105 transition-transform duration-200">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="url(#step-icon-grad)" stroke-width="1.8"
                                     stroke-linecap="round" stroke-linejoin="round"
                                     class="w-11 h-11 sm:w-12 sm:h-12 drop-shadow-sm">
@@ -675,7 +675,7 @@
                     </div>
 
                     <!-- Paso 4 -->
-                    <div class="flex-1 flex items-start gap-3 sm:gap-3.5 group">
+                    <div class="flex-1 flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-3 sm:gap-3.5 group max-w-sm md:max-w-none">
                         <!-- Círculo Número 4 -->
                         <div
                             class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-orange-500 via-rose-500 to-pink-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 mt-0.5 group-hover:scale-105 transition-transform duration-200">
@@ -683,9 +683,9 @@
                         </div>
 
                         <!-- Contenido: Icono + Título + Descripción -->
-                        <div class="space-y-2.5 sm:space-y-3">
+                        <div class="space-y-2.5 sm:space-y-3 flex flex-col items-center md:items-start">
                             <div
-                                class="w-12 h-12 flex items-center justify-start group-hover:scale-105 transition-transform duration-200">
+                                class="w-12 h-12 flex items-center justify-center md:justify-start group-hover:scale-105 transition-transform duration-200">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="url(#step-icon-grad)" stroke-width="1.8"
                                     stroke-linecap="round" stroke-linejoin="round"
                                     class="w-11 h-11 sm:w-12 sm:h-12 drop-shadow-sm">
